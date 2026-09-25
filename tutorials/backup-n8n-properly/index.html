@@ -36,6 +36,11 @@ docker compose exec n8n n8n export:credentials --all --decrypted --output=/tmp/c
 docker compose exec n8n rm /tmp/c.json      # contains secrets: delete it right away
 </code></pre>
 <p>If the export fails with a decryption error, the key doesn't match. Better to find out now than during an outage.</p>
+<p><strong>Check the key before you restore, without writing decrypted secrets to disk:</strong> the free <a href="https://github.com/onyxaholguin-cyber/n8n-key-check">n8n-key-check</a> CLI tests a key against a normal (encrypted) credentials export, a backup folder or <code>database.sqlite</code>. It prints only match / no match, and <code>--keys old.env</code> tells you which of several candidate keys is the right one.</p>
+<pre><code>docker compose exec n8n n8n export:credentials --all --output=/tmp/creds.json
+docker compose cp n8n:/tmp/creds.json ./creds.json
+N8N_ENCRYPTION_KEY='the-key-you-will-restore-with' npx github:onyxaholguin-cyber/n8n-key-check creds.json
+</code></pre>
 <p>We ran exactly these commands on n8n 2.40.6 with Postgres 17. All workflows came back and 5 of 5 test credentials decrypted.</p>
 <p><strong>Do the drill on a copy, not on production.</strong> Use a second Compose project (<code>docker compose -p n8n-drill ...</code>) without published ports, restore into it, check, and delete it.</p>
 <h2>How often?</h2>
