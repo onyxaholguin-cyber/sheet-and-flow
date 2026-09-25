@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Free Rental Property Calculator: Cash Flow, Cap Rate, Cash-on-Cash, DSCR | Sheet &amp; Flow</title><meta name="description" content="Instant rental deal math in your browser: monthly cash flow, NOI, cap rate, cash-on-cash return, DSCR, GRM, 1% rule and break-even occupancy.">
+<link rel="canonical" href="https://onyxaholguin-cyber.github.io/sheet-and-flow/tools/rental-deal-calculator/"><meta property="og:title" content="Free Rental Property Calculator: Cash Flow, Cap Rate, Cash-on-Cash, DSCR | Sheet &amp; Flow"><meta property="og:description" content="Instant rental deal math in your browser: monthly cash flow, NOI, cap rate, cash-on-cash return, DSCR, GRM, 1% rule and break-even occupancy.">
+<meta property="og:type" content="website"><meta property="og:url" content="https://onyxaholguin-cyber.github.io/sheet-and-flow/tools/rental-deal-calculator/"><meta name="theme-color" content="#0d9488">
+<link rel="stylesheet" href="/sheet-and-flow/assets/style.css"><link rel="icon" href="/sheet-and-flow/assets/favicon.svg" type="image/svg+xml"></head>
+<body><a class="skip" href="#main">Skip to content</a>
+<header class="top"><div class="wrap"><a class="brand" href="/sheet-and-flow/">Sheet <span>&amp;</span> Flow</a>
+<nav><a href="/sheet-and-flow/#products">Products</a><a href="/sheet-and-flow/tutorials/">Tutorials</a><a href="/sheet-and-flow/tools/">Free tools</a></nav></div></header>
+<main id="main"><div class="wrap narrow"><article>
+<h1>Free Rental Property Calculator</h1>
+<p class="byline">Cash flow, NOI, cap rate, cash-on-cash, DSCR, GRM, 1% rule and break-even occupancy. It runs in your browser; nothing is sent anywhere.</p>
+<div class="tool">
+<form id="deal" class="form" novalidate>
+<label>Purchase price ($)<input name="price" type="number" inputmode="decimal" min="0" step="any" value="250000"></label>
+<label>Down payment (%)<input name="downPct" type="number" inputmode="decimal" min="0" max="100" step="any" value="25"></label>
+<label>Interest rate (%)<input name="rate" type="number" inputmode="decimal" min="0" step="any" value="7"></label>
+<label>Loan term (years)<input name="years" type="number" inputmode="numeric" min="1" step="1" value="30"></label>
+<label>Closing costs ($)<input name="closing" type="number" inputmode="decimal" min="0" step="any" value="6000"></label>
+<label>Up-front repairs ($)<input name="repairs" type="number" inputmode="decimal" min="0" step="any" value="4000"></label>
+<label>Units<input name="units" type="number" inputmode="numeric" min="1" step="1" value="1"></label>
+<label>Rent per unit / month ($)<input name="rent" type="number" inputmode="decimal" min="0" step="any" value="2100"></label>
+<label>Other income / month ($)<input name="otherIncome" type="number" inputmode="decimal" min="0" step="any" value="0"></label>
+<label>Vacancy (%)<input name="vacancyPct" type="number" inputmode="decimal" min="0" max="100" step="any" value="5"></label>
+<label>Property taxes / year ($)<input name="taxes" type="number" inputmode="decimal" min="0" step="any" value="3000"></label>
+<label>Insurance / year ($)<input name="insurance" type="number" inputmode="decimal" min="0" step="any" value="1400"></label>
+<label>HOA / month ($)<input name="hoa" type="number" inputmode="decimal" min="0" step="any" value="0"></label>
+<label>Owner-paid utilities / month ($)<input name="utilities" type="number" inputmode="decimal" min="0" step="any" value="0"></label>
+<label>Repairs (% of rent)<input name="repairsPct" type="number" inputmode="decimal" min="0" step="any" value="5"></label>
+<label>CapEx reserve (% of rent)<input name="capexPct" type="number" inputmode="decimal" min="0" step="any" value="5"></label>
+<label>Management (% of collected)<input name="mgmtPct" type="number" inputmode="decimal" min="0" step="any" value="8"></label>
+</form>
+<p id="deal-err" class="err" role="alert"></p>
+<div id="deal-out" class="results" aria-live="polite"></div>
+</div>
+<h2>How the numbers are calculated</h2>
+<ul>
+<li><strong>NOI</strong> = rent × 12 − vacancy − operating expenses (taxes, insurance, HOA, utilities, repairs, CapEx, management). NOI leaves out the mortgage.</li>
+<li><strong>Cap rate</strong> = NOI ÷ purchase price. <strong>Cash-on-cash</strong> = annual cash flow ÷ cash invested (down payment + closing + repairs).</li>
+<li><strong>DSCR</strong> = NOI ÷ annual mortgage payments. Lenders usually want 1.20–1.25 or more.</li>
+<li><strong>Break-even occupancy</strong> = (operating expenses + mortgage) ÷ gross scheduled income.</li>
+<li>Repairs and CapEx are a % of scheduled rent; management is a % of collected income. These are the same formulas as the <a href="https://onyxaholguin.gumroad.com/l/rental-deal-analyzer">Rental Deal Analyzer</a> spreadsheet, and they're unit-tested against it.</li>
+</ul>
+<p>Full walkthrough: <a href="/sheet-and-flow/tutorials/cap-rate-cash-on-cash-dscr/">Cap rate vs cash-on-cash vs DSCR, with a worked example</a>.</p>
+<aside class="cta"><img src="/sheet-and-flow/assets/img/rental-deal-analyzer.webp" width="640" height="360" alt="Rental Deal Analyzer cover" loading="lazy"><div><h3>Compare 3 deals side by side</h3><p>The spreadsheet version adds a 10-year projection, IRR, equity build-up and sensitivity tables for rent and interest rate.</p><a class="btn" href="https://onyxaholguin.gumroad.com/l/rental-deal-analyzer">Rental Deal Analyzer · $15</a></div></aside>
+<p class="note">For education, not financial advice. Check the numbers with your lender and accountant.</p>
+</article></div>
+<script src="/sheet-and-flow/assets/deal-calc.js"></script><script src="/sheet-and-flow/assets/deal-ui.js"></script>
+</main>
+<footer><div class="wrap"><p><strong>Sheet & Flow</strong> · Practical spreadsheets and n8n automations for landlords, freelancers and small teams.</p>
+<p><a href="/sheet-and-flow/about/">About</a><a href="/sheet-and-flow/affiliate-disclosure/">Affiliate disclosure</a><a href="/sheet-and-flow/privacy/">Privacy</a><a href="/sheet-and-flow/refunds/">Refunds</a><a href="https://onyxaholguin.gumroad.com">Store</a></p>
+<p>Questions about a purchase? Reply to your Gumroad receipt email.</p>
+<p>Content and products are built with AI assistance and tested before publishing. Some links may become affiliate links. Nothing here is tax, legal or financial advice. Not affiliated with n8n GmbH, Microsoft or Google.</p></div></footer>
+</body></html>

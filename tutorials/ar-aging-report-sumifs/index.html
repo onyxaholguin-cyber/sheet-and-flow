@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>How to Build an Accounts Receivable Aging Report in Excel or Google Sheets | Sheet &amp; Flow</title><meta name="description" content="Days overdue, aging buckets (Current, 1-30, 31-60, 61-90, 90+) and a per-client aging summary, using three formulas.">
+<link rel="canonical" href="https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/ar-aging-report-sumifs/"><meta property="og:title" content="How to Build an Accounts Receivable Aging Report in Excel or Google Sheets | Sheet &amp; Flow"><meta property="og:description" content="Days overdue, aging buckets (Current, 1-30, 31-60, 61-90, 90+) and a per-client aging summary, using three formulas.">
+<meta property="og:type" content="website"><meta property="og:url" content="https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/ar-aging-report-sumifs/"><meta name="theme-color" content="#0d9488">
+<link rel="stylesheet" href="/sheet-and-flow/assets/style.css"><link rel="icon" href="/sheet-and-flow/assets/favicon.svg" type="image/svg+xml"><script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "How to Build an Accounts Receivable Aging Report in Excel or Google Sheets", "description": "Days overdue, aging buckets (Current, 1-30, 31-60, 61-90, 90+) and a per-client aging summary, using three formulas.", "dateModified": "2026-09-24", "author": {"@type": "Organization", "name": "Sheet & Flow"}, "mainEntityOfPage": "https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/ar-aging-report-sumifs/"}</script></head>
+<body><a class="skip" href="#main">Skip to content</a>
+<header class="top"><div class="wrap"><a class="brand" href="/sheet-and-flow/">Sheet <span>&amp;</span> Flow</a>
+<nav><a href="/sheet-and-flow/#products">Products</a><a href="/sheet-and-flow/tutorials/">Tutorials</a><a href="/sheet-and-flow/tools/">Free tools</a></nav></div></header>
+<main id="main"><div class="wrap narrow"><article><h1>How to Build an Accounts Receivable Aging Report in Excel or Google Sheets</h1><div class="byline">Updated 2026-09-24 · Sheet & Flow</div><p>An <strong>AR aging report</strong> shows who owes you money and how long it has been overdue. Accountants look at it first because the older an invoice gets, the less likely it is to be paid. Here's how to build one with three formulas.</p>
+<h2>The invoice table</h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>A</th>
+<th>B</th>
+<th>C</th>
+<th>D</th>
+<th>E</th>
+<th>F</th>
+<th>G</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Invoice</td>
+<td>Client</td>
+<td>Amount</td>
+<td>Due date</td>
+<td>Balance</td>
+<td>Days overdue</td>
+<td>Bucket</td>
+</tr>
+<tr>
+<td>2</td>
+<td>INV-1005</td>
+<td>Bright Path</td>
+<td>1800</td>
+<td>2026-06-25</td>
+<td>800</td>
+<td><em>formula</em></td>
+<td><em>formula</em></td>
+</tr>
+</tbody>
+</table>
+<p>Put an <strong>as-of date</strong> in <code>J1</code> (<code>=TODAY()</code>, or any date you want to report on). <em>Balance</em> is amount minus payments received.</p>
+<h2>1. Days overdue</h2>
+<pre><code>F2: =IF(E2&lt;=0, 0, MAX(0, $J$1 - D2))
+</code></pre>
+<p>Paid invoices get 0. Unpaid invoices get the number of days past the due date, and 0 if they're not due yet.</p>
+<h2>2. Aging bucket</h2>
+<pre><code>G2: =IF(E2&lt;=0, &quot;Paid&quot;, IF(F2=0, &quot;Current&quot;, IF(F2&lt;=30, &quot;1-30&quot;,
+     IF(F2&lt;=60, &quot;31-60&quot;, IF(F2&lt;=90, &quot;61-90&quot;, &quot;90+&quot;)))))
+</code></pre>
+<h2>3. Summary by client</h2>
+<p>Build a small table with clients down column L (<code>L2</code>, <code>L3</code>, …) and bucket names across row 1 (<code>M1:Q1</code> = <code>Current</code>, <code>1-30</code>, <code>31-60</code>, <code>61-90</code>, <code>90+</code>). Then:</p>
+<pre><code>M2: =SUMIFS($E$2:$E$500, $B$2:$B$500, $L2, $G$2:$G$500, M$1)
+</code></pre>
+<p>Copy across and down. Add a total column <code>=SUM(M2:Q2)</code>. An "overdue" column <code>=SUM(N2:Q2)</code> skips <em>Current</em>.</p>
+<h2>Reading the report</h2>
+<ul>
+<li><strong>Current</strong> is healthy.</li>
+<li><strong>1–30</strong> calls for a friendly reminder.</li>
+<li><strong>31–60</strong> calls for a firm reminder and a phone call.</li>
+<li><strong>61–90</strong> calls for a final notice. Consider pausing work for that client.</li>
+<li><strong>90+</strong> means you need a decision: payment plan, collections, or write it off with your accountant.</li>
+</ul>
+<h2>Common mistakes</h2>
+<ul>
+<li><strong>Aging from the invoice date instead of the due date.</strong> A 30-day-terms invoice isn't late on day 10.</li>
+<li><strong>Forgetting partial payments.</strong> Always age the <em>balance</em>, not the original amount.</li>
+</ul>
+<h2>Automate the reminders</h2>
+<p>Two ways to skip the manual work:</p>
+<ul>
+<li>The <a href="https://onyxaholguin.gumroad.com/l/freelancer-finance-tracker">Freelancer Finance Tracker</a> builds this report automatically from your invoices and payments, including partial payments.</li>
+<li>The <a href="https://onyxaholguin.gumroad.com/l/invoice-chaser">Invoice Chaser for n8n</a> reads the sheet every weekday and emails polite 3, 10 and 21-day reminders for you.</li>
+</ul><aside class="cta"><img src="/sheet-and-flow/assets/img/freelancer-finance-tracker.webp" width="640" height="360" alt="Freelancer Finance Tracker cover" loading="lazy">
+<div><h3>Freelancer Finance Tracker</h3><p>Invoices, partial payments, AR aging, quarterly tax set-aside and a Schedule C summary.</p><a class="btn" href="https://onyxaholguin.gumroad.com/l/freelancer-finance-tracker">Get it · $15</a></div></aside><p class="note">Written with AI assistance. Every formula, command and number on this page was tested before publishing (see each section). Product links go to our store.</p></article></div></main>
+<footer><div class="wrap"><p><strong>Sheet & Flow</strong> · Practical spreadsheets and n8n automations for landlords, freelancers and small teams.</p>
+<p><a href="/sheet-and-flow/about/">About</a><a href="/sheet-and-flow/affiliate-disclosure/">Affiliate disclosure</a><a href="/sheet-and-flow/privacy/">Privacy</a><a href="/sheet-and-flow/refunds/">Refunds</a><a href="https://onyxaholguin.gumroad.com">Store</a></p>
+<p>Questions about a purchase? Reply to your Gumroad receipt email.</p>
+<p>Content and products are built with AI assistance and tested before publishing. Some links may become affiliate links. Nothing here is tax, legal or financial advice. Not affiliated with n8n GmbH, Microsoft or Google.</p></div></footer>
+</body></html>

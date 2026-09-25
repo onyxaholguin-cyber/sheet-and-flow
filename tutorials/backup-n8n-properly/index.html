@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>How to Back Up n8n Properly: Database, Encryption Key and a Restore Test | Sheet &amp; Flow</title><meta name="description" content="Exporting workflows isn&#x27;t a backup. What an n8n backup must contain, the exact commands (tested on n8n 2.40.6 with Postgres), and how to prove it restores.">
+<link rel="canonical" href="https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/backup-n8n-properly/"><meta property="og:title" content="How to Back Up n8n Properly: Database, Encryption Key and a Restore Test | Sheet &amp; Flow"><meta property="og:description" content="Exporting workflows isn&#x27;t a backup. What an n8n backup must contain, the exact commands (tested on n8n 2.40.6 with Postgres), and how to prove it restores.">
+<meta property="og:type" content="website"><meta property="og:url" content="https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/backup-n8n-properly/"><meta name="theme-color" content="#0d9488">
+<link rel="stylesheet" href="/sheet-and-flow/assets/style.css"><link rel="icon" href="/sheet-and-flow/assets/favicon.svg" type="image/svg+xml"><script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "How to Back Up n8n Properly: Database, Encryption Key and a Restore Test", "description": "Exporting workflows isn't a backup. What an n8n backup must contain, the exact commands (tested on n8n 2.40.6 with Postgres), and how to prove it restores.", "dateModified": "2026-09-24", "author": {"@type": "Organization", "name": "Sheet & Flow"}, "mainEntityOfPage": "https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/backup-n8n-properly/"}</script></head>
+<body><a class="skip" href="#main">Skip to content</a>
+<header class="top"><div class="wrap"><a class="brand" href="/sheet-and-flow/">Sheet <span>&amp;</span> Flow</a>
+<nav><a href="/sheet-and-flow/#products">Products</a><a href="/sheet-and-flow/tutorials/">Tutorials</a><a href="/sheet-and-flow/tools/">Free tools</a></nav></div></header>
+<main id="main"><div class="wrap narrow"><article><h1>How to Back Up n8n Properly: Database, Encryption Key and a Restore Test</h1><div class="byline">Updated 2026-09-24 · Sheet & Flow</div><p>The most common n8n disaster isn't a crashed server. It's discovering, after the crash, that the backup can't restore the credentials. Here's what a real backup needs, and the commands we tested.</p>
+<h2>What you must back up</h2>
+<ol>
+<li><strong>The database</strong> (Postgres). It holds workflows, credentials (encrypted), users, variables and execution history.</li>
+<li><strong>The encryption key</strong> (<code>N8N_ENCRYPTION_KEY</code> in your <code>.env</code>, or <code>/home/node/.n8n/config</code> if you never set one). Without it, the credentials in the database are unreadable.</li>
+<li><strong>The n8n data folder</strong> (<code>/home/node/.n8n</code>). It holds binary data, community nodes and settings.</li>
+</ol>
+<p>A workflow JSON export alone is <strong>not</strong> a backup. Exports don't include decryptable credentials, users or history.</p>
+<h2>Back up (Docker Compose + Postgres)</h2>
+<p>From the folder with your <code>docker-compose.yml</code>:</p>
+<pre><code>docker compose exec -T postgres pg_dump -U n8n -d n8n -Fc &gt; n8n-db.dump
+docker compose exec -T n8n tar -czf - -C /home/node/.n8n . &gt; n8n-data.tar.gz
+</code></pre>
+<p>Store both files <strong>off the server</strong>, for example with rclone to Backblaze B2 or S3. Store the encryption key <strong>separately</strong>, in your password manager. If you keep the key next to the backup, encrypt the whole archive.</p>
+<h2>Restore</h2>
+<pre><code>docker compose stop n8n
+docker compose exec -T postgres psql -U n8n -d postgres \
+  -c 'DROP DATABASE n8n WITH (FORCE);' -c 'CREATE DATABASE n8n OWNER n8n;'
+docker compose exec -T postgres pg_restore --no-owner --role=n8n -U n8n -d n8n &lt; n8n-db.dump
+docker compose start n8n
+</code></pre>
+<p>Make sure <code>.env</code> contains the <strong>original</strong> encryption key <em>before</em> you start n8n.</p>
+<h2>Prove it: the restore test</h2>
+<p>A backup you have never restored is a hope. After restoring, check that workflows are back and that credentials decrypt:</p>
+<pre><code>docker compose exec n8n n8n list:workflow
+docker compose exec n8n n8n export:credentials --all --decrypted --output=/tmp/c.json
+docker compose exec n8n rm /tmp/c.json      # contains secrets: delete it right away
+</code></pre>
+<p>If the export fails with a decryption error, the key doesn't match. Better to find out now than during an outage.</p>
+<p>We ran exactly these commands on n8n 2.40.6 with Postgres 17. All workflows came back and 5 of 5 test credentials decrypted.</p>
+<p><strong>Do the drill on a copy, not on production.</strong> Use a second Compose project (<code>docker compose -p n8n-drill ...</code>) without published ports, restore into it, check, and delete it.</p>
+<h2>How often?</h2>
+<ul>
+<li>Nightly database + data backups, with 14–30 days retention.</li>
+<li>A restore drill once a month and before every upgrade.</li>
+<li>An alert when a backup fails. A cron job that silently stopped in March helps nobody.</li>
+</ul>
+<h2>Done-for-you version</h2>
+<p>The <a href="https://onyxaholguin.gumroad.com/l/n8n-self-hosting-kit">n8n Production Self-Hosting Kit</a> automates all of this:</p>
+<ul>
+<li><strong>Backups:</strong> encrypted archives with checksums and a key fingerprint, off-site copies, retention and failure pings.</li>
+<li><strong>Restores:</strong> <code>restore.sh</code> refuses to restore with the wrong key.</li>
+<li><strong>Monthly drill:</strong> <code>restore-drill.sh</code> restores into a throwaway stack and prints <code>DRILL PASSED</code> only if every credential decrypts.</li>
+</ul>
+<p>For nightly Git backups of your workflows, see the <a href="https://onyxaholguin.gumroad.com/l/n8n-reliability-pack">n8n Reliability Workflow Pack</a>.</p>
+<p><em>Not affiliated with n8n GmbH.</em></p><aside class="cta"><img src="/sheet-and-flow/assets/img/n8n-self-hosting-kit.webp" width="640" height="360" alt="n8n Production Self-Hosting Kit cover" loading="lazy">
+<div><h3>n8n Production Self-Hosting Kit</h3><p>Docker Compose + Postgres 17 + HTTPS, with encrypted backups, a restore drill and safe upgrades.</p><a class="btn" href="https://onyxaholguin.gumroad.com/l/n8n-self-hosting-kit">Get it · $29</a></div></aside><p class="note">Written with AI assistance. Every formula, command and number on this page was tested before publishing (see each section). Product links go to our store.</p></article></div></main>
+<footer><div class="wrap"><p><strong>Sheet & Flow</strong> · Practical spreadsheets and n8n automations for landlords, freelancers and small teams.</p>
+<p><a href="/sheet-and-flow/about/">About</a><a href="/sheet-and-flow/affiliate-disclosure/">Affiliate disclosure</a><a href="/sheet-and-flow/privacy/">Privacy</a><a href="/sheet-and-flow/refunds/">Refunds</a><a href="https://onyxaholguin.gumroad.com">Store</a></p>
+<p>Questions about a purchase? Reply to your Gumroad receipt email.</p>
+<p>Content and products are built with AI assistance and tested before publishing. Some links may become affiliate links. Nothing here is tax, legal or financial advice. Not affiliated with n8n GmbH, Microsoft or Google.</p></div></footer>
+</body></html>

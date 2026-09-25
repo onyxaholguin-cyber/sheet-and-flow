@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>n8n Error Alerts That Don&#x27;t Spam You: Error Trigger + Dedupe (n8n 2.x) | Sheet &amp; Flow</title><meta name="description" content="Set up one error workflow that alerts Slack, Discord, Telegram or email whenever any workflow fails, groups repeated errors, and actually fires in n8n 2.x.">
+<link rel="canonical" href="https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/n8n-error-alert-workflow/"><meta property="og:title" content="n8n Error Alerts That Don&#x27;t Spam You: Error Trigger + Dedupe (n8n 2.x) | Sheet &amp; Flow"><meta property="og:description" content="Set up one error workflow that alerts Slack, Discord, Telegram or email whenever any workflow fails, groups repeated errors, and actually fires in n8n 2.x.">
+<meta property="og:type" content="website"><meta property="og:url" content="https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/n8n-error-alert-workflow/"><meta name="theme-color" content="#0d9488">
+<link rel="stylesheet" href="/sheet-and-flow/assets/style.css"><link rel="icon" href="/sheet-and-flow/assets/favicon.svg" type="image/svg+xml"><script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "n8n Error Alerts That Don't Spam You: Error Trigger + Dedupe (n8n 2.x)", "description": "Set up one error workflow that alerts Slack, Discord, Telegram or email whenever any workflow fails, groups repeated errors, and actually fires in n8n 2.x.", "dateModified": "2026-09-24", "author": {"@type": "Organization", "name": "Sheet & Flow"}, "mainEntityOfPage": "https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/n8n-error-alert-workflow/"}</script></head>
+<body><a class="skip" href="#main">Skip to content</a>
+<header class="top"><div class="wrap"><a class="brand" href="/sheet-and-flow/">Sheet <span>&amp;</span> Flow</a>
+<nav><a href="/sheet-and-flow/#products">Products</a><a href="/sheet-and-flow/tutorials/">Tutorials</a><a href="/sheet-and-flow/tools/">Free tools</a></nav></div></header>
+<main id="main"><div class="wrap narrow"><article><h1>n8n Error Alerts That Don&#x27;t Spam You: Error Trigger + Dedupe (n8n 2.x)</h1><div class="byline">Updated 2026-09-24 · Sheet & Flow</div><p>n8n doesn't tell you when a workflow fails unless you ask it to. The built-in way is an <strong>error workflow</strong>: a workflow that starts with an <strong>Error Trigger</strong> node, and that other workflows point to in their settings.</p>
+<h2>Step 1: Create the error workflow</h2>
+<ol>
+<li>Create a workflow named <em>Error alert router</em>.</li>
+<li>Add an <strong>Error Trigger</strong> node. It receives the failed workflow's name and ID, the node that failed, the error message and a link to the execution.</li>
+<li>Add a <strong>Code</strong> node that formats the message (below).</li>
+<li>Add your alert node: <strong>Slack</strong>, <strong>Discord</strong> (HTTP Request to a webhook), <strong>Telegram</strong>, or <strong>Send Email</strong>.</li>
+</ol>
+<h2>Step 2: Format and dedupe</h2>
+<p>When an API goes down, every run of a scheduled workflow fails, and you get the same alert every five minutes. Workflow <strong>static data</strong> fixes that by remembering what you've already sent:</p>
+<pre><code class="language-js">const e = $('Error Trigger').first().json;
+const wf = e.workflow || {}, ex = e.execution || {}, err = ex.error || (e.trigger || {}).error || {};
+const node = (err.node &amp;&amp; err.node.name) || ex.lastNodeExecuted || 'unknown node';
+const msg = String(err.message || 'Unknown error');
+const key = [wf.id, node, msg.replace(/\d{2,}/g, '#').slice(0, 120)].join('|');
+const state = $getWorkflowStaticData('global');
+state.sent = state.sent || {};
+const now = Date.now(), windowMs = 30 * 60 * 1000;
+if (state.sent[key] &amp;&amp; now - state.sent[key] &lt; windowMs) return [];   // already alerted recently
+state.sent[key] = now;
+return [{ json: { text: `n8n workflow failed: ${wf.name}\nNode: ${node}\nError: ${msg}\n${ex.url || ''}` } }];
+</code></pre>
+<p>Replacing digits in the key (<code>\d{2,}</code> → <code>#</code>) groups errors that differ only by an order number or timestamp. Returning an empty array stops the workflow, so no alert is sent.</p>
+<h2>Step 3: Publish it (the n8n 2.x gotcha)</h2>
+<p>In n8n 2.x the error workflow <strong>must be published (active)</strong>. We tested this on 2.40.6. With an unpublished error workflow, nothing is sent and the log only says:</p>
+<pre><code>Calling Error Workflow for &quot;…&quot;. Workflow &quot;…&quot; is not active and cannot be executed
+</code></pre>
+<p>After publishing, the same failure produced exactly one alert, and two identical follow-up failures were suppressed.</p>
+<h2>Step 4: Point your workflows at it</h2>
+<p>In each workflow, open <strong>Workflow settings → Error workflow</strong> and choose <em>Error alert router</em>. Do this for your backup and monitoring workflows too.</p>
+<h2>Test it</h2>
+<p>Make a throwaway workflow with a <strong>Webhook</strong> trigger and a Code node containing <code>throw new Error('test')</code>, publish it, and call the webhook URL. Manual test runs from the editor don't trigger error workflows, so you need a production execution.</p>
+<h2>Done-for-you version</h2>
+<p>The <a href="https://onyxaholguin.gumroad.com/l/n8n-reliability-pack">n8n Reliability Workflow Pack</a> includes this router, ready to import:</p>
+<ul>
+<li>Slack, Discord, Mattermost, Google Chat, Telegram and email</li>
+<li>a suppressed-count line ("+12 identical alerts suppressed")</li>
+</ul>
+<p>The pack also includes:</p>
+<ul>
+<li>nightly GitHub and disk backups of all workflows</li>
+<li>an uptime, keyword and SSL monitor</li>
+<li>a weekly failed-executions report</li>
+</ul>
+<p>Everything was tested on n8n 2.40.6.</p>
+<p><em>Not affiliated with n8n GmbH.</em></p><aside class="cta"><img src="/sheet-and-flow/assets/img/n8n-reliability-pack.webp" width="640" height="360" alt="n8n Reliability Workflow Pack cover" loading="lazy">
+<div><h3>n8n Reliability Workflow Pack</h3><p>Error alerts with dedupe, GitHub and disk backups, uptime/SSL monitor and a weekly failure report.</p><a class="btn" href="https://onyxaholguin.gumroad.com/l/n8n-reliability-pack">Get it · $19</a></div></aside><p class="note">Written with AI assistance. Every formula, command and number on this page was tested before publishing (see each section). Product links go to our store.</p></article></div></main>
+<footer><div class="wrap"><p><strong>Sheet & Flow</strong> · Practical spreadsheets and n8n automations for landlords, freelancers and small teams.</p>
+<p><a href="/sheet-and-flow/about/">About</a><a href="/sheet-and-flow/affiliate-disclosure/">Affiliate disclosure</a><a href="/sheet-and-flow/privacy/">Privacy</a><a href="/sheet-and-flow/refunds/">Refunds</a><a href="https://onyxaholguin.gumroad.com">Store</a></p>
+<p>Questions about a purchase? Reply to your Gumroad receipt email.</p>
+<p>Content and products are built with AI assistance and tested before publishing. Some links may become affiliate links. Nothing here is tax, legal or financial advice. Not affiliated with n8n GmbH, Microsoft or Google.</p></div></footer>
+</body></html>

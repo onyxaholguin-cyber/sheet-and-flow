@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>How to Track Rental Income and Expenses by Schedule E Line (Free Spreadsheet Method) | Sheet &amp; Flow</title><meta name="description" content="A simple spreadsheet setup that sorts every rental transaction into its Schedule E line automatically, with the exact SUMIFS formulas.">
+<link rel="canonical" href="https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/rental-income-expenses-schedule-e/"><meta property="og:title" content="How to Track Rental Income and Expenses by Schedule E Line (Free Spreadsheet Method) | Sheet &amp; Flow"><meta property="og:description" content="A simple spreadsheet setup that sorts every rental transaction into its Schedule E line automatically, with the exact SUMIFS formulas.">
+<meta property="og:type" content="website"><meta property="og:url" content="https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/rental-income-expenses-schedule-e/"><meta name="theme-color" content="#0d9488">
+<link rel="stylesheet" href="/sheet-and-flow/assets/style.css"><link rel="icon" href="/sheet-and-flow/assets/favicon.svg" type="image/svg+xml"><script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "How to Track Rental Income and Expenses by Schedule E Line (Free Spreadsheet Method)", "description": "A simple spreadsheet setup that sorts every rental transaction into its Schedule E line automatically, with the exact SUMIFS formulas.", "dateModified": "2026-09-24", "author": {"@type": "Organization", "name": "Sheet & Flow"}, "mainEntityOfPage": "https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/rental-income-expenses-schedule-e/"}</script></head>
+<body><a class="skip" href="#main">Skip to content</a>
+<header class="top"><div class="wrap"><a class="brand" href="/sheet-and-flow/">Sheet <span>&amp;</span> Flow</a>
+<nav><a href="/sheet-and-flow/#products">Products</a><a href="/sheet-and-flow/tutorials/">Tutorials</a><a href="/sheet-and-flow/tools/">Free tools</a></nav></div></header>
+<main id="main"><div class="wrap narrow"><article><h1>How to Track Rental Income and Expenses by Schedule E Line (Free Spreadsheet Method)</h1><div class="byline">Updated 2026-09-24 · Sheet & Flow</div><p>If you own a rental or two, the IRS wants your year summarized on <strong>Schedule E</strong>: rents received on line 3, then expenses on lines 5–19 (advertising, insurance, repairs, taxes and so on).</p>
+<p>The easiest way to get there is to decide the line <strong>when you record the transaction</strong>, not in a panic in March. This tutorial shows the three-part setup we use.</p>
+<h2>1. A category table that knows the Schedule E line</h2>
+<p>Make a tab called <code>Categories</code> with two columns: the category name you'll pick from a dropdown, and its line code.</p>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Line</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Rent</td>
+<td>Line 3</td>
+</tr>
+<tr>
+<td>Advertising</td>
+<td>Line 5</td>
+</tr>
+<tr>
+<td>Auto and travel</td>
+<td>Line 6</td>
+</tr>
+<tr>
+<td>Cleaning and maintenance</td>
+<td>Line 7</td>
+</tr>
+<tr>
+<td>Insurance</td>
+<td>Line 9</td>
+</tr>
+<tr>
+<td>Legal and professional fees</td>
+<td>Line 10</td>
+</tr>
+<tr>
+<td>Management fees</td>
+<td>Line 11</td>
+</tr>
+<tr>
+<td>Mortgage interest</td>
+<td>Line 12</td>
+</tr>
+<tr>
+<td>Repairs</td>
+<td>Line 14</td>
+</tr>
+<tr>
+<td>Supplies</td>
+<td>Line 15</td>
+</tr>
+<tr>
+<td>Taxes</td>
+<td>Line 16</td>
+</tr>
+<tr>
+<td>Utilities</td>
+<td>Line 17</td>
+</tr>
+<tr>
+<td>Capital improvement</td>
+<td>None</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Use text codes like <code>Line 9</code>, not bare numbers.</strong> A bare <code>9</code> can be stored as a number in one cell and as text in another, and then <code>SUMIFS</code> silently misses it. <code>Line 9</code> is always text.</p>
+<p>Capital improvements (a new roof, a new furnace) are not deducted on the expense lines; they are depreciated. Mark them <code>None</code> so they stay out of the totals and hand them to your preparer.</p>
+<h2>2. A transactions table</h2>
+<p>Put one row per payment in or out on a <code>Transactions</code> tab:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>A</th>
+<th>B</th>
+<th>C</th>
+<th>D</th>
+<th>E</th>
+<th>F</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Date</td>
+<td>Property</td>
+<td>Category</td>
+<td>Amount</td>
+<td>Line</td>
+<td>Year</td>
+</tr>
+<tr>
+<td>2</td>
+<td>2026-01-03</td>
+<td>Maple St</td>
+<td>Rent</td>
+<td>1450</td>
+<td><em>formula</em></td>
+<td><em>formula</em></td>
+</tr>
+</tbody>
+</table>
+<p>The two formula columns:</p>
+<pre><code>E2:  =IFERROR(VLOOKUP(C2, Categories!$A$2:$B$50, 2, FALSE), &quot;?&quot;)
+F2:  =YEAR(A2)
+</code></pre>
+<p>Fill them down. Any category typo shows as <code>?</code>, so you can spot it instantly. Add a dropdown to column C (<em>Data → Data validation → List from a range → Categories!A2:A50</em>) and typos mostly disappear.</p>
+<h2>3. The Schedule E summary</h2>
+<p>On a <code>Summary</code> tab, put property names across row 1 (B1, C1, …) and line codes down column A (A3, A4, …). One formula fills the whole grid:</p>
+<pre><code>=SUMIFS(Transactions!$D$2:$D$2000, Transactions!$B$2:$B$2000, B$1,
+        Transactions!$E$2:$E$2000, $A3, Transactions!$F$2:$F$2000, 2026)
+</code></pre>
+<p>The <code>$</code> signs are the whole trick. <code>B$1</code> keeps the row fixed so the property follows the column. <code>$A3</code> keeps the column fixed so the line follows the row. Copy it across and down.</p>
+<p>Total expenses (line 20) is the sum of the expense rows. Income or loss (line 21) is line 3 minus line 20.</p>
+<h2>Common mistakes</h2>
+<ul>
+<li><strong>Mixing the tax year.</strong> Always filter on the Year column, and start a fresh copy each January.</li>
+<li><strong>Recording loan payments as an expense.</strong> Only the <em>interest</em> part goes on line 12. The principal is not deductible.</li>
+<li><strong>Security deposits.</strong> A deposit you expect to return is not income when you receive it. Track deposits separately.</li>
+</ul>
+<h2>Want it done for you?</h2>
+<p>The <a href="https://onyxaholguin.gumroad.com/l/rental-property-tracker">Rental Property Tracker</a> is this exact method, built out and tested:</p>
+<ul>
+<li>10 properties and 2,000 transaction rows</li>
+<li>a rent roll with late-rent flags</li>
+<li>a deposit ledger, a mileage log and a dashboard</li>
+<li>a Schedule E summary with lines 3–21</li>
+</ul>
+<p><em>This is general information, not tax advice. Check the current IRS Schedule E instructions or ask a tax professional about your situation.</em></p><aside class="cta"><img src="/sheet-and-flow/assets/img/rental-property-tracker.webp" width="640" height="360" alt="Rental Property Tracker cover" loading="lazy">
+<div><h3>Rental Property Tracker</h3><p>Income, expenses, rent roll, deposits, mileage and a Schedule E summary for up to 10 properties.</p><a class="btn" href="https://onyxaholguin.gumroad.com/l/rental-property-tracker">Get it · $19</a></div></aside><p class="note">Written with AI assistance. Every formula, command and number on this page was tested before publishing (see each section). Product links go to our store.</p></article></div></main>
+<footer><div class="wrap"><p><strong>Sheet & Flow</strong> · Practical spreadsheets and n8n automations for landlords, freelancers and small teams.</p>
+<p><a href="/sheet-and-flow/about/">About</a><a href="/sheet-and-flow/affiliate-disclosure/">Affiliate disclosure</a><a href="/sheet-and-flow/privacy/">Privacy</a><a href="/sheet-and-flow/refunds/">Refunds</a><a href="https://onyxaholguin.gumroad.com">Store</a></p>
+<p>Questions about a purchase? Reply to your Gumroad receipt email.</p>
+<p>Content and products are built with AI assistance and tested before publishing. Some links may become affiliate links. Nothing here is tax, legal or financial advice. Not affiliated with n8n GmbH, Microsoft or Google.</p></div></footer>
+</body></html>

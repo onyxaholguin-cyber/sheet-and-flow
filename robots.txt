@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://onyxaholguin-cyber.github.io/sheet-and-flow/sitemap.xml

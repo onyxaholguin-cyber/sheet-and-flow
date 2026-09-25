@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Freelancer Taxes: A Simple Set-Aside Method and the 2026 Quarterly Due Dates | Sheet &amp; Flow</title><meta name="description" content="How much to move to a tax savings account each month, how the IRS estimated-tax periods really work (they are not calendar quarters), and a spreadsheet to track it.">
+<link rel="canonical" href="https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/freelancer-quarterly-tax-set-aside/"><meta property="og:title" content="Freelancer Taxes: A Simple Set-Aside Method and the 2026 Quarterly Due Dates | Sheet &amp; Flow"><meta property="og:description" content="How much to move to a tax savings account each month, how the IRS estimated-tax periods really work (they are not calendar quarters), and a spreadsheet to track it.">
+<meta property="og:type" content="website"><meta property="og:url" content="https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/freelancer-quarterly-tax-set-aside/"><meta name="theme-color" content="#0d9488">
+<link rel="stylesheet" href="/sheet-and-flow/assets/style.css"><link rel="icon" href="/sheet-and-flow/assets/favicon.svg" type="image/svg+xml"><script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Freelancer Taxes: A Simple Set-Aside Method and the 2026 Quarterly Due Dates", "description": "How much to move to a tax savings account each month, how the IRS estimated-tax periods really work (they are not calendar quarters), and a spreadsheet to track it.", "dateModified": "2026-09-24", "author": {"@type": "Organization", "name": "Sheet & Flow"}, "mainEntityOfPage": "https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/freelancer-quarterly-tax-set-aside/"}</script></head>
+<body><a class="skip" href="#main">Skip to content</a>
+<header class="top"><div class="wrap"><a class="brand" href="/sheet-and-flow/">Sheet <span>&amp;</span> Flow</a>
+<nav><a href="/sheet-and-flow/#products">Products</a><a href="/sheet-and-flow/tutorials/">Tutorials</a><a href="/sheet-and-flow/tools/">Free tools</a></nav></div></header>
+<main id="main"><div class="wrap narrow"><article><h1>Freelancer Taxes: A Simple Set-Aside Method and the 2026 Quarterly Due Dates</h1><div class="byline">Updated 2026-09-24 · Sheet & Flow</div><p>When you freelance, nobody withholds tax from your pay. The fix most freelancers settle on is boring and effective: <strong>every time you get paid, move a fixed percentage of profit to a separate savings account</strong>, then pay estimated tax from that account each quarter.</p>
+<h2>Step 1: Pick a set-aside percentage</h2>
+<p>Your real tax depends on income tax brackets, self-employment tax, deductions, state tax and your household. So there is no universal number.</p>
+<p>Many freelancers start with <strong>25–30% of profit</strong> and adjust after their first tax return. A tax professional can give you a number for your situation in one short meeting, and it's worth doing once.</p>
+<p>"Profit" means money received minus business expenses. It is not revenue.</p>
+<h2>Step 2: Know the estimated-tax periods</h2>
+<p>The IRS periods are <strong>not</strong> calendar quarters:</p>
+<table>
+<thead>
+<tr>
+<th>Period</th>
+<th>Covers</th>
+<th>Nominal due date</th>
+<th>2026/27 due date</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Jan 1 – Mar 31</td>
+<td>April 15</td>
+<td>Wed, Apr 15, 2026</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Apr 1 – May 31</td>
+<td>June 15</td>
+<td>Mon, Jun 15, 2026</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Jun 1 – Aug 31</td>
+<td>September 15</td>
+<td>Tue, Sep 15, 2026</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Sep 1 – Dec 31</td>
+<td>January 15 (next year)</td>
+<td>Fri, Jan 15, 2027</td>
+</tr>
+</tbody>
+</table>
+<p>Period 2 is only two months and period 4 is four months. When a due date lands on a weekend or holiday it moves to the next business day, so always confirm on irs.gov (Form 1040-ES).</p>
+<h2>Step 3: A worked example</h2>
+<p>Say that in period 3 (Jun–Aug) you were paid $14,000 and had $2,200 of business expenses.</p>
+<ul>
+<li>Profit = $14,000 − $2,200 = <strong>$11,800</strong></li>
+<li>Set-aside at 25% = <strong>$2,950</strong></li>
+</ul>
+<p>If you moved 25% of profit each time a payment arrived, the $2,950 is already sitting in the tax account on September 15.</p>
+<h2>Step 4: Track it in a spreadsheet</h2>
+<p>For each period, sum payments and expenses between the start and end dates:</p>
+<pre><code>E5 (profit):     =SUMIFS(Payments!$C:$C, Payments!$A:$A, &quot;&gt;=&quot;&amp;B5, Payments!$A:$A, &quot;&lt;=&quot;&amp;C5)
+                  - SUMIFS(Expenses!$G:$G, Expenses!$A:$A, &quot;&gt;=&quot;&amp;B5, Expenses!$A:$A, &quot;&lt;=&quot;&amp;C5)
+F5 (set-aside):  =MAX(0, E5) * $B$2
+</code></pre>
+<p>Here <code>Payments</code> has the date in column A and the amount in C. <code>Expenses</code> has the date in A and the deductible amount in G. <code>$B$2</code> holds your set-aside percentage.</p>
+<p><code>B5</code> and <code>C5</code> are the period's start and end dates. <code>MAX(0, …)</code> stops a loss-making period from producing a negative set-aside.</p>
+<p>Add columns for <em>estimated payment made</em> and <em>date paid</em> so you can see at a glance whether each period is covered.</p>
+<h2>Common mistakes</h2>
+<ul>
+<li><strong>Using revenue instead of profit.</strong> You over-save, which is safe but ties up cash.</li>
+<li><strong>Forgetting period 2 is short.</strong> June 15 arrives only two months after April 15.</li>
+<li><strong>Spending the tax account.</strong> Keep it at a different bank if you're tempted.</li>
+</ul>
+<h2>Done-for-you version</h2>
+<p>The <a href="https://onyxaholguin.gumroad.com/l/freelancer-finance-tracker">Freelancer Finance Tracker</a> includes:</p>
+<ul>
+<li>a Quarterly Set-Aside tab with these periods and your own percentage</li>
+<li>invoices with overdue tracking, AR aging by client, expenses by Schedule C line</li>
+<li>a dashboard</li>
+</ul>
+<p><em>Not tax advice. The spreadsheet applies your own percentage; it does not calculate your tax.</em></p><aside class="cta"><img src="/sheet-and-flow/assets/img/freelancer-finance-tracker.webp" width="640" height="360" alt="Freelancer Finance Tracker cover" loading="lazy">
+<div><h3>Freelancer Finance Tracker</h3><p>Invoices, partial payments, AR aging, quarterly tax set-aside and a Schedule C summary.</p><a class="btn" href="https://onyxaholguin.gumroad.com/l/freelancer-finance-tracker">Get it · $15</a></div></aside><p class="note">Written with AI assistance. Every formula, command and number on this page was tested before publishing (see each section). Product links go to our store.</p></article></div></main>
+<footer><div class="wrap"><p><strong>Sheet & Flow</strong> · Practical spreadsheets and n8n automations for landlords, freelancers and small teams.</p>
+<p><a href="/sheet-and-flow/about/">About</a><a href="/sheet-and-flow/affiliate-disclosure/">Affiliate disclosure</a><a href="/sheet-and-flow/privacy/">Privacy</a><a href="/sheet-and-flow/refunds/">Refunds</a><a href="https://onyxaholguin.gumroad.com">Store</a></p>
+<p>Questions about a purchase? Reply to your Gumroad receipt email.</p>
+<p>Content and products are built with AI assistance and tested before publishing. Some links may become affiliate links. Nothing here is tax, legal or financial advice. Not affiliated with n8n GmbH, Microsoft or Google.</p></div></footer>
+</body></html>

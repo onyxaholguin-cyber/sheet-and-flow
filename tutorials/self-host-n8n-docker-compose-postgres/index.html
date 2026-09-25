@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Self-Host n8n with Docker Compose, PostgreSQL and Automatic HTTPS (2026 Guide) | Sheet &amp; Flow</title><meta name="description" content="A production-grade n8n 2.x setup on one small server, with Postgres 17, Caddy for HTTPS, a pinned version, and the three settings that trip people up in n8n 2.x.">
+<link rel="canonical" href="https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/self-host-n8n-docker-compose-postgres/"><meta property="og:title" content="Self-Host n8n with Docker Compose, PostgreSQL and Automatic HTTPS (2026 Guide) | Sheet &amp; Flow"><meta property="og:description" content="A production-grade n8n 2.x setup on one small server, with Postgres 17, Caddy for HTTPS, a pinned version, and the three settings that trip people up in n8n 2.x.">
+<meta property="og:type" content="website"><meta property="og:url" content="https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/self-host-n8n-docker-compose-postgres/"><meta name="theme-color" content="#0d9488">
+<link rel="stylesheet" href="/sheet-and-flow/assets/style.css"><link rel="icon" href="/sheet-and-flow/assets/favicon.svg" type="image/svg+xml"><script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Self-Host n8n with Docker Compose, PostgreSQL and Automatic HTTPS (2026 Guide)", "description": "A production-grade n8n 2.x setup on one small server, with Postgres 17, Caddy for HTTPS, a pinned version, and the three settings that trip people up in n8n 2.x.", "dateModified": "2026-09-24", "author": {"@type": "Organization", "name": "Sheet & Flow"}, "mainEntityOfPage": "https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/self-host-n8n-docker-compose-postgres/"}</script></head>
+<body><a class="skip" href="#main">Skip to content</a>
+<header class="top"><div class="wrap"><a class="brand" href="/sheet-and-flow/">Sheet <span>&amp;</span> Flow</a>
+<nav><a href="/sheet-and-flow/#products">Products</a><a href="/sheet-and-flow/tutorials/">Tutorials</a><a href="/sheet-and-flow/tools/">Free tools</a></nav></div></header>
+<main id="main"><div class="wrap narrow"><article><h1>Self-Host n8n with Docker Compose, PostgreSQL and Automatic HTTPS (2026 Guide)</h1><div class="byline">Updated 2026-09-24 · Sheet & Flow</div><p>Running n8n yourself is cheap and gives you full control. The default "quick start" (SQLite, no HTTPS, <code>latest</code> tag) is fine for a test, but not for workflows your business depends on.</p>
+<p>This is the setup we tested end to end with <strong>n8n 2.40.6</strong>.</p>
+<h2>What you need</h2>
+<ul>
+<li>A Linux server with 2 GB of RAM. Most €5–10/month VPS plans are enough for a small team.</li>
+<li>Docker with the Compose plugin. Check with <code>docker compose version</code>.</li>
+<li>A subdomain such as <code>n8n.example.com</code> with an <strong>A record pointing at the server</strong>.</li>
+<li>Ports <strong>80 and 443</strong> open. Caddy needs both to get the certificate.</li>
+</ul>
+<p>(Prefer not to run a server? <a href="https://n8n.io">n8n Cloud</a> is the hosted option.)</p>
+<h2>The three files</h2>
+<p>Generate them with the free <a href="/sheet-and-flow/tools/n8n-compose-generator/">n8n Docker Compose generator</a>. It creates the database password and encryption key in your browser. Or write them by hand:</p>
+<ul>
+<li><strong><code>docker-compose.yml</code></strong> has three services:</li>
+<li><code>postgres:17-alpine</code> with a health check</li>
+<li><code>docker.n8n.io/n8nio/n8n:&lt;exact version&gt;</code>, which waits for Postgres to be healthy</li>
+<li><code>caddy:2-alpine</code>, which publishes 80/443 and proxies to <code>n8n:5678</code></li>
+<li><strong><code>.env</code></strong> holds the domain, email, timezone, version, database password and <strong><code>N8N_ENCRYPTION_KEY</code></strong>.</li>
+<li><strong><code>Caddyfile</code></strong> is a few lines: your email, your domain and <code>reverse_proxy n8n:5678</code>. Caddy obtains and renews the Let's Encrypt certificate automatically.</li>
+</ul>
+<p>Then:</p>
+<pre><code>chmod 600 .env
+mkdir -p local-files
+docker compose up -d
+docker compose ps        # wait until n8n shows (healthy)
+</code></pre>
+<p>Open <code>https://n8n.example.com</code> and create the owner account.</p>
+<h2>The n8n 2.x settings that matter</h2>
+<p>We found these while testing on 2.40.6:</p>
+<ol>
+<li><strong>Use PostgreSQL 17 or newer.</strong> With Postgres 16, n8n 2.40 logs "Postgres 16 is outside the supported range and receives compatibility support only."</li>
+<li><strong>The Read/Write Files node is sandboxed.</strong> n8n 2.x only allows folders listed in <code>N8N_RESTRICT_FILE_ACCESS_TO</code>. Set it to <code>/files</code>, mount <code>./local-files:/files</code>, and create subfolders before writing to them. Otherwise you get "Access to the file is not allowed".</li>
+<li><strong>Set the URL variables behind a proxy.</strong> Set <code>N8N_HOST</code>, <code>N8N_PROTOCOL=https</code>, <code>WEBHOOK_URL=https://your-domain/</code> and <code>N8N_PROXY_HOPS=1</code>. Without them, webhook URLs show <code>localhost:5678</code>.</li>
+</ol>
+<p>Also worth setting:</p>
+<ul>
+<li><code>EXECUTIONS_DATA_PRUNE=true</code> with a max age, so the database doesn't grow forever</li>
+<li><code>GENERIC_TIMEZONE</code>, so Schedule triggers fire at the times you expect</li>
+</ul>
+<h2>Pin the version</h2>
+<p>Use an exact tag like <code>2.40.6</code>, never <code>latest</code>. To upgrade:</p>
+<ol>
+<li>Read the release notes.</li>
+<li>Take a backup.</li>
+<li>Change the version in <code>.env</code>.</li>
+<li>Run <code>docker compose pull n8n &amp;&amp; docker compose up -d n8n</code>.</li>
+</ol>
+<p>Don't downgrade without restoring the pre-upgrade backup, because newer versions may migrate the database.</p>
+<h2>Save the encryption key now</h2>
+<p>Every credential you store in n8n is encrypted with <code>N8N_ENCRYPTION_KEY</code>. <strong>A database backup without the key cannot decrypt a single credential.</strong> Put the key in your password manager today. The next tutorial covers <a href="/sheet-and-flow/tutorials/backup-n8n-properly/">how to back up n8n properly</a>.</p>
+<h2>Done-for-you version</h2>
+<p>The <a href="https://onyxaholguin.gumroad.com/l/n8n-self-hosting-kit">n8n Production Self-Hosting Kit</a> is this setup plus a set of tested scripts:</p>
+<ul>
+<li><code>setup.sh</code>, which generates secrets and never overwrites an existing key</li>
+<li>encrypted <code>backup.sh</code></li>
+<li><code>restore.sh</code>, which refuses a mismatched key</li>
+<li>a restore drill that proves your credentials decrypt</li>
+<li>a safe <code>upgrade.sh</code></li>
+<li>a health check</li>
+</ul>
+<p>We tested it by wiping every volume and restoring.</p>
+<p><em>Not affiliated with n8n GmbH.</em></p><aside class="cta"><img src="/sheet-and-flow/assets/img/n8n-self-hosting-kit.webp" width="640" height="360" alt="n8n Production Self-Hosting Kit cover" loading="lazy">
+<div><h3>n8n Production Self-Hosting Kit</h3><p>Docker Compose + Postgres 17 + HTTPS, with encrypted backups, a restore drill and safe upgrades.</p><a class="btn" href="https://onyxaholguin.gumroad.com/l/n8n-self-hosting-kit">Get it · $29</a></div></aside><p>Free tool: <a href="/sheet-and-flow/tools/n8n-compose-generator/">n8n Docker Compose Generator (Postgres + HTTPS)</a></p><p class="note">Written with AI assistance. Every formula, command and number on this page was tested before publishing (see each section). Product links go to our store.</p></article></div></main>
+<footer><div class="wrap"><p><strong>Sheet & Flow</strong> · Practical spreadsheets and n8n automations for landlords, freelancers and small teams.</p>
+<p><a href="/sheet-and-flow/about/">About</a><a href="/sheet-and-flow/affiliate-disclosure/">Affiliate disclosure</a><a href="/sheet-and-flow/privacy/">Privacy</a><a href="/sheet-and-flow/refunds/">Refunds</a><a href="https://onyxaholguin.gumroad.com">Store</a></p>
+<p>Questions about a purchase? Reply to your Gumroad receipt email.</p>
+<p>Content and products are built with AI assistance and tested before publishing. Some links may become affiliate links. Nothing here is tax, legal or financial advice. Not affiliated with n8n GmbH, Microsoft or Google.</p></div></footer>
+</body></html>

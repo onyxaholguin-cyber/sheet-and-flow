@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Build a Rent Roll That Flags Late Rent Automatically (Plus a Deposit Ledger) | Sheet &amp; Flow</title><meta name="description" content="Spreadsheet formulas for a rent roll that shows Paid, Partial, Due and LATE for each unit, and a security deposit ledger that always balances.">
+<link rel="canonical" href="https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/rent-roll-late-rent-deposits/"><meta property="og:title" content="Build a Rent Roll That Flags Late Rent Automatically (Plus a Deposit Ledger) | Sheet &amp; Flow"><meta property="og:description" content="Spreadsheet formulas for a rent roll that shows Paid, Partial, Due and LATE for each unit, and a security deposit ledger that always balances.">
+<meta property="og:type" content="website"><meta property="og:url" content="https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/rent-roll-late-rent-deposits/"><meta name="theme-color" content="#0d9488">
+<link rel="stylesheet" href="/sheet-and-flow/assets/style.css"><link rel="icon" href="/sheet-and-flow/assets/favicon.svg" type="image/svg+xml"><script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Build a Rent Roll That Flags Late Rent Automatically (Plus a Deposit Ledger)", "description": "Spreadsheet formulas for a rent roll that shows Paid, Partial, Due and LATE for each unit, and a security deposit ledger that always balances.", "dateModified": "2026-09-24", "author": {"@type": "Organization", "name": "Sheet & Flow"}, "mainEntityOfPage": "https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/rent-roll-late-rent-deposits/"}</script></head>
+<body><a class="skip" href="#main">Skip to content</a>
+<header class="top"><div class="wrap"><a class="brand" href="/sheet-and-flow/">Sheet <span>&amp;</span> Flow</a>
+<nav><a href="/sheet-and-flow/#products">Products</a><a href="/sheet-and-flow/tutorials/">Tutorials</a><a href="/sheet-and-flow/tools/">Free tools</a></nav></div></header>
+<main id="main"><div class="wrap narrow"><article><h1>Build a Rent Roll That Flags Late Rent Automatically (Plus a Deposit Ledger)</h1><div class="byline">Updated 2026-09-24 · Sheet & Flow</div><p>A rent roll answers one question every month: <strong>who hasn't paid?</strong> Here's a version that answers it by itself, using nothing but standard formulas that work in Excel and Google Sheets.</p>
+<h2>The layout</h2>
+<p>A <code>Rent Roll</code> tab with one row per lease:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>A</th>
+<th>B</th>
+<th>C</th>
+<th>D</th>
+<th>E</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Unit</td>
+<td>Tenant</td>
+<td>Monthly rent</td>
+<td>Received this month</td>
+<td>Status</td>
+</tr>
+<tr>
+<td>2</td>
+<td>1A</td>
+<td>Rivera</td>
+<td>1450</td>
+<td><em>formula</em></td>
+<td><em>formula</em></td>
+</tr>
+</tbody>
+</table>
+<p>Put three settings somewhere at the top right:</p>
+<ul>
+<li><code>H1</code>: <strong>As-of date</strong>. Use <code>=TODAY()</code>, or type a date to check a past month.</li>
+<li><code>H2</code>: <strong>Due day</strong> (e.g., <code>1</code>).</li>
+<li><code>H3</code>: <strong>Grace days</strong> (e.g., <code>5</code>).</li>
+</ul>
+<p>Rent payments live in your <code>Transactions</code> tab: date in column A, unit in column B, category in C, amount in D.</p>
+<h2>Received this month</h2>
+<pre><code>D2: =SUMIFS(Transactions!$D:$D, Transactions!$B:$B, A2, Transactions!$C:$C, &quot;Rent&quot;,
+            Transactions!$A:$A, &quot;&gt;=&quot;&amp;DATE(YEAR($H$1),MONTH($H$1),1),
+            Transactions!$A:$A, &quot;&lt;=&quot;&amp;EOMONTH($H$1,0))
+</code></pre>
+<p>It sums every <em>Rent</em> payment for this unit dated inside the as-of month.</p>
+<h2>The status formula</h2>
+<pre><code>E2: =IF(D2&gt;=C2, &quot;Paid&quot;,
+     IF($H$1&gt;DATE(YEAR($H$1),MONTH($H$1),$H$2+$H$3),
+        IF(D2&gt;0, &quot;Partial - LATE&quot;, &quot;LATE&quot;),
+        IF(D2&gt;0, &quot;Partial&quot;, &quot;Due&quot;)))
+</code></pre>
+<p>Read it top to bottom:</p>
+<ul>
+<li>Fully paid → <strong>Paid</strong>.</li>
+<li>Otherwise, if we're past the due day plus grace days → <strong>LATE</strong> (or <strong>Partial - LATE</strong> if some money came in).</li>
+<li>Otherwise, still inside the grace period → <strong>Due</strong> or <strong>Partial</strong>.</li>
+</ul>
+<p>Add conditional formatting: red when the cell contains "LATE", green for "Paid".</p>
+<p><strong>Use an as-of cell instead of <code>TODAY()</code> inside the formula.</strong> You can then type any date into <code>H1</code> to see how the roll looked on the 10th of last month, which is handy for disputes.</p>
+<h2>A deposit ledger that always balances</h2>
+<p>A <code>Deposits</code> tab with one row per tenant:</p>
+<table>
+<thead>
+<tr>
+<th>Tenant</th>
+<th>Received</th>
+<th>Refunded</th>
+<th>Kept (deductions)</th>
+<th>Still held</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Rivera</td>
+<td>1450</td>
+<td></td>
+<td></td>
+<td><code>=B2-N(C2)-N(D2)</code></td>
+</tr>
+</tbody>
+</table>
+<p><code>N()</code> treats empty cells as zero, so the formula works before anything is refunded. Add a total with <code>=SUM(E2:E100)</code> and compare it with the balance of the account where you actually keep deposits. Some states require a separate account and charge penalties for missing deadlines, so write the return deadline next to each move-out.</p>
+<h2>Common mistakes</h2>
+<ul>
+<li><strong>Leases that change mid-month.</strong> Give each lease its own row with start and end dates, and only count months inside the lease.</li>
+<li><strong>Late fees counted as rent.</strong> Use a separate <em>Late fee</em> category. Otherwise a tenant who paid a fee but not the rent shows as "Paid".</li>
+</ul>
+<h2>Done-for-you version</h2>
+<p>The <a href="https://onyxaholguin.gumroad.com/l/rental-property-tracker">Rental Property Tracker</a> has this rent roll built for 50 leases:</p>
+<ul>
+<li>lease start and end dates</li>
+<li>12 monthly columns</li>
+<li>year-to-date expected vs. received</li>
+<li>the deposit ledger, linked to a dashboard and Schedule E summary</li>
+</ul>
+<p><em>General information only. Landlord-tenant rules vary by state and city.</em></p><aside class="cta"><img src="/sheet-and-flow/assets/img/rental-property-tracker.webp" width="640" height="360" alt="Rental Property Tracker cover" loading="lazy">
+<div><h3>Rental Property Tracker</h3><p>Income, expenses, rent roll, deposits, mileage and a Schedule E summary for up to 10 properties.</p><a class="btn" href="https://onyxaholguin.gumroad.com/l/rental-property-tracker">Get it · $19</a></div></aside><p class="note">Written with AI assistance. Every formula, command and number on this page was tested before publishing (see each section). Product links go to our store.</p></article></div></main>
+<footer><div class="wrap"><p><strong>Sheet & Flow</strong> · Practical spreadsheets and n8n automations for landlords, freelancers and small teams.</p>
+<p><a href="/sheet-and-flow/about/">About</a><a href="/sheet-and-flow/affiliate-disclosure/">Affiliate disclosure</a><a href="/sheet-and-flow/privacy/">Privacy</a><a href="/sheet-and-flow/refunds/">Refunds</a><a href="https://onyxaholguin.gumroad.com">Store</a></p>
+<p>Questions about a purchase? Reply to your Gumroad receipt email.</p>
+<p>Content and products are built with AI assistance and tested before publishing. Some links may become affiliate links. Nothing here is tax, legal or financial advice. Not affiliated with n8n GmbH, Microsoft or Google.</p></div></footer>
+</body></html>

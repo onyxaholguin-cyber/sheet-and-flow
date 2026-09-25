@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>n8n Docker Compose Generator (Postgres + HTTPS) | Sheet &amp; Flow</title><meta name="description" content="Generate a production docker-compose.yml, .env with a strong encryption key, and Caddyfile for self-hosting n8n 2.x. Runs entirely in your browser.">
+<link rel="canonical" href="https://onyxaholguin-cyber.github.io/sheet-and-flow/tools/n8n-compose-generator/"><meta property="og:title" content="n8n Docker Compose Generator (Postgres + HTTPS) | Sheet &amp; Flow"><meta property="og:description" content="Generate a production docker-compose.yml, .env with a strong encryption key, and Caddyfile for self-hosting n8n 2.x. Runs entirely in your browser.">
+<meta property="og:type" content="website"><meta property="og:url" content="https://onyxaholguin-cyber.github.io/sheet-and-flow/tools/n8n-compose-generator/"><meta name="theme-color" content="#0d9488">
+<link rel="stylesheet" href="/sheet-and-flow/assets/style.css"><link rel="icon" href="/sheet-and-flow/assets/favicon.svg" type="image/svg+xml"></head>
+<body><a class="skip" href="#main">Skip to content</a>
+<header class="top"><div class="wrap"><a class="brand" href="/sheet-and-flow/">Sheet <span>&amp;</span> Flow</a>
+<nav><a href="/sheet-and-flow/#products">Products</a><a href="/sheet-and-flow/tutorials/">Tutorials</a><a href="/sheet-and-flow/tools/">Free tools</a></nav></div></header>
+<main id="main"><div class="wrap narrow"><article>
+<h1>n8n Docker Compose Generator</h1>
+<p class="byline">Generates a production <code>docker-compose.yml</code> (n8n + PostgreSQL 17 + Caddy for automatic HTTPS), a <code>.env</code> with strong random secrets, and a <code>Caddyfile</code>. Secrets are created in your browser with <code>crypto.getRandomValues</code> and are never sent anywhere.</p>
+<div class="tool">
+<form id="gen" class="form" novalidate>
+<label>Domain for n8n<input name="domain" type="text" autocomplete="off" placeholder="n8n.example.com" value="n8n.example.com"></label>
+<label>Email (Let's Encrypt notices)<input name="email" type="email" placeholder="you@example.com" value="you@example.com"></label>
+<label>Timezone (IANA)<input name="timezone" type="text" value="America/New_York"></label>
+<label>n8n version (pin exactly)<input name="version" type="text" value="2.40.6"></label>
+<label>Delete execution data after (hours)<input name="pruneHours" type="number" min="1" step="1" value="336"></label>
+<label>Allow the <code>tls</code> module in Code nodes<select name="allowTls"><option value="">No</option><option value="1">Yes (needed for SSL-expiry checks)</option></select></label>
+</form>
+<p><button type="button" class="btn" id="gen-go">Generate files</button></p>
+<p id="gen-err" class="err" role="alert"></p>
+<div id="gen-out" hidden>
+<blockquote><strong>Save your encryption key now.</strong> Copy the <code>N8N_ENCRYPTION_KEY</code> line from <code>.env</code> into your password manager. If you lose it, every saved credential in your backups is unreadable. The key starts and ends with <code id="gen-fp"></code>. Clicking Generate again creates new secrets.</blockquote>
+<h3>.env</h3><textarea id="out-env" readonly spellcheck="false"></textarea><p><button type="button" class="btn alt" data-copy="out-env">Copy</button> <button type="button" class="btn alt" data-dl="out-env" data-name=".env">Download</button></p>
+<h3>docker-compose.yml</h3><textarea id="out-compose" readonly spellcheck="false"></textarea><p><button type="button" class="btn alt" data-copy="out-compose">Copy</button> <button type="button" class="btn alt" data-dl="out-compose" data-name="docker-compose.yml">Download</button></p>
+<h3>Caddyfile</h3><textarea id="out-caddy" readonly spellcheck="false"></textarea><p><button type="button" class="btn alt" data-copy="out-caddy">Copy</button> <button type="button" class="btn alt" data-dl="out-caddy" data-name="Caddyfile">Download</button></p>
+</div>
+</div>
+<h2>Using the files</h2>
+<ol>
+<li>Point a DNS A record for your domain at the server. Open ports 80 and 443.</li>
+<li>Put the three files in one folder, e.g. <code>~/n8n</code>, and run <code>chmod 600 .env</code>.</li>
+<li>Run <code>docker compose up -d</code>, then open <code>https://your-domain</code> and create the owner account.</li>
+<li>Set up backups <em>before</em> you build workflows: <a href="/sheet-and-flow/tutorials/backup-n8n-properly/">How to back up n8n properly</a>.</li>
+</ol>
+<p>Full walkthrough: <a href="/sheet-and-flow/tutorials/self-host-n8n-docker-compose-postgres/">Self-host n8n with Docker Compose, Postgres and HTTPS</a>. Output of this generator was checked with <code>docker compose config</code> and <code>caddy validate</code>.</p>
+<aside class="cta"><img src="/sheet-and-flow/assets/img/n8n-self-hosting-kit.webp" width="640" height="360" alt="n8n Self-Hosting Kit cover" loading="lazy"><div><h3>Want backups, restore and upgrades handled?</h3><p>The Self-Hosting Kit adds one-command setup, encrypted off-site backups, a restore drill that proves your backups work, and upgrades that roll back on failure.</p><a class="btn" href="https://onyxaholguin.gumroad.com/l/n8n-self-hosting-kit">n8n Self-Hosting Kit · $29</a></div></aside>
+<p class="note">Not affiliated with n8n GmbH. n8n is a trademark of its owner. Prefer not to run a server? n8n Cloud is the hosted option (<a href="https://n8n.io">n8n.io</a>).</p>
+</article></div>
+<script src="/sheet-and-flow/assets/compose-gen.js"></script><script src="/sheet-and-flow/assets/compose-ui.js"></script>
+</main>
+<footer><div class="wrap"><p><strong>Sheet & Flow</strong> · Practical spreadsheets and n8n automations for landlords, freelancers and small teams.</p>
+<p><a href="/sheet-and-flow/about/">About</a><a href="/sheet-and-flow/affiliate-disclosure/">Affiliate disclosure</a><a href="/sheet-and-flow/privacy/">Privacy</a><a href="/sheet-and-flow/refunds/">Refunds</a><a href="https://onyxaholguin.gumroad.com">Store</a></p>
+<p>Questions about a purchase? Reply to your Gumroad receipt email.</p>
+<p>Content and products are built with AI assistance and tested before publishing. Some links may become affiliate links. Nothing here is tax, legal or financial advice. Not affiliated with n8n GmbH, Microsoft or Google.</p></div></footer>
+</body></html>
