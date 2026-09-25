@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>n8n Workflow Checker: Pasted Secrets, Open Webhooks, Silent Failures | Sheet &amp; Flow</title><meta name="description" content="Paste an n8n workflow JSON to find pasted API keys, webhooks without auth, missing error workflows, swallowed errors and pinned data. Runs in your browser.">
+<link rel="canonical" href="https://onyxaholguin-cyber.github.io/sheet-and-flow/tools/n8n-workflow-audit/"><meta property="og:title" content="n8n Workflow Checker: Pasted Secrets, Open Webhooks, Silent Failures | Sheet &amp; Flow"><meta property="og:description" content="Paste an n8n workflow JSON to find pasted API keys, webhooks without auth, missing error workflows, swallowed errors and pinned data. Runs in your browser.">
+<meta property="og:type" content="website"><meta property="og:url" content="https://onyxaholguin-cyber.github.io/sheet-and-flow/tools/n8n-workflow-audit/"><meta name="theme-color" content="#0d9488">
+<link rel="stylesheet" href="/sheet-and-flow/assets/style.css"><link rel="icon" href="/sheet-and-flow/assets/favicon.svg" type="image/svg+xml"></head>
+<body><a class="skip" href="#main">Skip to content</a>
+<header class="top"><div class="wrap"><a class="brand" href="/sheet-and-flow/">Sheet <span>&amp;</span> Flow</a>
+<nav><a href="/sheet-and-flow/#products">Products</a><a href="/sheet-and-flow/tutorials/">Tutorials</a><a href="/sheet-and-flow/tools/">Free tools</a></nav></div></header>
+<main id="main"><div class="wrap narrow"><article>
+<h1>n8n Workflow Checker: Find Pasted Secrets, Open Webhooks and Silent Failures</h1>
+<p class="byline">Paste an exported n8n workflow (or choose the .json file). It is checked in your browser; nothing is uploaded.</p>
+<div class="tool">
+<p style="margin:0 0 8px"><label for="na-file"><strong>Workflow JSON</strong></label> <input id="na-file" type="file" accept=".json,application/json"> <button type="button" id="na-sample" class="btn alt" style="padding:4px 10px">Load a risky example</button></p>
+<textarea id="na-json" spellcheck="false" aria-label="Workflow JSON" placeholder='{"name": "My workflow", "nodes": [...], "connections": {...}}'></textarea>
+<p id="na-err" class="err" role="alert"></p>
+<div id="na-out" aria-live="polite"></div>
+</div>
+<h2>What it checks</h2>
+<ul>
+<li><strong>Secrets pasted into nodes</strong>: API keys, bearer tokens, Slack/Discord webhook URLs, private keys, passwords in URLs, literal auth headers and keys hard-coded in Code nodes. They travel in plain text with every export, Git backup and shared template. Matches are shown redacted.</li>
+<li><strong>Webhooks without authentication</strong>, and <strong>no error workflow</strong> on workflows that run on a schedule, webhook or app trigger.</li>
+<li><strong>Swallowed errors</strong> (On Error: Continue) and error outputs that are not connected.</li>
+<li><strong>Pinned test data</strong>, orphan and disabled nodes, disabled TLS checks, plain-HTTP calls and HTTP Request nodes without Retry On Fail.</li>
+</ul>
+<p>How to get the JSON: in the n8n editor use <strong>⋯ &gt; Download</strong>, or select all nodes and copy (Ctrl/Cmd+C) and paste here. For many workflows at once, run <code>n8n export:workflow --all --output=workflows.json</code> and choose that file.</p>
+<h2>Run it in CI</h2>
+<p>The same checks are available as a zero-dependency CLI and GitHub Action, so every workflow backup pushed to Git gets audited: <a href="https://github.com/onyxaholguin-cyber/n8n-workflow-audit">n8n-workflow-audit on GitHub</a> (MIT).</p>
+<pre><code>npx --yes github:onyxaholguin-cyber/n8n-workflow-audit ./workflows</code></pre>
+<h2>Fix what it finds</h2>
+<ul>
+<li><a href="/sheet-and-flow/tutorials/n8n-error-alert-workflow/">Set up an n8n error alert workflow</a></li>
+<li><a href="/sheet-and-flow/tutorials/backup-n8n-properly/">Back up n8n properly, including the encryption key</a></li>
+<li><a href="/sheet-and-flow/tutorials/self-host-n8n-docker-compose-postgres/">Self-host n8n with Docker Compose and Postgres</a></li>
+</ul>
+<aside class="cta"><img src="/sheet-and-flow/assets/img/n8n-reliability-pack.webp" width="640" height="360" alt="n8n Reliability Workflow Pack cover" loading="lazy"><div><h3>n8n Reliability Workflow Pack</h3><p>Error alerts with dedupe, GitHub and disk backups, uptime/SSL monitor and a weekly failure report.</p><a class="btn" href="https://onyxaholguin.gumroad.com/l/n8n-reliability-pack">Get it · $19</a></div></aside>
+<p class="note">Static analysis only; it never connects to your n8n instance. A clean result does not prove a workflow is secure. Built with AI assistance; the rules are covered by automated tests and were run against 99 public n8n.io templates with no false secret errors. Not affiliated with n8n GmbH.</p>
+</article></div>
+<script src="/sheet-and-flow/assets/n8n-audit.js"></script><script src="/sheet-and-flow/assets/n8n-audit-ui.js"></script>
+</main>
+<footer><div class="wrap"><p><strong>Sheet & Flow</strong> · Practical spreadsheets and n8n automations for landlords, freelancers and small teams.</p>
+<p><a href="/sheet-and-flow/about/">About</a><a href="/sheet-and-flow/affiliate-disclosure/">Affiliate disclosure</a><a href="/sheet-and-flow/privacy/">Privacy</a><a href="/sheet-and-flow/refunds/">Refunds</a><a href="https://onyxaholguin.gumroad.com">Store</a></p>
+<p>Questions about a purchase? Reply to your Gumroad receipt email.</p>
+<p>Content and products are built with AI assistance and tested before publishing. Some links may become affiliate links. Nothing here is tax, legal or financial advice. Not affiliated with n8n GmbH, Microsoft or Google.</p></div></footer>
+</body></html>

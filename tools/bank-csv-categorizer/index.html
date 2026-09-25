@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Bank CSV Categorizer for Schedule E and Schedule C | Sheet &amp; Flow</title><meta name="description" content="Turn a bank or card CSV into categorized rows for landlord (Schedule E) or freelancer (Schedule C) spreadsheets. Runs in your browser; nothing is uploaded.">
+<link rel="canonical" href="https://onyxaholguin-cyber.github.io/sheet-and-flow/tools/bank-csv-categorizer/"><meta property="og:title" content="Bank CSV Categorizer for Schedule E and Schedule C | Sheet &amp; Flow"><meta property="og:description" content="Turn a bank or card CSV into categorized rows for landlord (Schedule E) or freelancer (Schedule C) spreadsheets. Runs in your browser; nothing is uploaded.">
+<meta property="og:type" content="website"><meta property="og:url" content="https://onyxaholguin-cyber.github.io/sheet-and-flow/tools/bank-csv-categorizer/"><meta name="theme-color" content="#0d9488">
+<link rel="stylesheet" href="/sheet-and-flow/assets/style.css"><link rel="icon" href="/sheet-and-flow/assets/favicon.svg" type="image/svg+xml"></head>
+<body><a class="skip" href="#main">Skip to content</a>
+<header class="top"><div class="wrap"><a class="brand" href="/sheet-and-flow/">Sheet <span>&amp;</span> Flow</a>
+<nav><a href="/sheet-and-flow/#products">Products</a><a href="/sheet-and-flow/tutorials/">Tutorials</a><a href="/sheet-and-flow/tools/">Free tools</a></nav></div></header>
+<main id="main"><div class="wrap narrow"><article>
+<h1>Bank CSV Categorizer for Schedule E and Schedule C</h1>
+<p class="byline">Turn a bank or card CSV export into categorized rows you can paste into a landlord or freelancer spreadsheet. It runs in your browser; your file is never uploaded anywhere.</p>
+<div class="tool">
+<form id="bc" class="form" novalidate onsubmit="return false">
+<label>Mode<select name="mode"><option value="landlord">Landlord (Schedule E)</option><option value="freelancer">Freelancer (Schedule C)</option></select></label>
+<label>Property name (landlord)<input name="property" type="text" placeholder="e.g. Maple Duplex"></label>
+<label>Date order<select name="dateOrder"><option value="mdy">MM/DD/YYYY (US)</option><option value="dmy">DD/MM/YYYY</option></select></label>
+<label>Charges are positive<select name="flipSign"><option value="">No (bank style: charges negative)</option><option value="1">Yes (many card exports)</option></select></label>
+</form>
+<p style="margin:14px 0 6px"><label for="bc-file"><strong>1. Choose your CSV</strong></label> <input id="bc-file" type="file" accept=".csv,text/csv,text/plain"> or paste it below. <button type="button" id="bc-sample" class="btn alt" style="padding:4px 10px">Load sample</button></p>
+<textarea id="bc-csv" spellcheck="false" aria-label="CSV contents" placeholder="Date,Description,Amount&#10;09/01/2026,ZELLE PAYMENT FROM J RIVERA,1450.00&#10;09/04/2026,THE HOME DEPOT #1234,-86.43"></textarea>
+<details style="margin-top:10px"><summary><strong>2. Rules (optional)</strong>: edit keyword rules; the first match wins</summary>
+<p style="font-size:.9rem;color:var(--mute)">One rule per line: <code>out: keyword|another keyword =&gt; Category</code>. Use <code>in:</code> for money in, <code>out:</code> for money out, <code>any:</code> for both. Categories must match the list for the mode. Your edits are kept in this browser only.</p>
+<textarea id="bc-rules" spellcheck="false" aria-label="Rules" style="min-height:160px"></textarea>
+<p><button type="button" id="bc-reset" class="btn alt" style="padding:4px 10px">Reset to default rules</button> <span id="bc-rule-err" class="err"></span></p>
+</details>
+<p id="bc-err" class="err" role="alert"></p>
+<div id="bc-out" hidden>
+<div class="results" id="bc-kpis"></div>
+<h3>3. Copy into your spreadsheet</h3>
+<p id="bc-hint"></p>
+<p><button type="button" id="bc-copy" class="btn">Copy rows</button> <button type="button" id="bc-dl" class="btn alt">Download CSV</button> <span id="bc-copied" style="color:var(--mute)"></span></p>
+<h3>Totals by tax line</h3>
+<div style="overflow-x:auto"><table id="bc-sum" class="bc-table"></table></div>
+<h3>Rows</h3>
+<p style="font-size:.9rem;color:var(--mute)">Blank category = no rule matched. Fill it in after pasting, or add a rule above.</p>
+<div style="overflow-x:auto;max-height:480px"><table id="bc-rows" class="bc-table"></table></div>
+</div>
+</div>
+<h2>How it works</h2>
+<ul>
+<li>Finds the Date, Description and Amount (or Debit/Credit) columns automatically, even with a few lines of account info above the header. Handles quoted fields, semicolon or tab separators, <code>$1,234.56</code>, <code>(45.10)</code>, <code>1.234,56</code> and most date formats.</li>
+<li>Applies keyword rules to each description. Landlord mode maps categories to IRS Schedule E lines (3 to 19); freelancer mode maps to Schedule C lines and leaves money coming in out (log client payments separately).</li>
+<li>Mortgage payments are left blank on purpose, because they mix interest, principal and escrow. Split them using your lender statement.</li>
+<li>Output columns match the Transactions tab of the Rental Property Tracker and the Expenses tab of the Freelancer Finance Tracker, so a paste lands in the right columns. It works with any spreadsheet that uses the same column order.</li>
+</ul>
+<p class="note">This tool organizes records; it is not tax advice. Check the category of every row and confirm line numbers on the current IRS forms or with a tax professional. Built with AI assistance; the parser and rules are covered by automated tests, and pasted output was checked against the Schedule E and Schedule C tabs of both trackers. Open source (MIT): <a href="https://github.com/onyxaholguin-cyber/bank-csv-categorizer">source on GitHub</a>.</p>
+</article></div>
+<script src="/sheet-and-flow/assets/bank-cat.js"></script><script src="/sheet-and-flow/assets/bank-cat-ui.js"></script>
+</main>
+<footer><div class="wrap"><p><strong>Sheet & Flow</strong> · Practical spreadsheets and n8n automations for landlords, freelancers and small teams.</p>
+<p><a href="/sheet-and-flow/about/">About</a><a href="/sheet-and-flow/affiliate-disclosure/">Affiliate disclosure</a><a href="/sheet-and-flow/privacy/">Privacy</a><a href="/sheet-and-flow/refunds/">Refunds</a><a href="https://onyxaholguin.gumroad.com">Store</a></p>
+<p>Questions about a purchase? Reply to your Gumroad receipt email.</p>
+<p>Content and products are built with AI assistance and tested before publishing. Some links may become affiliate links. Nothing here is tax, legal or financial advice. Not affiliated with n8n GmbH, Microsoft or Google.</p></div></footer>
+</body></html>
