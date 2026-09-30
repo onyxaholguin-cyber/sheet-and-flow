@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Free IRS Mileage Deduction Calculator (2026) | Sheet &amp; Flow</title><meta name="description" content="Business, medical and charity standard mileage rates for 2026, including the mid-year business rate change (72.5¢ → 76¢ on July 1). Trip or full-year mode. Runs in your browser.">
+<link rel="canonical" href="https://onyxaholguin-cyber.github.io/sheet-and-flow/tools/mileage-deduction-calculator/"><meta property="og:title" content="Free IRS Mileage Deduction Calculator (2026) | Sheet &amp; Flow"><meta property="og:description" content="Business, medical and charity standard mileage rates for 2026, including the mid-year business rate change (72.5¢ → 76¢ on July 1). Trip or full-year mode. Runs in your browser.">
+<meta property="og:type" content="website"><meta property="og:url" content="https://onyxaholguin-cyber.github.io/sheet-and-flow/tools/mileage-deduction-calculator/"><meta name="theme-color" content="#0d9488">
+<link rel="stylesheet" href="/sheet-and-flow/assets/style.css"><link rel="icon" href="/sheet-and-flow/assets/favicon.svg" type="image/svg+xml"></head>
+<body><a class="skip" href="#main">Skip to content</a>
+<header class="top"><div class="wrap"><a class="brand" href="/sheet-and-flow/">Sheet <span>&amp;</span> Flow</a>
+<nav><a href="/sheet-and-flow/#products">Products</a><a href="/sheet-and-flow/tutorials/">Tutorials</a><a href="/sheet-and-flow/tools/">Free tools</a></nav></div></header>
+<main id="main"><div class="wrap narrow"><article>
+<h1>Free IRS Mileage Deduction Calculator (2026)</h1>
+<p class="byline">Business, medical, and charity standard mileage rates for 2026 — including the mid-year business rate change (72.5¢ → 76¢ on July 1). Runs in your browser; nothing is sent anywhere.</p>
+<div class="tool">
+<form id="mileage" class="form" novalidate style="grid-template-columns:1fr">
+<div style="display:flex;gap:18px;flex-wrap:wrap;margin-bottom:8px">
+<label style="flex-direction:row;align-items:center;gap:8px;font-weight:700"><input type="radio" name="mode" id="mode-trip" value="trip" checked> Single trip</label>
+<label style="flex-direction:row;align-items:center;gap:8px;font-weight:700"><input type="radio" name="mode" id="mode-year" value="year"> Full year (monthly)</label>
+</div>
+<label>Purpose
+<select name="purpose">
+<option value="business" selected>Business / self-employed (Schedule C)</option>
+<option value="medical">Medical</option>
+<option value="charity">Charity</option>
+</select>
+</label>
+<div id="trip-fields" class="form" style="margin-top:8px">
+<label>Trip date<input name="date" type="date" value="2026-09-30" min="2026-01-01" max="2026-12-31"></label>
+<label>Miles<input name="miles" type="number" inputmode="decimal" min="0" step="any" value="42"></label>
+</div>
+<div id="year-fields" class="form" hidden style="margin-top:8px">
+<label>Year<input name="year" type="number" value="2026" readonly></label>
+<label>Jan<input name="m1" type="number" min="0" step="any" value="200"></label>
+<label>Feb<input name="m2" type="number" min="0" step="any" value="180"></label>
+<label>Mar<input name="m3" type="number" min="0" step="any" value="220"></label>
+<label>Apr<input name="m4" type="number" min="0" step="any" value="190"></label>
+<label>May<input name="m5" type="number" min="0" step="any" value="210"></label>
+<label>Jun<input name="m6" type="number" min="0" step="any" value="200"></label>
+<label>Jul<input name="m7" type="number" min="0" step="any" value="240"></label>
+<label>Aug<input name="m8" type="number" min="0" step="any" value="230"></label>
+<label>Sep<input name="m9" type="number" min="0" step="any" value="210"></label>
+<label>Oct<input name="m10" type="number" min="0" step="any" value="200"></label>
+<label>Nov<input name="m11" type="number" min="0" step="any" value="180"></label>
+<label>Dec<input name="m12" type="number" min="0" step="any" value="160"></label>
+</div>
+</form>
+<p id="mileage-err" class="err" role="alert"></p>
+<div id="mileage-out" class="results" aria-live="polite"></div>
+</div>
+<h2>2026 IRS standard mileage rates</h2>
+<table>
+<thead><tr><th>Purpose</th><th>Jan 1 – Jun 30</th><th>Jul 1 – Dec 31</th></tr></thead>
+<tbody>
+<tr><td>Business / self-employed</td><td>72.5¢ / mile</td><td>76¢ / mile</td></tr>
+<tr><td>Medical / military moving</td><td>20.5¢ / mile</td><td>23.5¢ / mile</td></tr>
+<tr><td>Charity</td><td colspan="2">14¢ / mile (unchanged)</td></tr>
+</tbody>
+</table>
+<p>Sources: IRS Notice 2026-10 and Announcement 2026-11 (IR-2026-29). The charity rate is set by statute at 14¢.</p>
+<h2>How the mid-year change works</h2>
+<ul>
+<li><strong>Single trip:</strong> the tool uses the rate in effect on that date. A June 30 trip is 72.5¢; a July 1 trip is 76¢ (business).</li>
+<li><strong>Monthly log:</strong> January–June miles use the H1 rate; July–December miles use the H2 rate. July 1 is the first day of July, so the whole month is H2.</li>
+<li>Keep a contemporaneous log (date, miles, business purpose, destination). The IRS can disallow estimates without records — see Pub. 463.</li>
+</ul>
+<p>Full walkthrough: <a href="/sheet-and-flow/tutorials/irs-mileage-log-schedule-c-2026/">How to log business miles for Schedule C (2026 rates)</a>.</p>
+<aside class="cta"><img src="/sheet-and-flow/assets/img/freelancer-finance-tracker.webp" width="640" height="360" alt="Freelancer Finance Tracker cover" loading="lazy"><div><h3>Track invoices, expenses and miles together</h3><p>The Freelancer Finance Tracker maps car and truck expenses (including standard mileage) to Schedule C Line 9, with AR aging and quarterly tax set-aside.</p><a class="btn" href="https://onyxaholguin.gumroad.com/l/freelancer-finance-tracker">Freelancer Finance Tracker · $15</a></div></aside>
+<p class="note">For education, not tax advice. Confirm rates and substantiation rules with IRS Pub. 463 or your tax professional. Self-employed filers use the business rate on Schedule C; most unreimbursed employee commuting is not deductible after TCJA.</p>
+</article></div>
+<script src="/sheet-and-flow/assets/mileage-calc.js"></script><script src="/sheet-and-flow/assets/mileage-ui.js"></script>
+</main>
+<footer><div class="wrap"><p><strong>Sheet & Flow</strong> · Practical spreadsheets and n8n automations for landlords, freelancers and small teams.</p>
+<p><a href="/sheet-and-flow/about/">About</a><a href="/sheet-and-flow/affiliate-disclosure/">Affiliate disclosure</a><a href="/sheet-and-flow/privacy/">Privacy</a><a href="/sheet-and-flow/refunds/">Refunds</a><a href="https://onyxaholguin.gumroad.com">Store</a></p>
+<p>Questions about a purchase? Reply to your Gumroad receipt email.</p>
+<p>Content and products are built with AI assistance and tested before publishing. Some links may become affiliate links. Nothing here is tax, legal or financial advice. Not affiliated with n8n GmbH, Microsoft or Google.</p></div></footer>
+</body></html>
