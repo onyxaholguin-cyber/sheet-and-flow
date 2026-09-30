@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Polite Overdue Invoice Reminders: A 3-Stage Sequence That Gets Paid | Sheet &amp; Flow</title><meta name="description" content="Copy, timing, and a days-overdue formula for friendly, firm, and final invoice follow-ups — plus how to automate them without spamming clients.">
+<link rel="canonical" href="https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/polite-overdue-invoice-reminders/"><meta property="og:title" content="Polite Overdue Invoice Reminders: A 3-Stage Sequence That Gets Paid | Sheet &amp; Flow"><meta property="og:description" content="Copy, timing, and a days-overdue formula for friendly, firm, and final invoice follow-ups — plus how to automate them without spamming clients.">
+<meta property="og:type" content="website"><meta property="og:url" content="https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/polite-overdue-invoice-reminders/"><meta name="theme-color" content="#0d9488">
+<link rel="stylesheet" href="/sheet-and-flow/assets/style.css"><link rel="icon" href="/sheet-and-flow/assets/favicon.svg" type="image/svg+xml"><script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Polite Overdue Invoice Reminders: A 3-Stage Sequence That Gets Paid", "description": "Copy, timing, and a days-overdue formula for friendly, firm, and final invoice follow-ups \u2014 plus how to automate them without spamming clients.", "dateModified": "2026-09-30", "author": {"@type": "Organization", "name": "Sheet & Flow"}, "mainEntityOfPage": "https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/polite-overdue-invoice-reminders/"}</script></head>
+<body><a class="skip" href="#main">Skip to content</a>
+<header class="top"><div class="wrap"><a class="brand" href="/sheet-and-flow/">Sheet <span>&amp;</span> Flow</a>
+<nav><a href="/sheet-and-flow/#products">Products</a><a href="/sheet-and-flow/tutorials/">Tutorials</a><a href="/sheet-and-flow/tools/">Free tools</a></nav></div></header>
+<main id="main"><div class="wrap narrow"><article><h1>Polite Overdue Invoice Reminders: A 3-Stage Sequence That Gets Paid</h1><div class="byline">Updated 2026-09-30 · Sheet & Flow</div><p>Most freelancers either send nothing (and wait) or send the same blunt "just following up" every few days. Neither works well. A <strong>three-stage sequence</strong> — friendly, firm, final — gets more invoices paid with less awkwardness, because each email has a job.</p>
+<p>This page is the sequence itself: when to send, what to say, and a spreadsheet formula for days overdue. Automating it is optional; the Invoice Chaser product at the bottom does the send-and-log part in n8n.</p>
+<h2>The three stages</h2>
+<table>
+<thead>
+<tr>
+<th>Stage</th>
+<th>When (days past due)</th>
+<th>Tone</th>
+<th>Goal</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>1. Friendly</strong></td>
+<td>3</td>
+<td>Assume good intent</td>
+<td>Nudge + make paying easy</td>
+</tr>
+<tr>
+<td><strong>2. Firm</strong></td>
+<td>10</td>
+<td>Clear and specific</td>
+<td>Restate amount, due date, and how to pay</td>
+</tr>
+<tr>
+<td><strong>3. Final</strong></td>
+<td>21</td>
+<td>Short, professional</td>
+<td>One last chance before you stop automated chasing</td>
+</tr>
+</tbody>
+</table>
+<p>After stage 3, <strong>stop the auto emails</strong> and pick up the phone (or write a personal note). Three reminders is enough for automation. More than that usually means the invoice needs a human conversation, not another template.</p>
+<h2>Days overdue (one formula)</h2>
+<p>Put the due date in <code>D2</code> and an as-of date in <code>J1</code> (<code>=TODAY()</code> works):</p>
+<pre><code>=MAX(0, $J$1 - D2)
+</code></pre>
+<p>Bucket it the same way AR aging reports do:</p>
+<pre><code>=IF(E2&lt;=0,&quot;Paid&quot;,IF(F2=0,&quot;Current&quot;,IF(F2&lt;=30,&quot;1-30&quot;,IF(F2&lt;=60,&quot;31-60&quot;,IF(F2&lt;=90,&quot;61-90&quot;,&quot;90+&quot;)))))
+</code></pre>
+<p>Where <code>E2</code> is the remaining balance and <code>F2</code> is days overdue. Tested in LibreOffice: with due date 2026-09-01, as-of 2026-09-30, and balance $800, days overdue = <strong>29</strong> and bucket = <strong>1-30</strong>.</p>
+<p>Placeholders below use <code>{name}</code> for readability. In the Invoice Chaser workflow they use Mustache-style double braces around the same names (client, invoice, amount, and so on).</p>
+<h2>Stage 1 — friendly (day 3)</h2>
+<p>Keep it short. Assume they missed it.</p>
+<blockquote>
+<p>Hi {client},</p>
+<p>Hope you're well — a quick note that invoice {invoice} for {amount} was due on {due_date} ({days_overdue} days ago).</p>
+<p>You can pay here: {payment_link}</p>
+<p>Thanks,
+{your_name}</p>
+</blockquote>
+<p><strong>Why it works:</strong> no accusation, a clear link, one ask.</p>
+<h2>Stage 2 — firm (day 10)</h2>
+<p>Be specific. Restate the numbers so there's nothing to dig for.</p>
+<blockquote>
+<p>Hi {client},</p>
+<p>Invoice {invoice} for {amount} is now {days_overdue} days past due (due {due_date}).</p>
+<p>Please arrange payment by {pay_by_date} using {payment_link}, or reply with a date that works.</p>
+<p>Thanks,
+{your_name}
+{business}</p>
+</blockquote>
+<p><strong>Tip:</strong> <code>pay_by_date</code> can be "this Friday" or a real date five business days out. Specific beats "as soon as possible."</p>
+<h2>Stage 3 — final (day 21)</h2>
+<p>One paragraph. No lecture.</p>
+<blockquote>
+<p>Hi {client},</p>
+<p>This is a final reminder that invoice {invoice} ({amount}) remains unpaid {days_overdue} days after the due date.</p>
+<p>Please pay via {payment_link} or reply today so we can resolve this. If I don't hear back, I'll pause work / follow up by phone.</p>
+<p>{your_name}
+{business}</p>
+</blockquote>
+<p>Adjust the "pause work" line to match your contracts. Don't threaten what you won't do.</p>
+<h2>Rules that keep you from looking spammy</h2>
+<ol>
+<li><strong>Cooldown.</strong> Never send two reminders within five days of each other, even if stages would otherwise fire.</li>
+<li><strong>Skip paid / void / disputed / hold.</strong> One formula or status column prevents the worst mistake: chasing a paid invoice.</li>
+<li><strong>Partial payments.</strong> Chase the <em>balance</em>, not the original amount. If they paid $500 of $1,800, the email should say $1,300.</li>
+<li><strong>Weekdays only.</strong> Weekend invoice emails get ignored and feel aggressive.</li>
+<li><strong>Cap per run.</strong> If 40 invoices are overdue, send at most ~20 in one morning so you can review failures.</li>
+<li><strong>Dry-run first.</strong> Route every reminder to yourself for a week before clients see them.</li>
+</ol>
+<h2>Spreadsheet columns you actually need</h2>
+<table>
+<thead>
+<tr>
+<th>Column</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Invoice #</td>
+<td>Unique key for write-back</td>
+</tr>
+<tr>
+<td>Client + Client email</td>
+<td>Greeting and recipient</td>
+</tr>
+<tr>
+<td>Due date</td>
+<td>Days overdue</td>
+</tr>
+<tr>
+<td>Amount / Amount paid / Balance</td>
+<td>What to ask for</td>
+</tr>
+<tr>
+<td>Status</td>
+<td>Paid / Void / Hold / Do not chase</td>
+</tr>
+<tr>
+<td>Payment link</td>
+<td>Optional; fall back to a default URL</td>
+</tr>
+<tr>
+<td>Last reminder sent + Reminders sent</td>
+<td>So you never double-send</td>
+</tr>
+</tbody>
+</table>
+<p>That last pair is what turns a one-off email into a reliable system.</p>
+<h2>Automate it (optional)</h2>
+<p>If you already keep invoices in Google Sheets (or the Freelancer Finance Tracker), an n8n workflow can:</p>
+<ul>
+<li>run every weekday morning</li>
+<li>pick the right stage from days overdue + reminders already sent</li>
+<li>send through your own SMTP (Gmail app password, Outlook, Fastmail, etc.)</li>
+<li>write the date and count back to the sheet</li>
+<li>stay in <strong>dry-run mode</strong> until the copy looks right</li>
+</ul>
+<p>That's exactly what <a href="https://onyxaholguin.gumroad.com/l/invoice-chaser">Invoice Chaser for n8n</a> does. The decision logic (stages, cooldown, statuses, caps, dry run) is covered by automated tests, and the full workflow was run in n8n 2.x against a test mail server.</p>
+<p>Whether you send by hand or automate, the sequence above is the same: friendly at 3, firm at 10, final at 21 — then a human call.</p>
+<p><em>Organizational guidance only — not legal or collections advice. Follow your local rules for debt collection language.</em></p><aside class="cta"><img src="/sheet-and-flow/assets/img/invoice-chaser.webp" width="640" height="360" alt="Invoice Chaser for n8n cover" loading="lazy">
+<div><h3>Invoice Chaser for n8n</h3><p>Polite 3-step overdue-invoice reminders from Google Sheets, with dry-run mode on by default.</p><a class="btn" href="https://onyxaholguin.gumroad.com/l/invoice-chaser">Get it · $12</a></div></aside><p>Free tool: <a href="/sheet-and-flow/tools/bank-csv-categorizer/">Bank CSV Categorizer for Schedule E and Schedule C</a></p><p class="note">Written with AI assistance. Every formula, command and number on this page was tested before publishing (see each section). Product links go to our store.</p></article></div></main>
+<footer><div class="wrap"><p><strong>Sheet & Flow</strong> · Practical spreadsheets and n8n automations for landlords, freelancers and small teams.</p>
+<p><a href="/sheet-and-flow/about/">About</a><a href="/sheet-and-flow/affiliate-disclosure/">Affiliate disclosure</a><a href="/sheet-and-flow/privacy/">Privacy</a><a href="/sheet-and-flow/refunds/">Refunds</a><a href="https://onyxaholguin.gumroad.com">Store</a></p>
+<p>Questions about a purchase? Reply to your Gumroad receipt email.</p>
+<p>Content and products are built with AI assistance and tested before publishing. Some links may become affiliate links. Nothing here is tax, legal or financial advice. Not affiliated with n8n GmbH, Microsoft or Google.</p></div></footer>
+</body></html>
