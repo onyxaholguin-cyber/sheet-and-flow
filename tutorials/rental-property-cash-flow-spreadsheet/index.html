@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Rental Property Cash Flow Spreadsheet: Monthly NOI and Cash Flow per Property (Excel &amp; Google Sheets) | Sheet &amp; Flow</title><meta name="description" content="Build a landlord spreadsheet that shows income, operating expenses, NOI and cash flow for each rental by month, with the exact SUMIFS formulas. Tested in Excel-compatible LibreOffice and Google Sheets syntax.">
+<link rel="canonical" href="https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/rental-property-cash-flow-spreadsheet/"><meta property="og:title" content="Rental Property Cash Flow Spreadsheet: Monthly NOI and Cash Flow per Property (Excel &amp; Google Sheets) | Sheet &amp; Flow"><meta property="og:description" content="Build a landlord spreadsheet that shows income, operating expenses, NOI and cash flow for each rental by month, with the exact SUMIFS formulas. Tested in Excel-compatible LibreOffice and Google Sheets syntax.">
+<meta property="og:type" content="article"><meta property="og:url" content="https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/rental-property-cash-flow-spreadsheet/"><meta name="theme-color" content="#0d9488">
+<link rel="stylesheet" href="/sheet-and-flow/assets/style.css"><link rel="icon" href="/sheet-and-flow/assets/favicon.svg" type="image/svg+xml"><meta property="og:image" content="https://onyxaholguin-cyber.github.io/sheet-and-flow/assets/og/rental-property-tracker.jpg"><meta property="og:image:width" content="1280"><meta property="og:image:height" content="720"><meta property="og:site_name" content="Sheet & Flow"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Rental Property Cash Flow Spreadsheet: Monthly NOI and Cash Flow per Property (Excel &amp; Google Sheets) | Sheet &amp; Flow"><meta name="twitter:description" content="Build a landlord spreadsheet that shows income, operating expenses, NOI and cash flow for each rental by month, with the exact SUMIFS formulas. Tested in Excel-compatible LibreOffice and Google Sheets syntax."><meta name="twitter:image" content="https://onyxaholguin-cyber.github.io/sheet-and-flow/assets/og/rental-property-tracker.jpg"><script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Rental Property Cash Flow Spreadsheet: Monthly NOI and Cash Flow per Property (Excel & Google Sheets)", "description": "Build a landlord spreadsheet that shows income, operating expenses, NOI and cash flow for each rental by month, with the exact SUMIFS formulas. Tested in Excel-compatible LibreOffice and Google Sheets syntax.", "dateModified": "2026-09-30", "datePublished": "2026-09-30", "image": "https://onyxaholguin-cyber.github.io/sheet-and-flow/assets/og/rental-property-tracker.jpg", "author": {"@type": "Organization", "name": "Sheet & Flow", "url": "https://onyxaholguin-cyber.github.io/sheet-and-flow/"}, "publisher": {"@type": "Organization", "name": "Sheet & Flow", "url": "https://onyxaholguin-cyber.github.io/sheet-and-flow/"}, "mainEntityOfPage": "https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/rental-property-cash-flow-spreadsheet/"}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://onyxaholguin-cyber.github.io/sheet-and-flow/"}, {"@type": "ListItem", "position": 2, "name": "Tutorials", "item": "https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/"}, {"@type": "ListItem", "position": 3, "name": "Rental Property Cash Flow Spreadsheet: Monthly NOI and Cash Flow per Property (Excel & Google Sheets)", "item": "https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/rental-property-cash-flow-spreadsheet/"}]}</script></head>
+<body><a class="skip" href="#main">Skip to content</a>
+<header class="top"><div class="wrap"><a class="brand" href="/sheet-and-flow/">Sheet <span>&amp;</span> Flow</a>
+<nav><a href="/sheet-and-flow/products/">Products</a><a href="/sheet-and-flow/tutorials/">Tutorials</a><a href="/sheet-and-flow/tools/">Free tools</a></nav></div></header><div class="offer" id="offer" data-expires="2026-10-15T05:59:59Z">Launch offer: 20% off every product and bundle with code <b>LAUNCH20</b> until October 14, 2026. <a href="https://sheetandflow.gumroad.com">Browse the store</a></div><script>(function(){var e=document.getElementById("offer");if(e&&Date.now()>Date.parse(e.getAttribute("data-expires"))){e.parentNode.removeChild(e);document.addEventListener("DOMContentLoaded",function(){[].forEach.call(document.querySelectorAll("[data-offer]"),function(x){x.parentNode.removeChild(x);});});}})();</script>
+<main id="main"><div class="wrap narrow"><article><h1>Rental Property Cash Flow Spreadsheet: Monthly NOI and Cash Flow per Property (Excel &amp; Google Sheets)</h1><div class="byline">Updated 2026-09-30 · Sheet & Flow</div><p class="inline-cta">Short on time? The <a href="/sheet-and-flow/products/rental-property-tracker/">Rental Property Tracker</a> ($19) is the finished, tested version of what this tutorial builds.</p><p>Most landlords know their rent. Far fewer know, month by month, <strong>what each property actually puts in their pocket</strong> after repairs, insurance, taxes and the mortgage. A property can look fine in January and quietly lose money over the year.</p>
+<p>This tutorial builds a small cash-flow sheet that answers that question for every property, using four standard formulas. It works the same in Excel, Google Sheets and LibreOffice. We tested every formula below by recalculating a sample workbook and comparing it to the numbers in the worked example.</p>
+<h2>The two numbers that matter</h2>
+<ul>
+<li><strong>NOI (net operating income)</strong> = income minus <em>operating</em> expenses (repairs, insurance, property tax, utilities, management). The mortgage is <strong>not</strong> an operating expense. NOI tells you how good the property is, regardless of how you financed it.</li>
+<li><strong>Cash flow</strong> = NOI minus <strong>debt service</strong> (your full mortgage payment, principal and interest). This is what actually lands in your bank account.</li>
+</ul>
+<p>Capital improvements (a new roof, a furnace) are neither. Keep them out of both numbers and track them separately, because they are depreciated for taxes rather than expensed.</p>
+<h2>1. A category table with a Type column</h2>
+<p>Make a tab called <code>Categories</code>. Every category gets exactly one type: <code>Income</code>, <code>Operating</code>, <code>Debt</code> or <code>Capital</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Rent</td>
+<td>Income</td>
+</tr>
+<tr>
+<td>Late fee</td>
+<td>Income</td>
+</tr>
+<tr>
+<td>Repairs</td>
+<td>Operating</td>
+</tr>
+<tr>
+<td>Insurance</td>
+<td>Operating</td>
+</tr>
+<tr>
+<td>Property tax</td>
+<td>Operating</td>
+</tr>
+<tr>
+<td>Utilities</td>
+<td>Operating</td>
+</tr>
+<tr>
+<td>Management</td>
+<td>Operating</td>
+</tr>
+<tr>
+<td>Mortgage payment</td>
+<td>Debt</td>
+</tr>
+<tr>
+<td>Capital improvement</td>
+<td>Capital</td>
+</tr>
+</tbody>
+</table>
+<p>Deciding the type once, in this table, means you never have to think about it again when you log a transaction.</p>
+<h2>2. The transactions tab</h2>
+<p>One row per payment in or out, amounts always <strong>positive</strong> (the type decides whether it adds or subtracts):</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>A</th>
+<th>B</th>
+<th>C</th>
+<th>D</th>
+<th>E</th>
+<th>F</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Date</td>
+<td>Property</td>
+<td>Category</td>
+<td>Amount</td>
+<td>Type</td>
+<td>Month</td>
+</tr>
+<tr>
+<td>2</td>
+<td>2026-01-03</td>
+<td>Maple St</td>
+<td>Rent</td>
+<td>1450</td>
+<td><em>formula</em></td>
+<td><em>formula</em></td>
+</tr>
+</tbody>
+</table>
+<p>The two formula columns:</p>
+<pre><code>E2:  =IFERROR(VLOOKUP(C2, Categories!$A$2:$B$50, 2, FALSE), &quot;?&quot;)
+F2:  =DATE(YEAR(A2), MONTH(A2), 1)
+</code></pre>
+<p>Fill both down. Column E looks up the type, and shows <code>?</code> for a misspelled category so you can spot it immediately. Column F turns any date into the first day of its month, which is what the monthly summary matches on. Format column F as <code>mmm yyyy</code>.</p>
+<p>If column F shows <code>#VALUE!</code>, the date in column A was typed or pasted as <strong>text</strong>. Re-enter it as a real date (in Google Sheets, <em>Format → Number → Date</em>). Text dates are the number one reason a SUMIFS total comes out too low.</p>
+<h2>3. The monthly cash-flow table</h2>
+<p>On a <code>Cash Flow</code> tab, type the property name in <code>B1</code>. Put the months down column A starting in <code>A4</code>, and the five headers in row 3: Income, Operating, NOI, Debt service, Cash flow.</p>
+<pre><code>A4:  =DATE(2026, 1, 1)
+A5:  =EDATE(A4, 1)
+</code></pre>
+<p>Fill <code>A5</code> down to <code>A15</code> to get all twelve months. Then the five columns:</p>
+<pre><code>B4:  =SUMIFS(Transactions!$D$2:$D$2000, Transactions!$B$2:$B$2000, $B$1, Transactions!$F$2:$F$2000, $A4, Transactions!$E$2:$E$2000, &quot;Income&quot;)
+C4:  =SUMIFS(Transactions!$D$2:$D$2000, Transactions!$B$2:$B$2000, $B$1, Transactions!$F$2:$F$2000, $A4, Transactions!$E$2:$E$2000, &quot;Operating&quot;)
+D4:  =B4-C4
+E4:  =SUMIFS(Transactions!$D$2:$D$2000, Transactions!$B$2:$B$2000, $B$1, Transactions!$F$2:$F$2000, $A4, Transactions!$E$2:$E$2000, &quot;Debt&quot;)
+F4:  =D4-E4
+</code></pre>
+<p>Fill row 4 down to row 15. The <code>$B$1</code> is fixed so every row reads the same property; <code>$A4</code> keeps column A fixed so each row reads its own month. To see another property, just change the name in <code>B1</code> (or copy the tab once per property).</p>
+<p>Add a totals row and the expense ratio:</p>
+<pre><code>B16: =SUM(B4:B15)
+B17: =IF(B16=0, 0, C16/B16)
+</code></pre>
+<p>Copy <code>B16</code> across to <code>F16</code>. <code>B17</code> is the <strong>operating expense ratio</strong>: operating expenses as a share of income. Format it as a percentage.</p>
+<h2>Worked example</h2>
+<p>Sample transactions for Maple St in the first quarter of 2026: rent of $1,450 every month, a $50 late fee in February, a $220 repair in February, the $900 annual insurance premium in March, a $980 mortgage payment every month, and a $7,800 new roof in March. The sheet also holds a $1,600 rent payment for Oak Ave, which must <strong>not</strong> show up in Maple St's numbers.</p>
+<table>
+<thead>
+<tr>
+<th>Month</th>
+<th>Income</th>
+<th>Operating</th>
+<th>NOI</th>
+<th>Debt service</th>
+<th>Cash flow</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Jan 2026</td>
+<td>1,450</td>
+<td>0</td>
+<td>1,450</td>
+<td>980</td>
+<td>470</td>
+</tr>
+<tr>
+<td>Feb 2026</td>
+<td>1,500</td>
+<td>220</td>
+<td>1,280</td>
+<td>980</td>
+<td>300</td>
+</tr>
+<tr>
+<td>Mar 2026</td>
+<td>1,450</td>
+<td>900</td>
+<td>550</td>
+<td>980</td>
+<td>−430</td>
+</tr>
+<tr>
+<td><strong>Q1 total</strong></td>
+<td><strong>4,400</strong></td>
+<td><strong>1,120</strong></td>
+<td><strong>3,280</strong></td>
+<td><strong>2,940</strong></td>
+<td><strong>340</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Operating expense ratio for the quarter: 1,120 ÷ 4,400 = <strong>25.5%</strong>.</p>
+<p>Three things this example shows:</p>
+<ol>
+<li><strong>March is negative</strong> because the annual insurance premium landed in one month. That's normal, and it's exactly why a monthly view beats a glance at the bank balance.</li>
+<li><strong>The $7,800 roof is not in any column.</strong> It's typed as <code>Capital</code>, so it doesn't distort NOI or cash flow. Your preparer will depreciate it.</li>
+<li><strong>Oak Ave's rent is ignored</strong> because the property filter in <code>$B$1</code> excludes it.</li>
+</ol>
+<h2>Common mistakes</h2>
+<ul>
+<li><strong>Putting the mortgage in operating expenses.</strong> Your NOI will look terrible and won't be comparable to cap rates you see in listings. Keep debt separate.</li>
+<li><strong>Negative amounts for expenses.</strong> With this setup every amount is positive; the Type column decides the sign. Mixing signs double-subtracts.</li>
+<li><strong>Forgetting irregular bills.</strong> Property tax, insurance and HOA special assessments are lumpy. Look at the full-year total, not one month.</li>
+<li><strong>Ignoring vacancy and capital reserves.</strong> A common rule of thumb is to set aside a few percent of rent each for vacancy and future capital items. Our free <a href="/sheet-and-flow/tools/rental-deal-calculator/">rental property calculator</a> lets you model both before you buy.</li>
+</ul>
+<h2>Related tutorials</h2>
+<ul>
+<li><a href="/sheet-and-flow/tutorials/rental-income-expenses-schedule-e/">How to track rental income and expenses by Schedule E line</a>: the same transactions tab, summarized for taxes.</li>
+<li><a href="/sheet-and-flow/tutorials/rent-roll-late-rent-deposits/">Build a rent roll that flags late rent automatically</a>.</li>
+<li><a href="/sheet-and-flow/tutorials/cap-rate-cash-on-cash-dscr/">Cap rate vs. cash-on-cash vs. DSCR: a worked rental example</a>.</li>
+</ul>
+<h2>Want it done for you?</h2>
+<p>The <a href="/sheet-and-flow/products/rental-property-tracker/">Rental Property Tracker</a> has this built in for up to 10 properties: a filterable dashboard with monthly income vs. expenses, cash flow and expense ratio, plus a rent roll with late-rent flags, a deposit ledger, a mileage log and a Schedule E summary. It works in Excel and Google Sheets with no macros.</p>
+<p>Not tax advice. Confirm treatment of specific items with the IRS instructions or your tax professional.</p><aside class="cta"><img src="/sheet-and-flow/assets/img/rental-property-tracker.webp" width="640" height="360" alt="Rental Property Tracker cover" loading="lazy">
+<div><h3>Rental Property Tracker</h3><p>Income, expenses, rent roll, deposits, mileage and a Schedule E summary for up to 10 properties.</p><a class="btn" href="https://sheetandflow.gumroad.com/l/rental-property-tracker">Get it · $19</a> <a href="/sheet-and-flow/products/rental-property-tracker/">See what's inside</a></div></aside><p>Free tool: <a href="/sheet-and-flow/tools/rental-deal-calculator/">Free Rental Property Calculator: Cash Flow, Cap Rate, Cash-on-Cash, DSCR</a></p><p class="note">Written with AI assistance. Every formula, command and number on this page was tested before publishing (see each section). Product links go to our store.</p></article></div></main>
+<footer><div class="wrap"><p><strong>Sheet & Flow</strong> · Practical spreadsheets and n8n automations for landlords, freelancers and small teams.</p>
+<p><a href="/sheet-and-flow/about/">About</a><a href="/sheet-and-flow/affiliate-disclosure/">Affiliate disclosure</a><a href="/sheet-and-flow/privacy/">Privacy</a><a href="/sheet-and-flow/refunds/">Refunds</a><a href="https://sheetandflow.gumroad.com">Store</a></p>
+<p>Questions about a purchase? Reply to your Gumroad receipt email.</p>
+<p>Content and products are built with AI assistance and tested before publishing. Some links may become affiliate links. Nothing here is tax, legal or financial advice. Not affiliated with n8n GmbH, Microsoft or Google.</p></div></footer>
+</body></html>

@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>How to Update Self-Hosted n8n in Docker Compose Without Losing Data (Tested 2.40 → 2.41) | Sheet &amp; Flow</title><meta name="description" content="The safe way to upgrade a self-hosted n8n: pin the version, back up the database and encryption key, pull, verify, and roll back properly. Every step tested in a real upgrade drill.">
+<link rel="canonical" href="https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/update-self-hosted-n8n-docker/"><meta property="og:title" content="How to Update Self-Hosted n8n in Docker Compose Without Losing Data (Tested 2.40 → 2.41) | Sheet &amp; Flow"><meta property="og:description" content="The safe way to upgrade a self-hosted n8n: pin the version, back up the database and encryption key, pull, verify, and roll back properly. Every step tested in a real upgrade drill.">
+<meta property="og:type" content="article"><meta property="og:url" content="https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/update-self-hosted-n8n-docker/"><meta name="theme-color" content="#0d9488">
+<link rel="stylesheet" href="/sheet-and-flow/assets/style.css"><link rel="icon" href="/sheet-and-flow/assets/favicon.svg" type="image/svg+xml"><meta property="og:image" content="https://onyxaholguin-cyber.github.io/sheet-and-flow/assets/og/n8n-self-hosting-kit.jpg"><meta property="og:image:width" content="1280"><meta property="og:image:height" content="720"><meta property="og:site_name" content="Sheet & Flow"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="How to Update Self-Hosted n8n in Docker Compose Without Losing Data (Tested 2.40 → 2.41) | Sheet &amp; Flow"><meta name="twitter:description" content="The safe way to upgrade a self-hosted n8n: pin the version, back up the database and encryption key, pull, verify, and roll back properly. Every step tested in a real upgrade drill."><meta name="twitter:image" content="https://onyxaholguin-cyber.github.io/sheet-and-flow/assets/og/n8n-self-hosting-kit.jpg"><script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "How to Update Self-Hosted n8n in Docker Compose Without Losing Data (Tested 2.40 \u2192 2.41)", "description": "The safe way to upgrade a self-hosted n8n: pin the version, back up the database and encryption key, pull, verify, and roll back properly. Every step tested in a real upgrade drill.", "dateModified": "2026-09-30", "datePublished": "2026-09-30", "image": "https://onyxaholguin-cyber.github.io/sheet-and-flow/assets/og/n8n-self-hosting-kit.jpg", "author": {"@type": "Organization", "name": "Sheet & Flow", "url": "https://onyxaholguin-cyber.github.io/sheet-and-flow/"}, "publisher": {"@type": "Organization", "name": "Sheet & Flow", "url": "https://onyxaholguin-cyber.github.io/sheet-and-flow/"}, "mainEntityOfPage": "https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/update-self-hosted-n8n-docker/"}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://onyxaholguin-cyber.github.io/sheet-and-flow/"}, {"@type": "ListItem", "position": 2, "name": "Tutorials", "item": "https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/"}, {"@type": "ListItem", "position": 3, "name": "How to Update Self-Hosted n8n in Docker Compose Without Losing Data (Tested 2.40 \u2192 2.41)", "item": "https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/update-self-hosted-n8n-docker/"}]}</script></head>
+<body><a class="skip" href="#main">Skip to content</a>
+<header class="top"><div class="wrap"><a class="brand" href="/sheet-and-flow/">Sheet <span>&amp;</span> Flow</a>
+<nav><a href="/sheet-and-flow/products/">Products</a><a href="/sheet-and-flow/tutorials/">Tutorials</a><a href="/sheet-and-flow/tools/">Free tools</a></nav></div></header><div class="offer" id="offer" data-expires="2026-10-15T05:59:59Z">Launch offer: 20% off every product and bundle with code <b>LAUNCH20</b> until October 14, 2026. <a href="https://sheetandflow.gumroad.com">Browse the store</a></div><script>(function(){var e=document.getElementById("offer");if(e&&Date.now()>Date.parse(e.getAttribute("data-expires"))){e.parentNode.removeChild(e);document.addEventListener("DOMContentLoaded",function(){[].forEach.call(document.querySelectorAll("[data-offer]"),function(x){x.parentNode.removeChild(x);});});}})();</script>
+<main id="main"><div class="wrap narrow"><article><h1>How to Update Self-Hosted n8n in Docker Compose Without Losing Data (Tested 2.40 → 2.41)</h1><div class="byline">Updated 2026-09-30 · Sheet & Flow</div><p class="inline-cta">Short on time? The <a href="/sheet-and-flow/products/n8n-self-hosting-kit/">n8n Production Self-Hosting Kit</a> ($29) is the finished, tested version of what this tutorial builds.</p><p>Updating n8n is one command. Updating it <strong>safely</strong> is five, and the extra four are what save you when a release changes something you depend on.</p>
+<p>We ran this exact procedure on September 30, 2026: a Docker Compose install with Postgres 17, a workflow and an encrypted credential, upgraded from <strong>n8n 2.40.6 to 2.41.4</strong>, then rolled back two different ways. The results are at the end.</p>
+<h2>Before you start: are you on a pinned version?</h2>
+<p>Open your <code>docker-compose.yml</code>. If the image line ends in <code>:latest</code> (or has no tag at all), you are not really choosing when you upgrade: any <code>docker compose pull</code>, server rebuild or a colleague's "quick fix" can jump you several versions at once.</p>
+<p>Pin it through <code>.env</code> instead:</p>
+<pre><code># docker-compose.yml
+    image: docker.n8n.io/n8nio/n8n:${N8N_VERSION}
+
+# .env
+N8N_VERSION=2.40.6
+</code></pre>
+<p>Now an upgrade is a one-line, reviewable change. (Our <a href="/sheet-and-flow/tutorials/self-host-n8n-docker-compose-postgres/">self-hosting tutorial</a> and the free <a href="/sheet-and-flow/tools/n8n-compose-generator/">Docker Compose generator</a> both set it up this way.)</p>
+<p>To see which version you're running right now:</p>
+<pre><code>docker compose exec n8n n8n --version
+</code></pre>
+<h2>Step 1: Pick the target version and read the release notes</h2>
+<p>On the day we tested, the Docker tags were <code>latest</code> = <code>stable</code> = <strong>2.41.4</strong> and <code>next</code> = <code>beta</code> = <strong>2.42.1</strong>. For a production instance, upgrade to the current <strong>stable</strong> release, not <code>next</code>/<code>beta</code>.</p>
+<p>Skim the release notes for every version between yours and the target (the n8n docs publish them per version). Look for "breaking", removed nodes, and changed environment variable defaults. For big jumps, go one minor version at a time.</p>
+<h2>Step 2: Back up the database and the encryption key</h2>
+<p>From the folder with your <code>docker-compose.yml</code>:</p>
+<pre><code>docker compose exec -T postgres pg_dump -U n8n -d n8n -Fc &gt; n8n-before-upgrade.dump
+cp .env env-before-upgrade.backup
+</code></pre>
+<p>The <code>.env</code> copy matters as much as the dump, because it holds <code>N8N_ENCRYPTION_KEY</code>. A database restored with the wrong key opens fine but every credential fails with "Credentials could not be decrypted". Move both files off the server (or at least out of the Docker volume) before continuing. Our <a href="/sheet-and-flow/tutorials/backup-n8n-properly/">backup tutorial</a> covers doing this on a schedule.</p>
+<p>Our test dump was about 480 KB for a small instance. Yours will be larger if you keep a lot of execution history.</p>
+<h2>Step 3: Change the version and pull</h2>
+<p>Edit one line in <code>.env</code>:</p>
+<pre><code>N8N_VERSION=2.41.4
+</code></pre>
+<p>Then pull the new image <strong>before</strong> stopping anything, so the downtime is only the restart:</p>
+<pre><code>docker compose pull n8n
+docker compose up -d n8n
+</code></pre>
+<p><code>up -d</code> recreates only the n8n container. Postgres and your data volume are untouched. On start, n8n runs its database migrations automatically. In our drill it ran <strong>5 migrations</strong> and was serving again about <strong>40 seconds</strong> after <code>pull</code> began.</p>
+<h2>Step 4: Verify before you walk away</h2>
+<pre><code>docker compose ps
+docker compose exec n8n n8n --version
+docker compose logs --tail 100 n8n
+</code></pre>
+<p>Check three things:</p>
+<ol>
+<li><code>n8n --version</code> prints the new version (ours printed <code>2.41.4</code>).</li>
+<li>The log has no errors after "Finished migration". Deprecation notices are normal: 2.41 warns about future default changes for things like <code>N8N_RUNNERS_MODE</code> and <code>N8N_RUNNERS_TASK_TIMEOUT</code>. Set the ones you rely on explicitly so a later release doesn't change them under you.</li>
+<li><strong>Your credentials still decrypt.</strong> Open a workflow that uses a credential and run it once, or run the test from the <a href="/sheet-and-flow/tutorials/backup-n8n-properly/">backup tutorial</a>. In our drill, the same workflow count and the same decrypted credential value came back after the upgrade.</li>
+</ol>
+<p>Also open any workflow with a Webhook trigger and confirm the production URL still points at your domain, not <code>localhost:5678</code>.</p>
+<h2>Step 5: If something breaks, roll back properly</h2>
+<p>The tempting rollback is to put the old version back in <code>.env</code> and restart. <strong>Don't rely on it.</strong> n8n migrates the database forward on upgrade and does not migrate it back when you start an older version.</p>
+<p>In our drill, the naive rollback (2.41.4 → 2.40.6 on the already-migrated database) did start and showed the workflow. That was a small minor-version jump with additive migrations; there is no guarantee the next one will be as forgiving, and an old version running on a newer schema can fail in ways that only show up later.</p>
+<p>The rollback that is guaranteed to be consistent is restoring the pre-upgrade backup:</p>
+<pre><code>docker compose stop n8n
+docker compose exec -T postgres psql -U n8n -d postgres -c 'DROP DATABASE n8n WITH (FORCE);' -c 'CREATE DATABASE n8n OWNER n8n;'
+docker compose exec -T postgres pg_restore -U n8n -d n8n --no-owner &lt; n8n-before-upgrade.dump
+cp env-before-upgrade.backup .env
+docker compose up -d n8n
+</code></pre>
+<p>Anything that happened between the upgrade and the rollback (new executions, edited workflows) is lost, which is another reason to verify right after upgrading rather than a week later. In our drill, the restored 2.40.6 instance came back with the workflow and a credential that decrypted correctly.</p>
+<h2>Drill results (September 30, 2026)</h2>
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Start on 2.40.6, create a workflow + an encrypted credential</td>
+<td>OK</td>
+</tr>
+<tr>
+<td>Back up: <code>pg_dump -Fc</code> + <code>.env</code> copy</td>
+<td>480 KB dump</td>
+</tr>
+<tr>
+<td>Upgrade to 2.41.4 (<code>pull</code> + <code>up -d</code>)</td>
+<td>5 migrations, ~40 s until ready</td>
+</tr>
+<tr>
+<td>After upgrade: workflows / credential decrypts</td>
+<td>1 / yes</td>
+</tr>
+<tr>
+<td>Naive rollback to 2.40.6 on the migrated database</td>
+<td>Started (not recommended; see Step 5)</td>
+</tr>
+<tr>
+<td>Proper rollback: restore dump + 2.40.6</td>
+<td>Workflows 1, credential decrypts</td>
+</tr>
+</tbody>
+</table>
+<p>Test setup: Docker Compose v2.39, <code>postgres:17-alpine</code>, <code>docker.n8n.io/n8nio/n8n</code>. (On our test machine both containers used host networking; the procedure is identical on the default Compose network.)</p>
+<h2>Common mistakes</h2>
+<ul>
+<li><strong>Upgrading without a dump because "it's just a minor version".</strong> The dump takes seconds. Restoring from nothing takes days.</li>
+<li><strong>Backing up the database but not <code>.env</code>.</strong> Without the original <code>N8N_ENCRYPTION_KEY</code>, credentials are unrecoverable. The free <a href="https://github.com/onyxaholguin-cyber/n8n-key-check">n8n-key-check</a> CLI confirms a key decrypts your credentials before you need it.</li>
+<li><strong>Using <code>latest</code> in production.</strong> You lose control over when upgrades happen and which versions you skip.</li>
+<li><strong>Upgrading on Friday evening.</strong> Upgrade when you have an hour to watch the logs and run your key workflows.</li>
+</ul>
+<h2>Done-for-you version</h2>
+<p>The <a href="/sheet-and-flow/products/n8n-self-hosting-kit/">n8n Production Self-Hosting Kit</a> turns this into scripts: <code>upgrade.sh &lt;version&gt;</code> takes a backup first, refuses <code>latest</code>, pulls, restarts and waits for the health check (with an optional automatic rollback), and there's an encrypted <code>backup.sh</code>, a <code>restore.sh</code> that refuses a mismatched key, and a restore drill that proves your credentials decrypt. Tested with Docker Compose, Postgres 17 and Caddy for HTTPS.</p>
+<p>Not affiliated with n8n GmbH.</p><aside class="cta"><img src="/sheet-and-flow/assets/img/n8n-self-hosting-kit.webp" width="640" height="360" alt="n8n Production Self-Hosting Kit cover" loading="lazy">
+<div><h3>n8n Production Self-Hosting Kit</h3><p>Docker Compose + Postgres 17 + HTTPS, with encrypted backups, a restore drill and safe upgrades.</p><a class="btn" href="https://sheetandflow.gumroad.com/l/n8n-self-hosting-kit">Get it · $29</a> <a href="/sheet-and-flow/products/n8n-self-hosting-kit/">See what's inside</a></div></aside><p>Free tool: <a href="/sheet-and-flow/tools/n8n-compose-generator/">n8n Docker Compose Generator (Postgres + HTTPS)</a></p><p class="note">Written with AI assistance. Every formula, command and number on this page was tested before publishing (see each section). Product links go to our store.</p></article></div></main>
+<footer><div class="wrap"><p><strong>Sheet & Flow</strong> · Practical spreadsheets and n8n automations for landlords, freelancers and small teams.</p>
+<p><a href="/sheet-and-flow/about/">About</a><a href="/sheet-and-flow/affiliate-disclosure/">Affiliate disclosure</a><a href="/sheet-and-flow/privacy/">Privacy</a><a href="/sheet-and-flow/refunds/">Refunds</a><a href="https://sheetandflow.gumroad.com">Store</a></p>
+<p>Questions about a purchase? Reply to your Gumroad receipt email.</p>
+<p>Content and products are built with AI assistance and tested before publishing. Some links may become affiliate links. Nothing here is tax, legal or financial advice. Not affiliated with n8n GmbH, Microsoft or Google.</p></div></footer>
+</body></html>
