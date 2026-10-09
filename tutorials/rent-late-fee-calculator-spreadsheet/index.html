@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Rent Late Fee Calculator Spreadsheet: Grace Period, Flat + Daily Fees and a Cap (Excel &amp; Google Sheets) | Sheet &amp; Flow</title><meta name="description" content="Build a rent ledger that works out days late, the late fee (flat, percent of rent, daily, with a maximum) and the balance for every charge, and flags LATE automatically. Exact formulas, tested by recalculating a sample workbook, plus how to set the grace period to match state rules like Colorado, New York and Texas.">
+<link rel="canonical" href="https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/rent-late-fee-calculator-spreadsheet/"><meta property="og:title" content="Rent Late Fee Calculator Spreadsheet: Grace Period, Flat + Daily Fees and a Cap (Excel &amp; Google Sheets) | Sheet &amp; Flow"><meta property="og:description" content="Build a rent ledger that works out days late, the late fee (flat, percent of rent, daily, with a maximum) and the balance for every charge, and flags LATE automatically. Exact formulas, tested by recalculating a sample workbook, plus how to set the grace period to match state rules like Colorado, New York and Texas.">
+<meta property="og:type" content="article"><meta property="og:url" content="https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/rent-late-fee-calculator-spreadsheet/"><meta name="theme-color" content="#0d9488">
+<link rel="stylesheet" href="/sheet-and-flow/assets/style.css"><link rel="icon" href="/sheet-and-flow/assets/favicon.svg" type="image/svg+xml"><meta property="og:image" content="https://onyxaholguin-cyber.github.io/sheet-and-flow/assets/og/landlord-tenant-toolkit.jpg"><meta property="og:image:width" content="1280"><meta property="og:image:height" content="720"><meta property="og:site_name" content="Sheet & Flow"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Rent Late Fee Calculator Spreadsheet: Grace Period, Flat + Daily Fees and a Cap (Excel &amp; Google Sheets) | Sheet &amp; Flow"><meta name="twitter:description" content="Build a rent ledger that works out days late, the late fee (flat, percent of rent, daily, with a maximum) and the balance for every charge, and flags LATE automatically. Exact formulas, tested by recalculating a sample workbook, plus how to set the grace period to match state rules like Colorado, New York and Texas."><meta name="twitter:image" content="https://onyxaholguin-cyber.github.io/sheet-and-flow/assets/og/landlord-tenant-toolkit.jpg"><script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Rent Late Fee Calculator Spreadsheet: Grace Period, Flat + Daily Fees and a Cap (Excel & Google Sheets)", "description": "Build a rent ledger that works out days late, the late fee (flat, percent of rent, daily, with a maximum) and the balance for every charge, and flags LATE automatically. Exact formulas, tested by recalculating a sample workbook, plus how to set the grace period to match state rules like Colorado, New York and Texas.", "dateModified": "2026-10-09", "datePublished": "2026-10-09", "image": "https://onyxaholguin-cyber.github.io/sheet-and-flow/assets/og/landlord-tenant-toolkit.jpg", "author": {"@type": "Organization", "name": "Sheet & Flow", "url": "https://onyxaholguin-cyber.github.io/sheet-and-flow/"}, "publisher": {"@type": "Organization", "name": "Sheet & Flow", "url": "https://onyxaholguin-cyber.github.io/sheet-and-flow/"}, "mainEntityOfPage": "https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/rent-late-fee-calculator-spreadsheet/"}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://onyxaholguin-cyber.github.io/sheet-and-flow/"}, {"@type": "ListItem", "position": 2, "name": "Tutorials", "item": "https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/"}, {"@type": "ListItem", "position": 3, "name": "Rent Late Fee Calculator Spreadsheet: Grace Period, Flat + Daily Fees and a Cap (Excel & Google Sheets)", "item": "https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/rent-late-fee-calculator-spreadsheet/"}]}</script></head>
+<body><a class="skip" href="#main">Skip to content</a>
+<header class="top"><div class="wrap"><a class="brand" href="/sheet-and-flow/">Sheet <span>&amp;</span> Flow</a>
+<nav><a href="/sheet-and-flow/products/">Products</a><a href="/sheet-and-flow/tutorials/">Tutorials</a><a href="/sheet-and-flow/tools/">Free tools</a></nav></div></header><div class="offer" id="offer" data-expires="2026-10-15T05:59:59Z">Launch offer: 20% off every product and bundle with code <b>LAUNCH20</b> until October 14, 2026. <a href="https://sheetandflow.gumroad.com">Browse the store</a></div><script>(function(){var e=document.getElementById("offer");if(e&&Date.now()>Date.parse(e.getAttribute("data-expires"))){e.parentNode.removeChild(e);document.addEventListener("DOMContentLoaded",function(){[].forEach.call(document.querySelectorAll("[data-offer]"),function(x){x.parentNode.removeChild(x);});});}})();</script>
+<main id="main"><div class="wrap narrow"><article><h1>Rent Late Fee Calculator Spreadsheet: Grace Period, Flat + Daily Fees and a Cap (Excel &amp; Google Sheets)</h1><div class="byline">Updated 2026-10-09 · Sheet & Flow</div><p class="inline-cta">Short on time? The <a href="/sheet-and-flow/products/landlord-tenant-toolkit/">Landlord Tenant Toolkit</a> ($39) is the finished, tested version of what this tutorial builds.</p><p>Late fees are where small landlords most often get the math wrong. One tenant pays on the 6th and gets charged when the lease says the grace period runs through the 6th. Another is three weeks late and the daily fee has quietly passed the maximum your lease (or your state) allows. Both mistakes are easy to make by hand and easy to avoid with four formulas.</p>
+<p>This tutorial builds a rent ledger that calculates <strong>days late, the late fee, the balance and a status</strong> for every charge. It works the same in Excel, Google Sheets and LibreOffice. We tested every formula below by building a workbook with these exact formulas, recalculating it in LibreOffice, and comparing every cell to the worked example and to an independent Python calculation (plus 200 randomized rows).</p>
+<h2>1. A Setup tab with your late fee rule</h2>
+<p>Make a tab called <code>Setup</code>:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>A</th>
+<th>B</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>As-of date</td>
+<td>2026-10-20</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Grace period (days)</td>
+<td>5</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Flat late fee</td>
+<td>50</td>
+</tr>
+<tr>
+<td>4</td>
+<td>% of rent</td>
+<td>0%</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Daily fee after grace</td>
+<td>10</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Maximum fee (0 = no cap)</td>
+<td>150</td>
+</tr>
+</tbody>
+</table>
+<p><code>B1</code> is the date the ledger is measured from. Type a date for a monthly review, or use <code>=TODAY()</code>. The fee rule reads: <strong>once rent is more than <code>B2</code> days late, charge <code>B3</code> + <code>B4</code> × rent + <code>B5</code> for each day past the grace period, but never more than <code>B6</code>.</strong> Use the parts your lease uses and leave the others at 0. A lease with "$75 if rent is late" is <code>B3 = 75</code> with everything else 0. A lease with "5% of the monthly rent" is <code>B4 = 5%</code>.</p>
+<h2>2. The Ledger tab</h2>
+<p>One row per charge (usually one per unit per month), starting in row 2. The first five columns are typed:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>A</th>
+<th>B</th>
+<th>C</th>
+<th>D</th>
+<th>E</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Due date</td>
+<td>Unit</td>
+<td>Rent</td>
+<td>Paid so far</td>
+<td>Date paid in full</td>
+</tr>
+<tr>
+<td>2</td>
+<td>2026-10-01</td>
+<td>101 Maple</td>
+<td>1450</td>
+<td>1450</td>
+<td>2026-10-01</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Paid so far</strong> is everything the tenant has paid toward this charge, including any late fee they paid. <strong>Date paid in full</strong> is the day the <em>rent</em> was fully paid. Leave it blank while any rent is still owed, because the clock keeps running until then.</p>
+<h2>3. The calculated columns</h2>
+<pre><code>F2:  =IF(A2=&quot;&quot;,&quot;&quot;,MAX(0,IF(E2&lt;&gt;&quot;&quot;,E2,Setup!$B$1)-A2))
+G2:  =IF(F2=&quot;&quot;,&quot;&quot;,IF(F2&lt;=Setup!$B$2,0,ROUND(IF(Setup!$B$6&gt;0,MIN(Setup!$B$6,Setup!$B$3+Setup!$B$4*C2+Setup!$B$5*(F2-Setup!$B$2)),Setup!$B$3+Setup!$B$4*C2+Setup!$B$5*(F2-Setup!$B$2)),2)))
+H2:  =IF(A2=&quot;&quot;,&quot;&quot;,C2+G2-N(D2))
+I2:  =IF(A2=&quot;&quot;,&quot;&quot;,IF(H2&lt;=0,&quot;Paid&quot;,IF(N(D2)&gt;=C2,&quot;Fee owed&quot;,IF(A2&gt;Setup!$B$1,&quot;Upcoming&quot;,IF(F2&gt;Setup!$B$2,&quot;LATE&quot;,IF(N(D2)&gt;0,&quot;Partial&quot;,&quot;Due&quot;))))))
+</code></pre>
+<p>Fill all four down as far as you have charges (blank rows stay blank). What each one does:</p>
+<ul>
+<li><strong>F, Days late:</strong> the date the rent was paid in full minus the due date. While rent is still owed, it counts to the as-of date instead. <code>MAX(0, …)</code> keeps early payments and future charges at 0.</li>
+<li><strong>G, Late fee:</strong> 0 while the payment is inside the grace period. After that, the flat fee plus the percentage plus the daily fee for each day past the grace period, capped at the maximum, rounded to cents. One fee per charge row.</li>
+<li><strong>H, Balance:</strong> rent plus late fee minus everything paid. <code>N()</code> treats an empty "paid" cell as 0.</li>
+<li><strong>I, Status:</strong> <code>Paid</code> when nothing is owed; <code>Fee owed</code> when the rent is paid but the late fee isn't; <code>Upcoming</code> before the due date; <code>LATE</code> once past the grace period; otherwise <code>Partial</code> or <code>Due</code>.</li>
+</ul>
+<p>To color the rows, select the Ledger data and add a conditional-formatting rule with the custom formula <code>=$I2="LATE"</code> (red) and <code>=$I2="Fee owed"</code> (amber).</p>
+<h3>How the grace period lines up with the calendar</h3>
+<p>With rent due on the 1st and <code>B2 = 5</code>, rent paid on the 6th is 5 days late and has <strong>no fee</strong>. Paid on the 7th, it's 6 days late and the fee starts. That's why the formula uses "more than the grace period" (<code>F2&gt;Setup!$B$2</code>). Lease wording like "rent is late after the 5th" is different: a payment on the 6th is already late, so that lease needs <code>B2 = 4</code>. Read yours and set <code>B2</code> to the number of days late that are still free.</p>
+<h2>4. A per-row cap (when the maximum depends on the rent)</h2>
+<p>Some rules cap the fee as a share of the rent, so the maximum differs by unit. Put the cap in column <code>J</code> and use this version of <code>G2</code> instead:</p>
+<pre><code>G2 (per-row cap in J):  =IF(F2=&quot;&quot;,&quot;&quot;,IF(F2&lt;=Setup!$B$2,0,ROUND(MIN(J2,Setup!$B$3+Setup!$B$4*C2+Setup!$B$5*(F2-Setup!$B$2)),2)))
+J2 (lesser of $50 or 5% of rent):  =MIN(50,5%*C2)
+J2 (12% of rent):  =12%*C2
+</code></pre>
+<p>Here are three state rules, as examples of how to translate statute wording into <code>B2</code> and the cap. This is how we read the text. Check the current law, your city's rules and your lease before charging anything.</p>
+<table>
+<thead>
+<tr>
+<th>State</th>
+<th>Rule (summary)</th>
+<th>Grace <code>B2</code></th>
+<th>Cap</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Colorado</td>
+<td>No fee unless rent is late by at least 7 calendar days; fee can't exceed the greater of $50 or 5% of the past-due rent (<a href="https://colorado.public.law/statutes/crs_38-12-105">C.R.S. 38-12-105</a>)</td>
+<td>6</td>
+<td>greater of $50 or 5% of the past-due rent</td>
+</tr>
+<tr>
+<td>New York</td>
+<td>No fee unless rent wasn't paid within 5 days of the due date; fee can't exceed $50 or 5% of the monthly rent, whichever is less (<a href="https://ag.ny.gov/resources/individuals/tenants-homeowners/tenants">NY Attorney General, Real Property Law §238-a</a>)</td>
+<td>5</td>
+<td><code>=MIN(50,5%*C2)</code></td>
+</tr>
+<tr>
+<td>Texas</td>
+<td>No fee unless rent has remained unpaid two full days after the due date; a fee of up to 12% of the rent (4 or fewer units) or 10% (more than 4 units) is considered reasonable, and an initial fee plus daily fees count as one late fee (<a href="https://statutes.capitol.texas.gov/docs/PR/htm/PR.92.htm">Tex. Prop. Code §92.019</a>)</td>
+<td>2</td>
+<td><code>=12%*C2</code> or <code>=10%*C2</code></td>
+</tr>
+</tbody>
+</table>
+<p>Colorado's "late by at least 7 days" means 7 days late is the first day a fee is allowed, so the number of free days is 6. Texas's "two full days after the due date" means a fee can start on the third day late, so the grace setting is 2.</p>
+<h2>5. A small dashboard</h2>
+<p>On a <code>Dashboard</code> tab:</p>
+<pre><code>B1:  =SUMIFS(Ledger!$H$2:$H$200,Ledger!$A$2:$A$200,&quot;&lt;=&quot;&amp;Setup!$B$1)
+B2:  =SUM(Ledger!$G$2:$G$200)
+B3:  =COUNTIF(Ledger!$I$2:$I$200,&quot;LATE&quot;)
+B4:  =COUNTIF(Ledger!$I$2:$I$200,&quot;Fee owed&quot;)
+</code></pre>
+<p>Label them in column A: <em>Owed now</em>, <em>Late fees assessed</em>, <em>Charges LATE</em>, <em>Rent paid, fee still owed</em>. <code>B1</code> only counts charges that are already due, so next month's rent doesn't inflate what you're owed today.</p>
+<h2>Worked example</h2>
+<p>As-of date October 20, 2026, grace period 5 days, $50 flat fee, 0%, $10 per day after the grace period, maximum $150:</p>
+<table>
+<thead>
+<tr>
+<th>Unit</th>
+<th>Due</th>
+<th>Rent</th>
+<th>Paid so far</th>
+<th>Paid in full</th>
+<th>Days late</th>
+<th>Late fee</th>
+<th>Balance</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>101 Maple</td>
+<td>2026-10-01</td>
+<td>1,450</td>
+<td>1,450</td>
+<td>2026-10-01</td>
+<td>0</td>
+<td>0.00</td>
+<td>0.00</td>
+<td>Paid</td>
+</tr>
+<tr>
+<td>102 Maple</td>
+<td>2026-10-01</td>
+<td>1,395</td>
+<td>1,395</td>
+<td>2026-10-06</td>
+<td>5</td>
+<td>0.00</td>
+<td>0.00</td>
+<td>Paid</td>
+</tr>
+<tr>
+<td>103 Maple</td>
+<td>2026-10-01</td>
+<td>1,395</td>
+<td>1,395</td>
+<td>2026-10-07</td>
+<td>6</td>
+<td>60.00</td>
+<td>60.00</td>
+<td>Fee owed</td>
+</tr>
+<tr>
+<td>12 Pine</td>
+<td>2026-10-01</td>
+<td>1,500</td>
+<td>1,590</td>
+<td>2026-10-10</td>
+<td>9</td>
+<td>90.00</td>
+<td>0.00</td>
+<td>Paid</td>
+</tr>
+<tr>
+<td>7 Birch A</td>
+<td>2026-10-01</td>
+<td>1,300</td>
+<td>0</td>
+<td></td>
+<td>19</td>
+<td>150.00</td>
+<td>1,450.00</td>
+<td>LATE</td>
+</tr>
+<tr>
+<td>7 Birch B</td>
+<td>2026-10-01</td>
+<td>1,250</td>
+<td>800</td>
+<td></td>
+<td>19</td>
+<td>150.00</td>
+<td>600.00</td>
+<td>LATE</td>
+</tr>
+<tr>
+<td>9 Cedar</td>
+<td>2026-10-15</td>
+<td>1,100</td>
+<td>500</td>
+<td></td>
+<td>5</td>
+<td>0.00</td>
+<td>600.00</td>
+<td>Partial</td>
+</tr>
+<tr>
+<td>9 Cedar</td>
+<td>2026-11-01</td>
+<td>1,100</td>
+<td>0</td>
+<td></td>
+<td>0</td>
+<td>0.00</td>
+<td>1,100.00</td>
+<td>Upcoming</td>
+</tr>
+</tbody>
+</table>
+<p>Dashboard: <strong>$2,710.00</strong> owed now (the November charge isn't due yet, so it's left out), <strong>$450.00</strong> in late fees assessed, <strong>2</strong> charges LATE and <strong>1</strong> with the rent paid but the fee still owed.</p>
+<p>What the example shows:</p>
+<ol>
+<li><strong>The grace boundary is one day wide.</strong> 102 Maple paid on the 6th (5 days late, no fee). 103 Maple paid one day later and owes $50 + $10 × 1 = <strong>$60</strong>.</li>
+<li><strong>The cap does real work.</strong> 7 Birch A is 19 days late, so the uncapped fee would be $50 + $10 × 14 = $190. The $150 maximum applies.</li>
+<li><strong>A partial payment doesn't stop the clock.</strong> 7 Birch B paid $800 but still owes rent, so it's 19 days late too and carries the same capped fee: $1,250 + $150 − $800 = <strong>$600</strong>.</li>
+<li><strong>Paying the fee closes the row.</strong> 12 Pine paid on the 10th (9 days late, $50 + $10 × 4 = $90) and paid $1,590 in total, so the balance is 0 and the status is Paid.</li>
+</ol>
+<h2>Common mistakes</h2>
+<ul>
+<li><strong>Counting from the wrong day.</strong> "Days late" here is the payment date minus the due date. If your lease counts the grace period differently, change <code>B2</code>, not the formula.</li>
+<li><strong>Letting daily fees run past the maximum.</strong> Always fill in <code>B6</code> (or column J) if your lease or law sets a cap. A blank cap means no cap.</li>
+<li><strong>Charging a fee on top of a fee.</strong> This sheet calculates one late fee per charge. Some states (Colorado, for example) restrict charging more than one late fee per late payment, so don't add a second late-fee row for the same month.</li>
+<li><strong>Dates typed as text.</strong> If column F shows <code>#VALUE!</code>, a date was pasted as text. Re-enter it as a real date (in Google Sheets, <em>Format → Number → Date</em>).</li>
+<li><strong>A late fee your lease doesn't mention.</strong> Most rules require the fee to be in the written lease. The spreadsheet can't check that for you.</li>
+</ul>
+<h2>Related tutorials</h2>
+<ul>
+<li><a href="/sheet-and-flow/tutorials/rent-roll-late-rent-deposits/">Build a rent roll that flags late rent automatically (plus a deposit ledger)</a>.</li>
+<li><a href="/sheet-and-flow/tutorials/lease-renewal-tracker-spreadsheet/">Lease renewal tracker spreadsheet: expiration alerts, notice deadlines and rent increases</a>.</li>
+<li><a href="/sheet-and-flow/tutorials/rental-property-cash-flow-spreadsheet/">Rental property cash flow spreadsheet: monthly NOI and cash flow per property</a>.</li>
+</ul>
+<h2>Want it done for you?</h2>
+<p>The <a href="/sheet-and-flow/products/landlord-tenant-toolkit/">Landlord Tenant Toolkit</a> is a finished workbook with a rent ledger that calculates late fees from the same kind of rule (grace period, flat, percent, daily and a cap), plus a move-out inspection that feeds a security deposit itemization with the return deadline, a tenant screening scorecard, a turnover-vs-renewal calculator, a maintenance log and a dashboard. It comes with a filled-in 4-unit sample and works in Excel and Google Sheets with no macros.</p>
+<p>Not legal advice. Late fee limits, grace periods and notice rules depend on your state, city and lease. Check them before charging a late fee.</p><aside class="cta"><img src="/sheet-and-flow/assets/img/landlord-tenant-toolkit.webp" width="640" height="360" alt="Landlord Tenant Toolkit cover" loading="lazy">
+<div><h3>Landlord Tenant Toolkit</h3><p>Rent ledger with automatic late fees, move-out inspection to security deposit itemization, tenant screening, turnover cost and a maintenance log.</p><a class="btn" href="https://sheetandflow.gumroad.com/l/landlord-tenant-toolkit">Get it · $39</a> <a href="/sheet-and-flow/products/landlord-tenant-toolkit/">See what's inside</a></div></aside><p>Free tool: <a href="/sheet-and-flow/tools/rental-deal-calculator/">Free Rental Property Calculator: Cash Flow, Cap Rate, Cash-on-Cash, DSCR</a></p><p class="note">Written with AI assistance. Every formula, command and number on this page was tested before publishing (see each section). Product links go to our store.</p></article></div></main>
+<footer><div class="wrap"><p><strong>Sheet & Flow</strong> · Practical spreadsheets and n8n automations for landlords, freelancers and small teams.</p>
+<p><a href="/sheet-and-flow/about/">About</a><a href="/sheet-and-flow/affiliate-disclosure/">Affiliate disclosure</a><a href="/sheet-and-flow/privacy/">Privacy</a><a href="/sheet-and-flow/refunds/">Refunds</a><a href="https://sheetandflow.gumroad.com">Store</a></p>
+<p>Questions about a purchase? Reply to your Gumroad receipt email.</p>
+<p>Content and products are built with AI assistance and tested before publishing. Some links may become affiliate links. Nothing here is tax, legal or financial advice. Not affiliated with n8n GmbH, Microsoft or Google.</p></div></footer>
+</body></html>
