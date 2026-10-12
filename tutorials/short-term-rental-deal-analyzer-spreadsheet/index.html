@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Short-Term Rental Calculator Spreadsheet: Airbnb Cash Flow, Break-Even Occupancy and Nightly Rate (Excel &amp; Google Sheets) | Sheet &amp; Flow</title><meta name="description" content="Build an Airbnb/VRBO deal analyzer that works out gross revenue, NOI, cash flow after the mortgage, cash-on-cash, cap rate, DSCR, RevPAR, and the occupancy and nightly rate you need to break even. Exact formulas, tested by recalculating a sample workbook in LibreOffice and checking it against an independent model.">
+<link rel="canonical" href="https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/short-term-rental-deal-analyzer-spreadsheet/"><meta property="og:title" content="Short-Term Rental Calculator Spreadsheet: Airbnb Cash Flow, Break-Even Occupancy and Nightly Rate (Excel &amp; Google Sheets) | Sheet &amp; Flow"><meta property="og:description" content="Build an Airbnb/VRBO deal analyzer that works out gross revenue, NOI, cash flow after the mortgage, cash-on-cash, cap rate, DSCR, RevPAR, and the occupancy and nightly rate you need to break even. Exact formulas, tested by recalculating a sample workbook in LibreOffice and checking it against an independent model.">
+<meta property="og:type" content="article"><meta property="og:url" content="https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/short-term-rental-deal-analyzer-spreadsheet/"><meta name="theme-color" content="#0d9488">
+<link rel="stylesheet" href="/sheet-and-flow/assets/style.css"><link rel="icon" href="/sheet-and-flow/assets/favicon.svg" type="image/svg+xml"><meta property="og:image" content="https://onyxaholguin-cyber.github.io/sheet-and-flow/assets/og/short-term-rental-analyzer.jpg"><meta property="og:image:width" content="1280"><meta property="og:image:height" content="720"><meta property="og:site_name" content="Sheet & Flow"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Short-Term Rental Calculator Spreadsheet: Airbnb Cash Flow, Break-Even Occupancy and Nightly Rate (Excel &amp; Google Sheets) | Sheet &amp; Flow"><meta name="twitter:description" content="Build an Airbnb/VRBO deal analyzer that works out gross revenue, NOI, cash flow after the mortgage, cash-on-cash, cap rate, DSCR, RevPAR, and the occupancy and nightly rate you need to break even. Exact formulas, tested by recalculating a sample workbook in LibreOffice and checking it against an independent model."><meta name="twitter:image" content="https://onyxaholguin-cyber.github.io/sheet-and-flow/assets/og/short-term-rental-analyzer.jpg"><script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Short-Term Rental Calculator Spreadsheet: Airbnb Cash Flow, Break-Even Occupancy and Nightly Rate (Excel & Google Sheets)", "description": "Build an Airbnb/VRBO deal analyzer that works out gross revenue, NOI, cash flow after the mortgage, cash-on-cash, cap rate, DSCR, RevPAR, and the occupancy and nightly rate you need to break even. Exact formulas, tested by recalculating a sample workbook in LibreOffice and checking it against an independent model.", "dateModified": "2026-10-12", "datePublished": "2026-10-12", "image": "https://onyxaholguin-cyber.github.io/sheet-and-flow/assets/og/short-term-rental-analyzer.jpg", "author": {"@type": "Organization", "name": "Sheet & Flow", "url": "https://onyxaholguin-cyber.github.io/sheet-and-flow/"}, "publisher": {"@type": "Organization", "name": "Sheet & Flow", "url": "https://onyxaholguin-cyber.github.io/sheet-and-flow/"}, "mainEntityOfPage": "https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/short-term-rental-deal-analyzer-spreadsheet/"}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://onyxaholguin-cyber.github.io/sheet-and-flow/"}, {"@type": "ListItem", "position": 2, "name": "Tutorials", "item": "https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/"}, {"@type": "ListItem", "position": 3, "name": "Short-Term Rental Calculator Spreadsheet: Airbnb Cash Flow, Break-Even Occupancy and Nightly Rate (Excel & Google Sheets)", "item": "https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/short-term-rental-deal-analyzer-spreadsheet/"}]}</script></head>
+<body><a class="skip" href="#main">Skip to content</a>
+<header class="top"><div class="wrap"><a class="brand" href="/sheet-and-flow/">Sheet <span>&amp;</span> Flow</a>
+<nav><a href="/sheet-and-flow/products/">Products</a><a href="/sheet-and-flow/tutorials/">Tutorials</a><a href="/sheet-and-flow/tools/">Free tools</a></nav></div></header><div class="offer" id="offer" data-expires="2026-10-15T05:59:59Z">Launch offer: 20% off every product and bundle with code <b>LAUNCH20</b> until October 14, 2026. <a href="https://sheetandflow.gumroad.com">Browse the store</a></div><script>(function(){var e=document.getElementById("offer");if(e&&Date.now()>Date.parse(e.getAttribute("data-expires"))){e.parentNode.removeChild(e);document.addEventListener("DOMContentLoaded",function(){[].forEach.call(document.querySelectorAll("[data-offer]"),function(x){x.parentNode.removeChild(x);});});}})();</script>
+<main id="main"><div class="wrap narrow"><article><h1>Short-Term Rental Calculator Spreadsheet: Airbnb Cash Flow, Break-Even Occupancy and Nightly Rate (Excel &amp; Google Sheets)</h1><div class="byline">Updated 2026-10-12 · Sheet & Flow</div><p class="inline-cta">Short on time? The <a href="/sheet-and-flow/products/short-term-rental-analyzer/">Short-Term Rental Analyzer</a> ($19) is the finished, tested version of what this tutorial builds.</p><p>Most short-term rental deals look great in a listing spreadsheet because the listing spreadsheet multiplies a nightly rate by 365 and stops there. The real deal is smaller: fewer nights are available than you think, every stay costs a cleaning, the platform takes its fee off the top, and the mortgage doesn't care how slow February was. The most useful single number is <strong>break-even occupancy</strong>: the share of available nights you must book just to cover every cost and the mortgage.</p>
+<p>This tutorial builds a one-tab analyzer that works out <strong>gross revenue, NOI, cash flow, cash-on-cash, cap rate, DSCR, RevPAR, break-even occupancy and break-even nightly rate</strong>, plus a small what-if grid. It works the same in Excel, Google Sheets and LibreOffice. We tested every formula below by building a workbook with these exact formulas, recalculating it in LibreOffice, and comparing every cell to the worked example and to an independent Python model (break-even values solved numerically), plus 40 randomized deals.</p>
+<h2>1. The inputs</h2>
+<p>Make a tab called <code>Analyzer</code>. Labels go in column A, your numbers in column B:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>A</th>
+<th>B</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2</td>
+<td>Purchase price</td>
+<td>350000</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Down payment %</td>
+<td>25%</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Interest rate (annual)</td>
+<td>7.00%</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Loan term (years)</td>
+<td>30</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Closing costs</td>
+<td>10500</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Furnishing &amp; setup</td>
+<td>25000</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Average nightly rate (ADR)</td>
+<td>185</td>
+</tr>
+<tr>
+<td>9</td>
+<td>Occupancy % of available nights</td>
+<td>62%</td>
+</tr>
+<tr>
+<td>10</td>
+<td>Blocked nights / year</td>
+<td>14</td>
+</tr>
+<tr>
+<td>11</td>
+<td>Average stay (nights)</td>
+<td>3.2</td>
+</tr>
+<tr>
+<td>12</td>
+<td>Cleaning fee charged per stay</td>
+<td>95</td>
+</tr>
+<tr>
+<td>13</td>
+<td>Platform host fee %</td>
+<td>15.5%</td>
+</tr>
+<tr>
+<td>14</td>
+<td>Cleaning cost per turnover</td>
+<td>85</td>
+</tr>
+<tr>
+<td>15</td>
+<td>Management % of revenue</td>
+<td>0%</td>
+</tr>
+<tr>
+<td>16</td>
+<td>Maintenance + CapEx reserve % of revenue</td>
+<td>9%</td>
+</tr>
+<tr>
+<td>17</td>
+<td>Fixed costs / month</td>
+<td>920</td>
+</tr>
+</tbody>
+</table>
+<p>A few of these trip people up:</p>
+<ul>
+<li><strong>ADR</strong> is what guests pay per night <em>before</em> cleaning fees and lodging taxes. Lodging and occupancy taxes you collect and pass on to the city or state are not your revenue, so leave them out.</li>
+<li><strong>Occupancy</strong> is booked nights divided by <em>available</em> nights, not by 365. <strong>Blocked nights</strong> are owner stays and maintenance days that can't be booked.</li>
+<li><strong>Average stay</strong> sets how many turnovers you pay for. Shorter stays mean more cleaning fees collected, but also more cleanings paid and more wear.</li>
+<li><strong>Platform host fee:</strong> on Airbnb's single-fee structure, the whole service fee comes out of the host payout, and most hosts pay 15.5%. On the older split-fee structure, most hosts pay 3% and the guest pays the rest. Airbnb is moving all hosts to the single fee, and it's mandatory for hosts who use property management software (<a href="https://www.airbnb.com/help/article/1857">Airbnb Help Center: service fees</a>). The fee applies to the nightly price plus fees you charge, such as the cleaning fee, which is how the formulas below use it.</li>
+<li><strong>Fixed costs</strong> are the monthly bills that don't change with bookings: property tax, STR insurance, utilities, internet, HOA, supplies and software.</li>
+</ul>
+<h2>2. The formulas</h2>
+<p>Put these in column B, below the inputs:</p>
+<pre><code>B19:  =365-B10
+B20:  =B19*B9
+B21:  =IF(B11&gt;0,B20/B11,0)
+B22:  =B20*B8+B21*B12
+B23:  =B22*(B13+B15+B16)+B21*B14+12*B17
+B24:  =B22-B23
+B25:  =IF(B2*(1-B3)=0,0,IF(B4=0,B2*(1-B3)/(B5*12),PMT(B4/12,B5*12,-B2*(1-B3))))
+B26:  =B24-12*B25
+B27:  =B2*B3+B6+B7
+B28:  =IF(B27=0,&quot;&quot;,B26/B27)
+B29:  =IF(B2=0,&quot;&quot;,B24/B2)
+B30:  =IF(B25=0,&quot;&quot;,B24/(12*B25))
+B31:  =IF(B19=0,0,B20*B8/B19)
+B32:  =(B8+IF(B11&gt;0,B12/B11,0))*(1-B13-B15-B16)-IF(B11&gt;0,B14/B11,0)
+B33:  =IF(OR(B32&lt;=0,B19=0),&quot;Never&quot;,12*(B17+B25)/(B19*B32))
+B34:  =IF(OR(B20=0,B13+B15+B16&gt;=1),&quot;Never&quot;,(12*(B17+B25)+B21*B14)/(B20*(1-B13-B15-B16))-IF(B11&gt;0,B12/B11,0))
+</code></pre>
+<p>Label them in column A: <em>Available nights, Booked nights, Stays (turnovers), Gross revenue, Operating expenses, NOI, Mortgage P&amp;I / month, Annual cash flow, Total cash invested, Cash-on-cash, Cap rate, DSCR, RevPAR, Kept per booked night, Break-even occupancy, Break-even nightly rate</em>. Format B28:B30 and B33 as percentages (B30 as a plain number). What each one does:</p>
+<ul>
+<li><strong>B19–B21, nights and stays:</strong> available nights are 365 minus blocked nights; booked nights are available nights × occupancy; stays are booked nights ÷ average stay.</li>
+<li><strong>B22, Gross revenue:</strong> nightly revenue plus the cleaning fees guests pay.</li>
+<li><strong>B23, Operating expenses:</strong> the platform fee, management and maintenance/CapEx reserve as a share of gross revenue, plus what you pay the cleaner for every turnover, plus twelve months of fixed costs. The mortgage is <em>not</em> an operating expense.</li>
+<li><strong>B24, NOI:</strong> gross revenue minus operating expenses.</li>
+<li><strong>B25, Mortgage P&amp;I:</strong> the standard monthly payment. The <code>IF</code>s handle a cash purchase (100% down, no loan) and a 0% loan, where <code>PMT</code> isn't needed.</li>
+<li><strong>B26, Annual cash flow:</strong> NOI minus twelve mortgage payments. Divide by 12 for a monthly figure.</li>
+<li><strong>B27–B30, returns:</strong> cash-on-cash is cash flow ÷ the cash you put in (down payment, closing and furnishing); cap rate is NOI ÷ price; DSCR is NOI ÷ annual debt service. Below 1.0 means NOI doesn't cover the mortgage.</li>
+<li><strong>B31, RevPAR:</strong> nightly revenue per <em>available</em> night, the number to compare against market data that reports RevPAR.</li>
+<li><strong>B32, Kept per booked night:</strong> what one booked night is worth after every cost that scales with bookings: the rate plus its share of the cleaning fee, less the percentage fees, less its share of the cleaning cost.</li>
+<li><strong>B33, Break-even occupancy:</strong> the fixed costs and mortgage for a year, divided by what each available night would earn if it were booked. It's the occupancy at which B26 is exactly 0, with everything else held where it is. "Never" means each booked night loses money; a result above 100% means the deal can't break even at this nightly rate.</li>
+<li><strong>B34, Break-even nightly rate:</strong> the same idea turned around: the ADR at which cash flow is 0 at your occupancy.</li>
+</ul>
+<h2>3. A what-if grid</h2>
+<p>One estimate of occupancy and rate isn't enough; you want to see how wrong you can be. Make a tab called <code>WhatIf</code> with nightly rates across row 2 (<code>B2:D2</code>) and occupancies down column A (<code>A3:A5</code>), then put this in <code>B3</code> and fill it across and down:</p>
+<pre><code>WhatIf!B3:  =Analyzer!$B$19*$A3*((B$2+IF(Analyzer!$B$11&gt;0,Analyzer!$B$12/Analyzer!$B$11,0))*(1-Analyzer!$B$13-Analyzer!$B$15-Analyzer!$B$16)-IF(Analyzer!$B$11&gt;0,Analyzer!$B$14/Analyzer!$B$11,0))-12*(Analyzer!$B$17+Analyzer!$B$25)
+</code></pre>
+<p>Each cell is the annual cash flow at that occupancy and that nightly rate, with every other input taken from the Analyzer. Add conditional formatting (red when less than 0, green when greater than 0) and the boundary between the colors is your margin of safety. You can extend it to as many rows and columns as you like.</p>
+<h2>Worked example</h2>
+<p>A $350,000 property, 25% down at 7.00% for 30 years, $10,500 closing costs and $25,000 to furnish ($123,000 cash in). $185 a night at 62% occupancy, 14 blocked nights, 3.2-night average stay, $95 cleaning fee charged and $85 paid to the cleaner, a 15.5% host fee, self-managed, 9% for maintenance and CapEx, and $920 a month in fixed costs:</p>
+<table>
+<thead>
+<tr>
+<th>Result</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Available nights</td>
+<td>351</td>
+</tr>
+<tr>
+<td>Booked nights</td>
+<td>217.6</td>
+</tr>
+<tr>
+<td>Stays (turnovers)</td>
+<td>68.0</td>
+</tr>
+<tr>
+<td>Gross revenue</td>
+<td>$46,720</td>
+</tr>
+<tr>
+<td>Operating expenses</td>
+<td>$28,267</td>
+</tr>
+<tr>
+<td>NOI</td>
+<td>$18,453</td>
+</tr>
+<tr>
+<td>Mortgage P&amp;I / month</td>
+<td>$1,746.42</td>
+</tr>
+<tr>
+<td>Annual cash flow</td>
+<td>−$2,504</td>
+</tr>
+<tr>
+<td>Cash-on-cash</td>
+<td>−2.0%</td>
+</tr>
+<tr>
+<td>Cap rate</td>
+<td>5.3%</td>
+</tr>
+<tr>
+<td>DSCR</td>
+<td>0.88</td>
+</tr>
+<tr>
+<td>RevPAR</td>
+<td>$114.70</td>
+</tr>
+<tr>
+<td>Kept per booked night</td>
+<td>$135.53</td>
+</tr>
+<tr>
+<td>Break-even occupancy</td>
+<td>67.3%</td>
+</tr>
+<tr>
+<td>Break-even nightly rate</td>
+<td>$200.24</td>
+</tr>
+</tbody>
+</table>
+<p>What-if grid (annual cash flow):</p>
+<table>
+<thead>
+<tr>
+<th>Occupancy \ ADR</th>
+<th>$165</th>
+<th>$185</th>
+<th>$205</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>55%</td>
+<td>−$8,749</td>
+<td>−$5,834</td>
+<td>−$2,919</td>
+</tr>
+<tr>
+<td>62%</td>
+<td>−$5,790</td>
+<td>−$2,504</td>
+<td>$782</td>
+</tr>
+<tr>
+<td>70%</td>
+<td>−$2,408</td>
+<td>$1,302</td>
+<td>$5,012</td>
+</tr>
+</tbody>
+</table>
+<p>What the example shows:</p>
+<ol>
+<li><strong>A 5.3% cap rate can still lose money.</strong> NOI is positive, but the mortgage is $1,746.42 a month, so the deal is about <strong>$209 a month</strong> short and DSCR is below 1.</li>
+<li><strong>Break-even is the number to check against comps.</strong> At $185 a night you need <strong>67.3%</strong> occupancy. At 62% occupancy you need <strong>$200.24</strong> a night. Before making an offer, look at whether comparable listings near you actually book at those levels.</li>
+<li><strong>The host fee structure is worth $5,840 a year here.</strong> The same deal with a 3% host fee instead of 15.5% shows <strong>$3,336</strong> of annual cash flow instead of −$2,504. Use the fee you'll really pay.</li>
+<li><strong>Hiring a manager changes everything.</strong> Add 20% management and annual cash flow drops to <strong>−$11,848</strong>, with break-even occupancy at <strong>98.5%</strong>. If you won't self-manage, underwrite with the management fee from the start.</li>
+</ol>
+<h2>Common mistakes</h2>
+<ul>
+<li><strong>Occupancy against 365 nights.</strong> If you block 14 nights for yourself, 62% occupancy is 217.6 booked nights, not 226.3.</li>
+<li><strong>Counting lodging taxes as revenue.</strong> Taxes you collect and remit aren't yours. Enter ADR before taxes.</li>
+<li><strong>Forgetting the cleaner.</strong> The cleaning fee you charge is revenue; the cleaning you pay for is an expense on every turnover. Shorter stays raise both.</li>
+<li><strong>Using last year's platform fee.</strong> Check your platform's current fee page and the structure your account is on.</li>
+<li><strong>Ignoring personal use.</strong> Under IRS rules, a property you also use personally counts as a home if your personal use is more than the greater of 14 days or 10% of the days it's rented at a fair price, which changes how expenses are deducted (<a href="https://www.irs.gov/publications/p527">IRS Publication 527</a>). Talk to a tax professional before you count on deductions.</li>
+<li><strong>Skipping local rules.</strong> Many cities and HOAs restrict, license or tax short-term rentals. A deal that pencils out but can't get a permit is not a deal.</li>
+</ul>
+<h2>Related tutorials</h2>
+<ul>
+<li><a href="/sheet-and-flow/tutorials/cap-rate-cash-on-cash-dscr/">Cap rate vs. cash-on-cash vs. DSCR: a worked rental example</a>.</li>
+<li><a href="/sheet-and-flow/tutorials/rental-property-cash-flow-spreadsheet/">Rental property cash flow spreadsheet: monthly NOI and cash flow per property</a>.</li>
+<li><a href="/sheet-and-flow/tutorials/rental-income-expenses-schedule-e/">How to track rental income and expenses by Schedule E line</a>.</li>
+</ul>
+<h2>Want it done for you?</h2>
+<p>The <a href="/sheet-and-flow/products/short-term-rental-analyzer/">Short-Term Rental Deal Analyzer</a> is a finished workbook built on the same math: three scenarios side by side (conservative, base and optimistic, or three different properties), itemized monthly bills, every result above including break-even occupancy, and a 90-cell sensitivity grid of annual cash flow at occupancy 40–85% and nightly rate −$40 to +$40, colored red and green. It comes with a filled-in $350,000 sample and a PDF guide, and works in Excel, Google Sheets and LibreOffice with no macros.</p>
+<p>Not tax, legal or investment advice. Short-term rental rules, taxes and fees depend on your city, state, platform and lender. Check them before you buy.</p><aside class="cta"><img src="/sheet-and-flow/assets/img/short-term-rental-analyzer.webp" width="640" height="360" alt="Short-Term Rental Analyzer cover" loading="lazy">
+<div><h3>Short-Term Rental Analyzer</h3><p>Airbnb/VRBO underwriting: 3 scenarios, cash flow, cap rate, DSCR, break-even occupancy and an ADR x occupancy grid.</p><a class="btn" href="https://sheetandflow.gumroad.com/l/short-term-rental-analyzer">Get it · $19</a> <a href="/sheet-and-flow/products/short-term-rental-analyzer/">See what's inside</a></div></aside><p>Free tool: <a href="/sheet-and-flow/tools/rental-deal-calculator/">Free Rental Property Calculator: Cash Flow, Cap Rate, Cash-on-Cash, DSCR</a></p><p class="note">Written with AI assistance. Every formula, command and number on this page was tested before publishing (see each section). Product links go to our store.</p></article></div></main>
+<footer><div class="wrap"><p><strong>Sheet & Flow</strong> · Practical spreadsheets and n8n automations for landlords, freelancers and small teams.</p>
+<p><a href="/sheet-and-flow/about/">About</a><a href="/sheet-and-flow/affiliate-disclosure/">Affiliate disclosure</a><a href="/sheet-and-flow/privacy/">Privacy</a><a href="/sheet-and-flow/refunds/">Refunds</a><a href="https://sheetandflow.gumroad.com">Store</a></p>
+<p>Questions about a purchase? Reply to your Gumroad receipt email.</p>
+<p>Content and products are built with AI assistance and tested before publishing. Some links may become affiliate links. Nothing here is tax, legal or financial advice. Not affiliated with n8n GmbH, Microsoft or Google.</p></div></footer>
+</body></html>
