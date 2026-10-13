@@ -1,0 +1,359 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Rental Property IRR Spreadsheet: 10-Year Projection, Loan Paydown, Sale Proceeds and Equity Multiple (Excel &amp; Google Sheets) | Sheet &amp; Flow</title><meta name="description" content="Build a 10-year rental projection that works out yearly cash flow, loan balance, property value, net sale proceeds, IRR, equity multiple and a breakdown of where the profit comes from. Exact formulas, tested by recalculating a sample workbook in LibreOffice and checking it against an independent model.">
+<link rel="canonical" href="https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/rental-property-irr-spreadsheet/"><meta property="og:title" content="Rental Property IRR Spreadsheet: 10-Year Projection, Loan Paydown, Sale Proceeds and Equity Multiple (Excel &amp; Google Sheets) | Sheet &amp; Flow"><meta property="og:description" content="Build a 10-year rental projection that works out yearly cash flow, loan balance, property value, net sale proceeds, IRR, equity multiple and a breakdown of where the profit comes from. Exact formulas, tested by recalculating a sample workbook in LibreOffice and checking it against an independent model.">
+<meta property="og:type" content="article"><meta property="og:url" content="https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/rental-property-irr-spreadsheet/"><meta name="theme-color" content="#0d9488">
+<link rel="stylesheet" href="/sheet-and-flow/assets/style.css"><link rel="icon" href="/sheet-and-flow/assets/favicon.svg" type="image/svg+xml"><meta property="og:image" content="https://onyxaholguin-cyber.github.io/sheet-and-flow/assets/og/rental-deal-analyzer.jpg"><meta property="og:image:width" content="1280"><meta property="og:image:height" content="720"><meta property="og:site_name" content="Sheet & Flow"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Rental Property IRR Spreadsheet: 10-Year Projection, Loan Paydown, Sale Proceeds and Equity Multiple (Excel &amp; Google Sheets) | Sheet &amp; Flow"><meta name="twitter:description" content="Build a 10-year rental projection that works out yearly cash flow, loan balance, property value, net sale proceeds, IRR, equity multiple and a breakdown of where the profit comes from. Exact formulas, tested by recalculating a sample workbook in LibreOffice and checking it against an independent model."><meta name="twitter:image" content="https://onyxaholguin-cyber.github.io/sheet-and-flow/assets/og/rental-deal-analyzer.jpg"><script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Rental Property IRR Spreadsheet: 10-Year Projection, Loan Paydown, Sale Proceeds and Equity Multiple (Excel & Google Sheets)", "description": "Build a 10-year rental projection that works out yearly cash flow, loan balance, property value, net sale proceeds, IRR, equity multiple and a breakdown of where the profit comes from. Exact formulas, tested by recalculating a sample workbook in LibreOffice and checking it against an independent model.", "dateModified": "2026-10-13", "datePublished": "2026-10-13", "image": "https://onyxaholguin-cyber.github.io/sheet-and-flow/assets/og/rental-deal-analyzer.jpg", "author": {"@type": "Organization", "name": "Sheet & Flow", "url": "https://onyxaholguin-cyber.github.io/sheet-and-flow/"}, "publisher": {"@type": "Organization", "name": "Sheet & Flow", "url": "https://onyxaholguin-cyber.github.io/sheet-and-flow/"}, "mainEntityOfPage": "https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/rental-property-irr-spreadsheet/"}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://onyxaholguin-cyber.github.io/sheet-and-flow/"}, {"@type": "ListItem", "position": 2, "name": "Tutorials", "item": "https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/"}, {"@type": "ListItem", "position": 3, "name": "Rental Property IRR Spreadsheet: 10-Year Projection, Loan Paydown, Sale Proceeds and Equity Multiple (Excel & Google Sheets)", "item": "https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/rental-property-irr-spreadsheet/"}]}</script></head>
+<body><a class="skip" href="#main">Skip to content</a>
+<header class="top"><div class="wrap"><a class="brand" href="/sheet-and-flow/">Sheet <span>&amp;</span> Flow</a>
+<nav><a href="/sheet-and-flow/products/">Products</a><a href="/sheet-and-flow/tutorials/">Tutorials</a><a href="/sheet-and-flow/tools/">Free tools</a></nav></div></header><div class="offer" id="offer" data-expires="2026-10-15T05:59:59Z">Launch offer: 20% off every product and bundle with code <b>LAUNCH20</b> until October 14, 2026. <a href="https://sheetandflow.gumroad.com">Browse the store</a></div><script>(function(){var e=document.getElementById("offer");if(e&&Date.now()>Date.parse(e.getAttribute("data-expires"))){e.parentNode.removeChild(e);document.addEventListener("DOMContentLoaded",function(){[].forEach.call(document.querySelectorAll("[data-offer]"),function(x){x.parentNode.removeChild(x);});});}})();</script>
+<main id="main"><div class="wrap narrow"><article><h1>Rental Property IRR Spreadsheet: 10-Year Projection, Loan Paydown, Sale Proceeds and Equity Multiple (Excel &amp; Google Sheets)</h1><div class="byline">Updated 2026-10-13 · Sheet & Flow</div><p class="inline-cta">Short on time? The <a href="/sheet-and-flow/products/rental-deal-analyzer/">Rental Deal Analyzer</a> ($15) is the finished, tested version of what this tutorial builds.</p><p>Cap rate and cash-on-cash describe one year. But nobody buys a rental for one year: rents rise, the loan gets paid down, the property (hopefully) appreciates, and at the end you sell and pay an agent. <strong>IRR</strong>, the internal rate of return, rolls all of that into one annual percentage: the return on your cash from the day you buy to the day you sell.</p>
+<p>This tutorial builds a two-tab projection that works out <strong>yearly cash flow, loan balance, property value, net sale proceeds, IRR, equity multiple and total profit</strong>, plus a table that splits the profit into <strong>cash flow, appreciation, loan paydown, selling costs and upfront costs</strong>, so you can see how much of the return depends on appreciation. It works the same in Excel, Google Sheets and LibreOffice. We tested every formula below by building a workbook with these exact formulas, recalculating it in LibreOffice, and comparing every cell to the worked example and to an independent Python model (loan balance amortized month by month, IRR solved numerically), plus 40 randomized deals.</p>
+<h2>1. The inputs</h2>
+<p>Make a tab called <code>Inputs</code>. Labels go in column A, your numbers in column B. The example is a duplex: two units at $1,450 a month, plus $50 a month of laundry income.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>A</th>
+<th>B</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2</td>
+<td>Purchase price</td>
+<td>285000</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Closing costs</td>
+<td>7500</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Upfront repairs</td>
+<td>12000</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Down payment %</td>
+<td>25%</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Interest rate (annual)</td>
+<td>6.75%</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Loan term (years)</td>
+<td>30</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Loan points %</td>
+<td>1%</td>
+</tr>
+<tr>
+<td>9</td>
+<td>Monthly rent (all units)</td>
+<td>2900</td>
+</tr>
+<tr>
+<td>10</td>
+<td>Other monthly income</td>
+<td>50</td>
+</tr>
+<tr>
+<td>11</td>
+<td>Vacancy &amp; credit loss %</td>
+<td>6%</td>
+</tr>
+<tr>
+<td>12</td>
+<td>Fixed costs, year 1</td>
+<td>6340</td>
+</tr>
+<tr>
+<td>13</td>
+<td>Repairs + CapEx reserve % of rent</td>
+<td>12%</td>
+</tr>
+<tr>
+<td>14</td>
+<td>Management % of collected income</td>
+<td>8%</td>
+</tr>
+<tr>
+<td>15</td>
+<td>Rent growth % / year</td>
+<td>3%</td>
+</tr>
+<tr>
+<td>16</td>
+<td>Expense growth % / year</td>
+<td>3%</td>
+</tr>
+<tr>
+<td>17</td>
+<td>Appreciation % / year</td>
+<td>3%</td>
+</tr>
+<tr>
+<td>18</td>
+<td>Selling costs % of sale price</td>
+<td>7%</td>
+</tr>
+<tr>
+<td>19</td>
+<td>Hold period (years, 1–10)</td>
+<td>7</td>
+</tr>
+</tbody>
+</table>
+<p>A few notes:</p>
+<ul>
+<li><strong>Fixed costs</strong> are the yearly bills that don't depend on rent: property tax, insurance, HOA, owner-paid utilities and anything else. Here that's $3,100 tax + $1,500 insurance + $145 a month of utilities and other costs × 12 = $6,340.</li>
+<li><strong>Repairs + CapEx</strong> is a reserve, a share of scheduled rent you set aside every month for repairs and big replacements (roof, HVAC, water heater). It grows with rent.</li>
+<li><strong>Selling costs</strong> are agent commission, transfer taxes and seller closing costs, as a share of the sale price. 6–8% is a common planning range; check what's normal where you are.</li>
+<li><strong>Hold period</strong> is the year you sell. The projection runs 10 years, so use a whole number from 1 to 10.</li>
+</ul>
+<p>Below the inputs, add three calculated cells:</p>
+<pre><code>B21:  =B2*(1-B5)
+B22:  =B2*B5+B3+B4+B21*B8
+B23:  =IF(OR(B21=0,B7=0),0,IF(B6=0,B21/(B7*12),PMT(B6/12,B7*12,-B21)))
+</code></pre>
+<p>Label them <em>Loan amount, Cash invested, Monthly P&amp;I</em>. Cash invested is everything you put in on day one: the down payment, closing costs, upfront repairs and the loan points. The <code>IF</code>s in B23 handle a cash purchase (no loan) and a 0% loan, where <code>PMT</code> isn't needed. In the example the loan is $213,750, cash invested is $92,888 and the payment is $1,386.38 a month.</p>
+<h2>2. The projection</h2>
+<p>Make a second tab called <code>Projection</code>. Put these headers in row 1: <em>Year, Effective gross income, Operating expenses, NOI, Debt service, Cash flow, Loan balance, Value, Net sale proceeds, IRR cash flow</em> (columns A to J). Type the years 0 to 10 in A2:A12.</p>
+<p>Year 0 is the purchase. It only needs three cells:</p>
+<pre><code>Projection!G2:  =Inputs!$B$21
+Projection!H2:  =Inputs!$B$2
+Projection!J2:  =-Inputs!$B$22
+</code></pre>
+<p>Row 3 is year 1. Enter these formulas, then fill B3:J3 down to row 12:</p>
+<pre><code>Projection!B3:  =(Inputs!$B$9+Inputs!$B$10)*12*(1+Inputs!$B$15)^(A3-1)*(1-Inputs!$B$11)
+Projection!C3:  =Inputs!$B$12*(1+Inputs!$B$16)^(A3-1)+Inputs!$B$13*Inputs!$B$9*12*(1+Inputs!$B$15)^(A3-1)+Inputs!$B$14*B3
+Projection!D3:  =B3-C3
+Projection!E3:  =IF(A3&lt;=Inputs!$B$7,12*Inputs!$B$23,0)
+Projection!F3:  =D3-E3
+Projection!G3:  =IF(OR(Inputs!$B$21=0,A3&gt;=Inputs!$B$7),0,IF(Inputs!$B$6=0,Inputs!$B$21-12*A3*Inputs!$B$23,MAX(0,-FV(Inputs!$B$6/12,12*A3,-Inputs!$B$23,Inputs!$B$21))))
+Projection!H3:  =Inputs!$B$2*(1+Inputs!$B$17)^A3
+Projection!I3:  =H3*(1-Inputs!$B$18)-G3
+Projection!J3:  =IF(A3&lt;Inputs!$B$19,F3,IF(A3=Inputs!$B$19,F3+I3,0))
+</code></pre>
+<p>What each column does:</p>
+<ul>
+<li><strong>B, Effective gross income:</strong> a year of rent and other income, grown by the rent growth rate from year 2 on, minus the vacancy allowance.</li>
+<li><strong>C, Operating expenses:</strong> fixed costs grown by expense growth, plus the repairs/CapEx reserve on scheduled rent, plus management on collected income. The mortgage is <em>not</em> an operating expense.</li>
+<li><strong>D, NOI</strong> is income minus operating expenses. <strong>E, Debt service</strong> is twelve payments a year until the loan term ends. <strong>F, Cash flow</strong> is NOI minus debt service, before income tax.</li>
+<li><strong>G, Loan balance</strong> at the end of the year. <code>FV</code> returns what's left of the loan after <code>12*A3</code> payments. It comes back negative because it's money you owe, hence the minus sign (<a href="https://support.microsoft.com/en-us/office/fv-function-2eef9f44-a084-4c61-bdd8-4fe4bb1b71b3">Microsoft: FV function</a>). For a 0% loan it's the loan minus the payments made, and once the term is over it's 0.</li>
+<li><strong>H, Value</strong> is the price grown by appreciation each year. <strong>I, Net sale proceeds</strong> is what you'd walk away with if you sold that year: value minus selling costs minus the loan payoff.</li>
+<li><strong>J, IRR cash flow</strong> is the column IRR reads: the year's cash flow, plus the sale proceeds in the sale year, and 0 after you've sold. Year 0 is your cash in, as a negative number.</li>
+</ul>
+<h2>3. The results</h2>
+<p>Back on the <code>Inputs</code> tab:</p>
+<pre><code>B25:  =IFERROR(IRR(Projection!J2:J12),IFERROR(IRR(Projection!J2:J12,-0.5),&quot;n/a&quot;))
+B26:  =IF(B22=0,&quot;n/a&quot;,SUM(Projection!J3:J12)/B22)
+B27:  =SUM(Projection!J2:J12)
+B28:  =SUMIF(Projection!A3:A12,&quot;&lt;=&quot;&amp;B19,Projection!F3:F12)
+B29:  =INDEX(Projection!H2:H12,B19+1)-B2
+B30:  =B21-INDEX(Projection!G2:G12,B19+1)
+B31:  =-INDEX(Projection!H2:H12,B19+1)*B18
+B32:  =-(B3+B4+B21*B8)
+B33:  =B28+B29+B30+B31+B32-B27
+</code></pre>
+<p>Label them <em>IRR, Equity multiple, Total profit, Cash flow during hold, Appreciation, Loan paydown, Selling costs, Upfront costs, Check (should be 0)</em>. Format B25 as a percentage and B26 as a number with two decimals.</p>
+<ul>
+<li><strong>IRR</strong> is the annual rate that makes the present value of every cash flow in column J add up to zero. Excel's <code>IRR</code> needs at least one negative and one positive value and assumes the cash flows are evenly spaced, which yearly rows are; it starts from a guess of 10% and returns <code>#NUM!</code> if it can't find an answer in 20 tries; Microsoft's advice is to try again with a different guess (<a href="https://support.microsoft.com/en-us/office/irr-function-64925eaa-9988-495b-b290-3ad0c163c1bc">Microsoft: IRR function</a>; Google Sheets' <a href="https://support.google.com/docs/answer/3093231">IRR</a> also takes an optional guess). That's what the second <code>IRR</code> does: in our LibreOffice tests, losing deals with IRRs of −8% to −58% returned an error from the default guess but solved from −50%. If both fail, the cell shows "n/a".</li>
+<li><strong>Equity multiple</strong> is everything you get back (all the cash flows plus the sale) divided by the cash you put in. 2.0 means you doubled your money, but it says nothing about how long that took. That's what IRR adds.</li>
+<li><strong>Total profit</strong> is everything you get back minus the cash you put in.</li>
+<li><strong>The breakdown, B28–B32</strong>, splits total profit into five pieces that always add up to it: cash flow while you hold, appreciation (sale-year value minus price), loan paydown (the principal your tenants paid off), selling costs and the upfront costs you never get back (closing, repairs and points). The down payment isn't a cost: you get it back inside the sale proceeds. B33 should show 0. If it doesn't, a formula was mistyped.</li>
+</ul>
+<h2>Worked example</h2>
+<p>With the inputs above, the first seven years look like this (cash flow is before income tax):</p>
+<table>
+<thead>
+<tr>
+<th>Year</th>
+<th>Income</th>
+<th>OpEx</th>
+<th>NOI</th>
+<th>Cash flow</th>
+<th>Loan balance</th>
+<th>Value</th>
+<th>IRR cash flow</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td>$213,750</td>
+<td>$285,000</td>
+<td>−$92,888</td>
+</tr>
+<tr>
+<td>1</td>
+<td>$33,276</td>
+<td>$13,178</td>
+<td>$20,098</td>
+<td>$3,461</td>
+<td>$211,472</td>
+<td>$293,550</td>
+<td>$3,461</td>
+</tr>
+<tr>
+<td>2</td>
+<td>$34,274</td>
+<td>$13,573</td>
+<td>$20,701</td>
+<td>$4,064</td>
+<td>$209,035</td>
+<td>$302,357</td>
+<td>$4,064</td>
+</tr>
+<tr>
+<td>3</td>
+<td>$35,303</td>
+<td>$13,981</td>
+<td>$21,322</td>
+<td>$4,685</td>
+<td>$206,429</td>
+<td>$311,427</td>
+<td>$4,685</td>
+</tr>
+<tr>
+<td>4</td>
+<td>$36,362</td>
+<td>$14,400</td>
+<td>$21,962</td>
+<td>$5,325</td>
+<td>$203,641</td>
+<td>$320,770</td>
+<td>$5,325</td>
+</tr>
+<tr>
+<td>5</td>
+<td>$37,452</td>
+<td>$14,832</td>
+<td>$22,620</td>
+<td>$5,984</td>
+<td>$200,659</td>
+<td>$330,393</td>
+<td>$5,984</td>
+</tr>
+<tr>
+<td>6</td>
+<td>$38,576</td>
+<td>$15,277</td>
+<td>$23,299</td>
+<td>$6,662</td>
+<td>$197,470</td>
+<td>$340,305</td>
+<td>$6,662</td>
+</tr>
+<tr>
+<td>7</td>
+<td>$39,733</td>
+<td>$15,735</td>
+<td>$23,998</td>
+<td>$7,361</td>
+<td>$194,058</td>
+<td>$350,514</td>
+<td>$139,281</td>
+</tr>
+</tbody>
+</table>
+<p>In year 7 the IRR cash flow is that year's $7,361 plus $131,920 of net sale proceeds ($350,514 minus 7% selling costs minus the $194,058 payoff).</p>
+<table>
+<thead>
+<tr>
+<th>Result</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>IRR</td>
+<td>9.9%</td>
+</tr>
+<tr>
+<td>Equity multiple</td>
+<td>1.82</td>
+</tr>
+<tr>
+<td>Total profit</td>
+<td>$76,576</td>
+</tr>
+</tbody>
+</table>
+<p>Where the profit comes from:</p>
+<table>
+<thead>
+<tr>
+<th>Piece</th>
+<th>Amount</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cash flow during hold</td>
+<td>$37,544</td>
+</tr>
+<tr>
+<td>Appreciation</td>
+<td>$65,514</td>
+</tr>
+<tr>
+<td>Loan paydown</td>
+<td>$19,692</td>
+</tr>
+<tr>
+<td>Selling costs</td>
+<td>−$24,536</td>
+</tr>
+<tr>
+<td>Upfront costs</td>
+<td>−$21,638</td>
+</tr>
+<tr>
+<td><strong>Total profit</strong></td>
+<td><strong>$76,576</strong></td>
+</tr>
+</tbody>
+</table>
+<p>What the example shows:</p>
+<ol>
+<li><strong>The first year undersells the deal.</strong> Year-1 cash flow is $3,461 on $92,888 of cash, a <strong>3.7%</strong> cash-on-cash return. Over seven years, with rising rents, loan paydown and the sale, the IRR is <strong>9.9%</strong>.</li>
+<li><strong>Most of the profit is appreciation.</strong> Appreciation is <strong>86%</strong> of the total profit. Set appreciation to 0% and the IRR falls to <strong>2.6%</strong>, with a total profit of <strong>$15,648</strong>. Before trusting an IRR, run it at 0% appreciation too and decide whether you'd still buy.</li>
+<li><strong>Short holds rarely work.</strong> Sell in year 3 instead and the IRR is <strong>0.9%</strong>: the selling costs and the upfront costs land on just three years of cash flow and paydown. Hold for 10 years and the IRR is <strong>11.4%</strong>, with an equity multiple of <strong>2.56</strong>.</li>
+</ol>
+<h2>Common mistakes</h2>
+<ul>
+<li><strong>Leaving selling costs out.</strong> Selling at the projected value with no commission makes every deal look better. Here, 7% of the sale price is $24,536 of profit.</li>
+<li><strong>Treating the down payment as profit or as a cost.</strong> It's neither. Count it as cash in on day 0 and let it come back through the sale proceeds, as the breakdown does.</li>
+<li><strong>Comparing IRR with year-1 cash-on-cash.</strong> They answer different questions. Cash-on-cash is this year's income on your cash; IRR is the whole hold, including the sale.</li>
+<li><strong>Uneven dates.</strong> <code>IRR</code> assumes evenly spaced cash flows. If you have real dates (a refinance in month 17, a sale in March), use <code>XIRR</code> with the actual dates.</li>
+<li><strong>Negative years.</strong> If a year's cash flow goes negative (a big repair, a vacancy), the cash flows can change sign more than once and IRR can have more than one answer. Check the result against the equity multiple and the profit breakdown. The equity multiple here nets those years against what you get back.</li>
+<li><strong>Taxes.</strong> This projection is before income tax. It doesn't model depreciation (under the general system, residential rental buildings are depreciated over 27.5 years; see <a href="https://www.irs.gov/publications/p527">IRS Publication 527</a>) or tax on the sale. Both can change the after-tax return a lot, so ask a tax professional.</li>
+</ul>
+<h2>Related tutorials</h2>
+<ul>
+<li><a href="/sheet-and-flow/tutorials/cap-rate-cash-on-cash-dscr/">Cap rate vs. cash-on-cash vs. DSCR: a worked rental example</a>.</li>
+<li><a href="/sheet-and-flow/tutorials/rental-property-cash-flow-spreadsheet/">Rental property cash flow spreadsheet: monthly NOI and cash flow per property</a>.</li>
+<li><a href="/sheet-and-flow/tutorials/short-term-rental-deal-analyzer-spreadsheet/">Short-term rental calculator spreadsheet: Airbnb cash flow and break-even occupancy</a>.</li>
+</ul>
+<h2>Want it done for you?</h2>
+<p>The <a href="/sheet-and-flow/products/rental-deal-analyzer/">Rental Property Deal Analyzer</a> is a finished workbook built on the same projection math: three deals side by side from 25 itemized inputs (units, taxes, insurance, HOA, utilities and separate repair and CapEx reserves), a 10-year projection with IRR and equity multiple for any hold period from 1 to 10 years, cap rate, cash-on-cash, DSCR, the 1% rule, break-even occupancy, and sensitivity tables for rent × price and interest rate × down payment. It comes with a SAMPLE file containing this duplex and two other deals, plus a PDF guide, and works in Excel, Google Sheets and LibreOffice with no macros.</p>
+<p>Not tax, legal or investment advice. Projections depend on assumptions about rent, expenses and appreciation that may not hold.</p><aside class="cta"><img src="/sheet-and-flow/assets/img/rental-deal-analyzer.webp" width="640" height="360" alt="Rental Deal Analyzer cover" loading="lazy">
+<div><h3>Rental Deal Analyzer</h3><p>Compare 3 rentals: cash flow, cap rate, cash-on-cash, DSCR, 10-year IRR and sensitivity tables.</p><a class="btn" href="https://sheetandflow.gumroad.com/l/rental-deal-analyzer">Get it · $15</a> <a href="/sheet-and-flow/products/rental-deal-analyzer/">See what's inside</a></div></aside><p>Free tool: <a href="/sheet-and-flow/tools/rental-deal-calculator/">Free Rental Property Calculator: Cash Flow, Cap Rate, Cash-on-Cash, DSCR</a></p><p class="note">Written with AI assistance. Every formula, command and number on this page was tested before publishing (see each section). Product links go to our store.</p></article></div></main>
+<footer><div class="wrap"><p><strong>Sheet & Flow</strong> · Practical spreadsheets and n8n automations for landlords, freelancers and small teams.</p>
+<p><a href="/sheet-and-flow/about/">About</a><a href="/sheet-and-flow/affiliate-disclosure/">Affiliate disclosure</a><a href="/sheet-and-flow/privacy/">Privacy</a><a href="/sheet-and-flow/refunds/">Refunds</a><a href="https://sheetandflow.gumroad.com">Store</a></p>
+<p>Questions about a purchase? Reply to your Gumroad receipt email.</p>
+<p>Content and products are built with AI assistance and tested before publishing. Some links may become affiliate links. Nothing here is tax, legal or financial advice. Not affiliated with n8n GmbH, Microsoft or Google.</p></div></footer>
+</body></html>
