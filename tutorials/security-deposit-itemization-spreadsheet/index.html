@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Security Deposit Itemization Spreadsheet: Refund, Interest, Deductions and Return Deadline (Excel &amp; Google Sheets) | Sheet &amp; Flow</title><meta name="description" content="Build a one-page move-out deposit sheet that calculates interest earned, total deductions, the refund (or what the tenant still owes), the return deadline and days left. Exact formulas, tested by recalculating a sample workbook, plus how to set the deadline days for rules like Colorado and Texas.">
+<link rel="canonical" href="https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/security-deposit-itemization-spreadsheet/"><meta property="og:title" content="Security Deposit Itemization Spreadsheet: Refund, Interest, Deductions and Return Deadline (Excel &amp; Google Sheets) | Sheet &amp; Flow"><meta property="og:description" content="Build a one-page move-out deposit sheet that calculates interest earned, total deductions, the refund (or what the tenant still owes), the return deadline and days left. Exact formulas, tested by recalculating a sample workbook, plus how to set the deadline days for rules like Colorado and Texas.">
+<meta property="og:type" content="article"><meta property="og:url" content="https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/security-deposit-itemization-spreadsheet/"><meta name="theme-color" content="#0d9488">
+<link rel="stylesheet" href="/sheet-and-flow/assets/style.css"><link rel="icon" href="/sheet-and-flow/assets/favicon.svg" type="image/svg+xml"><meta property="og:image" content="https://onyxaholguin-cyber.github.io/sheet-and-flow/assets/og/landlord-tenant-toolkit.jpg"><meta property="og:image:width" content="1280"><meta property="og:image:height" content="720"><meta property="og:site_name" content="Sheet & Flow"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Security Deposit Itemization Spreadsheet: Refund, Interest, Deductions and Return Deadline (Excel &amp; Google Sheets) | Sheet &amp; Flow"><meta name="twitter:description" content="Build a one-page move-out deposit sheet that calculates interest earned, total deductions, the refund (or what the tenant still owes), the return deadline and days left. Exact formulas, tested by recalculating a sample workbook, plus how to set the deadline days for rules like Colorado and Texas."><meta name="twitter:image" content="https://onyxaholguin-cyber.github.io/sheet-and-flow/assets/og/landlord-tenant-toolkit.jpg"><script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Security Deposit Itemization Spreadsheet: Refund, Interest, Deductions and Return Deadline (Excel & Google Sheets)", "description": "Build a one-page move-out deposit sheet that calculates interest earned, total deductions, the refund (or what the tenant still owes), the return deadline and days left. Exact formulas, tested by recalculating a sample workbook, plus how to set the deadline days for rules like Colorado and Texas.", "dateModified": "2026-10-14", "datePublished": "2026-10-14", "image": "https://onyxaholguin-cyber.github.io/sheet-and-flow/assets/og/landlord-tenant-toolkit.jpg", "author": {"@type": "Organization", "name": "Sheet & Flow", "url": "https://onyxaholguin-cyber.github.io/sheet-and-flow/"}, "publisher": {"@type": "Organization", "name": "Sheet & Flow", "url": "https://onyxaholguin-cyber.github.io/sheet-and-flow/"}, "mainEntityOfPage": "https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/security-deposit-itemization-spreadsheet/"}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://onyxaholguin-cyber.github.io/sheet-and-flow/"}, {"@type": "ListItem", "position": 2, "name": "Tutorials", "item": "https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/"}, {"@type": "ListItem", "position": 3, "name": "Security Deposit Itemization Spreadsheet: Refund, Interest, Deductions and Return Deadline (Excel & Google Sheets)", "item": "https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/security-deposit-itemization-spreadsheet/"}]}</script></head>
+<body><a class="skip" href="#main">Skip to content</a>
+<header class="top"><div class="wrap"><a class="brand" href="/sheet-and-flow/">Sheet <span>&amp;</span> Flow</a>
+<nav><a href="/sheet-and-flow/products/">Products</a><a href="/sheet-and-flow/tutorials/">Tutorials</a><a href="/sheet-and-flow/tools/">Free tools</a></nav></div></header><div class="offer" id="offer" data-expires="2026-10-15T05:59:59Z">Launch offer: 20% off every product and bundle with code <b>LAUNCH20</b> until October 14, 2026. <a href="https://sheetandflow.gumroad.com">Browse the store</a></div><script>(function(){var e=document.getElementById("offer");if(e&&Date.now()>Date.parse(e.getAttribute("data-expires"))){e.parentNode.removeChild(e);document.addEventListener("DOMContentLoaded",function(){[].forEach.call(document.querySelectorAll("[data-offer]"),function(x){x.parentNode.removeChild(x);});});}})();</script>
+<main id="main"><div class="wrap narrow"><article><h1>Security Deposit Itemization Spreadsheet: Refund, Interest, Deductions and Return Deadline (Excel &amp; Google Sheets)</h1><div class="byline">Updated 2026-10-14 · Sheet & Flow</div><p class="inline-cta">Short on time? The <a href="/sheet-and-flow/products/landlord-tenant-toolkit/">Landlord Tenant Toolkit</a> ($39) is the finished, tested version of what this tutorial builds.</p><p>A security deposit return is where landlords most often lose money they didn't have to, or keep money they shouldn't. Miss the return deadline and some states forfeit your right to withhold anything. Deduct "normal wear" and the tenant has a clean argument. Forget interest when your state requires it and the itemization is wrong before you mail it.</p>
+<p>This tutorial builds a <strong>one-tab deposit itemization</strong> that calculates interest, total deductions, the refund (or the balance the tenant still owes), the return / itemization deadline and how many days you have left. It works the same in Excel, Google Sheets and LibreOffice. We tested every formula below by building a workbook with these exact formulas, recalculating it in LibreOffice, and comparing every cell to the worked example and to an independent Python calculation (plus dozens of randomized move-outs).</p>
+<h2>1. A Setup tab with the as-of date</h2>
+<p>Make a tab called <code>Setup</code>:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>A</th>
+<th>B</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>As-of date</td>
+<td>2026-10-20</td>
+</tr>
+</tbody>
+</table>
+<p><code>B1</code> is the day you are measuring from (today when you prepare the letter, or a fixed date for a monthly review). Type a date, or use <code>=TODAY()</code>.</p>
+<h2>2. The Deposit tab (inputs)</h2>
+<p>One sheet per move-out is enough. Type the yellow cells; the rest calculate.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>A</th>
+<th>B</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Tenant</td>
+<td>P. Silva</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Unit</td>
+<td>7 Birch B</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Deposit held</td>
+<td>1500</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Annual interest rate (0 if none)</td>
+<td>0</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Move-in date</td>
+<td>2025-06-01</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Move-out date</td>
+<td>2026-10-15</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Damage charges</td>
+<td>510</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Unpaid rent and charges</td>
+<td>0</td>
+</tr>
+<tr>
+<td>9</td>
+<td>Cleaning beyond normal wear</td>
+<td>150</td>
+</tr>
+<tr>
+<td>10</td>
+<td>Other deductions</td>
+<td>0</td>
+</tr>
+<tr>
+<td>11</td>
+<td>State return deadline (days after move-out)</td>
+<td>30</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Damage charges</strong> is the total from your move-out inspection that you are allowed to charge (not normal wear). <strong>Cleaning beyond normal wear</strong> is the extra clean-out, not ordinary turnover cleaning your local rule treats as the landlord's cost. <strong>Other deductions</strong> covers contracted repairs or utilities the lease lets you take from the deposit. Put <strong>0</strong> in any line you aren't using.</p>
+<h2>3. The calculated cells</h2>
+<pre><code>B12:  =IF(OR(B5=&quot;&quot;,B6=&quot;&quot;),&quot;&quot;,B6-B5)
+B13:  =IF(OR(B5=&quot;&quot;,B6=&quot;&quot;),0,B3*B4*MAX(0,B6-B5)/365)
+B14:  =SUM(B7:B10)
+B15:  =MAX(0,B3+B13-B14)
+B16:  =MAX(0,B14-B3-B13)
+B17:  =IF(B6=&quot;&quot;,&quot;&quot;,B6+B11)
+B18:  =IF(B17=&quot;&quot;,&quot;&quot;,B17-Setup!$B$1)
+B19:  =IF(B18=&quot;&quot;,&quot;&quot;,IF(B18&lt;0,&quot;PAST DEADLINE&quot;,IF(B18&lt;=7,&quot;Due within 7 days&quot;,&quot;On track&quot;)))
+</code></pre>
+<p>Label them in column A: <em>Days held</em>, <em>Interest earned</em>, <em>Total deductions</em>, <em>Refund due to tenant</em>, <em>Tenant still owes</em>, <em>Return / itemization deadline</em>, <em>Days left</em>, <em>Deadline status</em>.</p>
+<p>What each one does:</p>
+<ul>
+<li><strong>B12, Days held:</strong> move-out minus move-in. Useful when you are checking an interest figure by hand.</li>
+<li><strong>B13, Interest earned:</strong> deposit × annual rate × days held ÷ 365. Leave <code>B4</code> at 0 when your state (or building size) does not require interest. The product sheet uses the same day-count rule; it does not round to cents, so a 1% example can show a fraction of a cent until you optionally wrap it in <code>ROUND</code>.</li>
+<li><strong>B14, Total deductions:</strong> damage + unpaid rent + cleaning + other.</li>
+<li><strong>B15 / B16:</strong> only one of these is positive. If the deposit plus interest covers the deductions, <strong>B15</strong> is the refund. If deductions are larger, <strong>B16</strong> is what the tenant still owes and the refund is 0.</li>
+<li><strong>B17, Deadline date:</strong> move-out plus the number of days your state (or lease, where the statute allows) gives you to return the deposit or send the itemization.</li>
+<li><strong>B18 / B19:</strong> days from the as-of date to that deadline. Status turns amber at 7 days left and red when the deadline has passed.</li>
+</ul>
+<h3>Optional: interest rounded to cents</h3>
+<p>Banks pay in cents. If you want the sheet to match a bank statement:</p>
+<pre><code>B13 (rounded to cents):  =IF(OR(B5=&quot;&quot;,B6=&quot;&quot;),0,ROUND(B3*B4*MAX(0,B6-B5)/365,2))
+</code></pre>
+<p>Use either <code>B13</code> or this variant, not both in the same cell.</p>
+<h2>4. Setting the deadline days from state rules</h2>
+<p><code>B11</code> is the number you look up. Here are two common statutes, as examples of how to translate the wording. This is how we read the text. Check the current law, your city and your lease before mailing anything.</p>
+<table>
+<thead>
+<tr>
+<th>State</th>
+<th>Rule (summary)</th>
+<th>Typical <code>B11</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Colorado</td>
+<td>Return the full deposit within one month after termination or surrender (whichever is later), unless the lease sets a longer period of up to 60 days; keep nothing for normal wear and tear; send a written list of reasons with any partial retention (<a href="https://colorado.public.law/statutes/crs_38-12-103">C.R.S. 38-12-103</a>)</td>
+<td>30 (or up to 60 if the lease says so)</td>
+</tr>
+<tr>
+<td>Texas</td>
+<td>Refund on or before the 30th day after the tenant surrenders the premises; if you keep any part, send the balance with a written itemized list of deductions (normal wear is not allowed) (<a href="https://texas.public.law/statutes/tex._prop._code_section_92.103">Tex. Prop. Code §92.103</a>, <a href="https://texas.public.law/statutes/tex._prop._code_section_92.104">§92.104</a>)</td>
+<td>30</td>
+</tr>
+</tbody>
+</table>
+<p>New York has separate rules on interest (buildings with six or more apartments must place deposits in an interest-bearing New York bank account; the landlord may keep 1% of the deposit per year as an admin fee, and the rest of the interest belongs to the tenant — see the <a href="https://ag.ny.gov/resources/individuals/tenants-homeowners/tenants/recovering-rent-security-deposits-and-interest">NY Attorney General guide</a>). Put the interest rate the tenant is owed in <code>B4</code> after subtracting any allowed admin fee, and look up your return deadline separately.</p>
+<h2>Worked example</h2>
+<p>As-of date October 20, 2026. Deposit $1,500 held from June 1, 2025 to October 15, 2026 (501 days). No interest required (<code>B4 = 0</code>). Damage $510, cleaning $150, unpaid rent $0, other $0. State deadline 30 days after move-out.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Days held</td>
+<td>501</td>
+</tr>
+<tr>
+<td>Interest earned</td>
+<td>0.00</td>
+</tr>
+<tr>
+<td>Total deductions</td>
+<td>660.00</td>
+</tr>
+<tr>
+<td>Refund due to tenant</td>
+<td>840.00</td>
+</tr>
+<tr>
+<td>Tenant still owes</td>
+<td>0.00</td>
+</tr>
+<tr>
+<td>Return / itemization deadline</td>
+<td>2026-11-14</td>
+</tr>
+<tr>
+<td>Days left</td>
+<td>25</td>
+</tr>
+<tr>
+<td>Deadline status</td>
+<td>On track</td>
+</tr>
+</tbody>
+</table>
+<p>What the example shows:</p>
+<ol>
+<li><strong>Refund = deposit − deductions when interest is zero.</strong> $1,500 − ($510 + $150) = <strong>$840</strong>.</li>
+<li><strong>The deadline is a calendar date, not a feeling.</strong> Move-out October 15 + 30 days = <strong>November 14, 2026</strong>. On October 20 you still have <strong>25</strong> days (On track). Change the as-of date to November 10 and the status becomes <strong>Due within 7 days</strong>; November 15 → <strong>PAST DEADLINE</strong>.</li>
+<li><strong>Interest changes the refund.</strong> With the same dates and a 1% annual rate (no rounding), interest is $1,500 × 0.01 × 501 / 365 ≈ <strong>20.589</strong>, deductions stay $660, and the refund becomes about <strong>$860.59</strong>. The rounded variant of <code>B13</code> makes that <strong>$20.59</strong> of interest and a <strong>$860.59</strong> refund exactly.</li>
+</ol>
+<p>A second case, same dates, where deductions exceed the deposit: damage $1,200 + cleaning $400 = $1,600 against a $1,500 deposit and 0% interest → refund <strong>$0</strong>, tenant still owes <strong>$100</strong>, deadline still November 14.</p>
+<h2>Common mistakes</h2>
+<ul>
+<li><strong>Charging normal wear.</strong> Pinholes from picture hangers and faded paint are usually the landlord's cost. Only put chargeable damage in <code>B7</code>.</li>
+<li><strong>Missing the deadline.</strong> Some rules (Colorado's among them) can forfeit your right to withhold anything if the written statement is late. Watch <code>B19</code>.</li>
+<li><strong>Interest on the wrong day count.</strong> This sheet uses move-out minus move-in over 365. If your statute or bank uses a different day-count, adjust <code>B13</code>.</li>
+<li><strong>Dates typed as text.</strong> If <code>B12</code> or <code>B17</code> shows <code>#VALUE!</code>, re-enter the dates as real dates (<em>Format → Number → Date</em> in Google Sheets).</li>
+<li><strong>One sheet for every tenant.</strong> Copy the Deposit tab per move-out, or you will overwrite the prior itemization.</li>
+</ul>
+<h2>Related tutorials</h2>
+<ul>
+<li><a href="/sheet-and-flow/tutorials/rent-late-fee-calculator-spreadsheet/">Rent late fee calculator spreadsheet: grace period, flat + daily fees and a cap</a>.</li>
+<li><a href="/sheet-and-flow/tutorials/rent-roll-late-rent-deposits/">Build a rent roll that flags late rent automatically (plus a deposit ledger)</a>.</li>
+<li><a href="/sheet-and-flow/tutorials/lease-renewal-tracker-spreadsheet/">Lease renewal tracker spreadsheet: expiration alerts, notice deadlines and rent increases</a>.</li>
+</ul>
+<h2>Want it done for you?</h2>
+<p>The <a href="/sheet-and-flow/products/landlord-tenant-toolkit/">Landlord Tenant Toolkit</a> is a finished workbook with a rent ledger that calculates late fees, a move-out inspection that feeds a security deposit itemization (interest, deductions, refund, return deadline and days left), a tenant screening scorecard, a turnover-vs-renewal calculator, a maintenance log and a dashboard. It comes with a filled-in 4-unit sample and works in Excel and Google Sheets with no macros.</p>
+<p>Not legal advice. Deposit deadlines, interest, allowed deductions and notice rules depend on your state, city and lease. Check them before you withhold or mail a refund.</p><aside class="cta"><img src="/sheet-and-flow/assets/img/landlord-tenant-toolkit.webp" width="640" height="360" alt="Landlord Tenant Toolkit cover" loading="lazy">
+<div><h3>Landlord Tenant Toolkit</h3><p>Rent ledger with automatic late fees, move-out inspection to security deposit itemization, tenant screening, turnover cost and a maintenance log.</p><a class="btn" href="https://sheetandflow.gumroad.com/l/landlord-tenant-toolkit">Get it · $39</a> <a href="/sheet-and-flow/products/landlord-tenant-toolkit/">See what's inside</a></div></aside><p>Free tool: <a href="/sheet-and-flow/tools/rental-deal-calculator/">Free Rental Property Calculator: Cash Flow, Cap Rate, Cash-on-Cash, DSCR</a></p><p class="note">Written with AI assistance. Every formula, command and number on this page was tested before publishing (see each section). Product links go to our store.</p></article></div></main>
+<footer><div class="wrap"><p><strong>Sheet & Flow</strong> · Practical spreadsheets and n8n automations for landlords, freelancers and small teams.</p>
+<p><a href="/sheet-and-flow/about/">About</a><a href="/sheet-and-flow/affiliate-disclosure/">Affiliate disclosure</a><a href="/sheet-and-flow/privacy/">Privacy</a><a href="/sheet-and-flow/refunds/">Refunds</a><a href="https://sheetandflow.gumroad.com">Store</a></p>
+<p>Questions about a purchase? Reply to your Gumroad receipt email.</p>
+<p>Content and products are built with AI assistance and tested before publishing. Some links may become affiliate links. Nothing here is tax, legal or financial advice. Not affiliated with n8n GmbH, Microsoft or Google.</p></div></footer>
+</body></html>
