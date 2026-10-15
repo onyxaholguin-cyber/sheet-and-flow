@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Rent Bump vs Turnover Cost Spreadsheet: Keep, Vacancy Days, Make-Ready and Break-Even Increase (Excel &amp; Google Sheets) | Sheet &amp; Flow</title><meta name="description" content="Build a one-page renewal decision sheet that compares 12-month income if the tenant renews at your proposed rent against turning the unit over (lost rent while vacant, make-ready, leasing fees) and shows the break-even increase. Exact formulas, tested by recalculating a sample workbook.">
+<link rel="canonical" href="https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/rent-bump-vs-turnover-cost-spreadsheet/"><meta property="og:title" content="Rent Bump vs Turnover Cost Spreadsheet: Keep, Vacancy Days, Make-Ready and Break-Even Increase (Excel &amp; Google Sheets) | Sheet &amp; Flow"><meta property="og:description" content="Build a one-page renewal decision sheet that compares 12-month income if the tenant renews at your proposed rent against turning the unit over (lost rent while vacant, make-ready, leasing fees) and shows the break-even increase. Exact formulas, tested by recalculating a sample workbook.">
+<meta property="og:type" content="article"><meta property="og:url" content="https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/rent-bump-vs-turnover-cost-spreadsheet/"><meta name="theme-color" content="#0d9488">
+<link rel="stylesheet" href="/sheet-and-flow/assets/style.css"><link rel="icon" href="/sheet-and-flow/assets/favicon.svg" type="image/svg+xml"><meta property="og:image" content="https://onyxaholguin-cyber.github.io/sheet-and-flow/assets/og/lease-renewal-tracker.jpg"><meta property="og:image:width" content="1280"><meta property="og:image:height" content="720"><meta property="og:site_name" content="Sheet & Flow"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Rent Bump vs Turnover Cost Spreadsheet: Keep, Vacancy Days, Make-Ready and Break-Even Increase (Excel &amp; Google Sheets) | Sheet &amp; Flow"><meta name="twitter:description" content="Build a one-page renewal decision sheet that compares 12-month income if the tenant renews at your proposed rent against turning the unit over (lost rent while vacant, make-ready, leasing fees) and shows the break-even increase. Exact formulas, tested by recalculating a sample workbook."><meta name="twitter:image" content="https://onyxaholguin-cyber.github.io/sheet-and-flow/assets/og/lease-renewal-tracker.jpg"><script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Rent Bump vs Turnover Cost Spreadsheet: Keep, Vacancy Days, Make-Ready and Break-Even Increase (Excel & Google Sheets)", "description": "Build a one-page renewal decision sheet that compares 12-month income if the tenant renews at your proposed rent against turning the unit over (lost rent while vacant, make-ready, leasing fees) and shows the break-even increase. Exact formulas, tested by recalculating a sample workbook.", "dateModified": "2026-10-15", "datePublished": "2026-10-15", "image": "https://onyxaholguin-cyber.github.io/sheet-and-flow/assets/og/lease-renewal-tracker.jpg", "author": {"@type": "Organization", "name": "Sheet & Flow", "url": "https://onyxaholguin-cyber.github.io/sheet-and-flow/"}, "publisher": {"@type": "Organization", "name": "Sheet & Flow", "url": "https://onyxaholguin-cyber.github.io/sheet-and-flow/"}, "mainEntityOfPage": "https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/rent-bump-vs-turnover-cost-spreadsheet/"}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://onyxaholguin-cyber.github.io/sheet-and-flow/"}, {"@type": "ListItem", "position": 2, "name": "Tutorials", "item": "https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/"}, {"@type": "ListItem", "position": 3, "name": "Rent Bump vs Turnover Cost Spreadsheet: Keep, Vacancy Days, Make-Ready and Break-Even Increase (Excel & Google Sheets)", "item": "https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/rent-bump-vs-turnover-cost-spreadsheet/"}]}</script></head>
+<body><a class="skip" href="#main">Skip to content</a>
+<header class="top"><div class="wrap"><a class="brand" href="/sheet-and-flow/">Sheet <span>&amp;</span> Flow</a>
+<nav><a href="/sheet-and-flow/products/">Products</a><a href="/sheet-and-flow/tutorials/">Tutorials</a><a href="/sheet-and-flow/tools/">Free tools</a></nav></div></header>
+<main id="main"><div class="wrap narrow"><article><h1>Rent Bump vs Turnover Cost Spreadsheet: Keep, Vacancy Days, Make-Ready and Break-Even Increase (Excel &amp; Google Sheets)</h1><div class="byline">Updated 2026-10-15 · Sheet & Flow</div><p class="inline-cta">Short on time? The <a href="/sheet-and-flow/products/lease-renewal-tracker/">Lease Renewal Tracker</a> ($12) is the finished, tested version of what this tutorial builds.</p><p>Setting a renewal rent is not just "what will the market bear." A larger bump that pushes a good tenant out can cost more in vacant days, cleaning, paint, repairs and leasing fees than you gain from the higher new rent — over a full year.</p>
+<p>This tutorial builds a <strong>one-tab keep-vs-turnover</strong> sheet. You type current rent, proposed renewal rent, market rent for a replacement tenant, expected vacant days and the cash costs of a turnover. The sheet calculates the rent bump, 12-month income if they renew, total turnover cost, 12-month net if they leave, whether renewing wins, the break-even renewal increase and how many months of the rent gap would be needed to recover a turnover. It works the same in Excel, Google Sheets and LibreOffice. We tested every formula below by building a workbook with these exact formulas, recalculating it in LibreOffice, and comparing every cell to the worked example and to an independent Python calculation (plus dozens of randomized renewals).</p>
+<h2>1. The Decision tab (inputs)</h2>
+<p>One sheet is enough. Type the yellow cells; the rest calculate.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>A</th>
+<th>B</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Current monthly rent</td>
+<td>1450</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Proposed renewal rent</td>
+<td>1520</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Market rent (new tenant)</td>
+<td>1580</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Expected vacant days if they leave</td>
+<td>40</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Make-ready (clean, paint, repairs)</td>
+<td>1100</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Leasing / placement fee</td>
+<td>790</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Other turnover costs (listing, screening, your time)</td>
+<td>250</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Current</strong> and <strong>proposed</strong> are the same numbers you track on a lease renewal list (the SAMPLE lease for Oak St Duplex 1A uses $1,450 → $1,520). <strong>Market rent</strong> is what you honestly expect a replacement tenant to pay on day one — not a wishful listing price. <strong>Vacant days</strong> should include notice lag, make-ready time and days on market. Put <strong>0</strong> in any cost line you aren't using.</p>
+<h2>2. The calculated cells</h2>
+<pre><code>B8:   =IF(OR(B1=&quot;&quot;,B2=&quot;&quot;),&quot;&quot;,B2-B1)
+B9:   =IF(OR(B1=&quot;&quot;,B2=&quot;&quot;,B1=0),&quot;&quot;,(B2-B1)/B1)
+B10:  =IF(B2=&quot;&quot;,&quot;&quot;,12*B2)
+B11:  =IF(OR(B3=&quot;&quot;,B4=&quot;&quot;),&quot;&quot;,B3*12/365*B4)
+B12:  =SUM(B5:B7)
+B13:  =IF(OR(B11=&quot;&quot;,B12=&quot;&quot;),&quot;&quot;,B11+B12)
+B14:  =IF(OR(B3=&quot;&quot;,B13=&quot;&quot;),&quot;&quot;,12*B3-B13)
+B15:  =IF(OR(B10=&quot;&quot;,B14=&quot;&quot;),&quot;&quot;,B10-B14)
+B16:  =IF(OR(B1=&quot;&quot;,B1=0,B14=&quot;&quot;),&quot;&quot;,B14/(12*B1)-1)
+B17:  =IF(B15=&quot;&quot;,&quot;&quot;,IF(B15&gt;=0,&quot;Renewing at this rent earns more over 12 months&quot;,&quot;Turning over earns more over 12 months (if vacancy estimate holds)&quot;))
+B18:  =IF(OR(B3=&quot;&quot;,B2=&quot;&quot;,B3&lt;=B2,B13=&quot;&quot;),&quot;&quot;,B13/(B3-B2))
+</code></pre>
+<p>Label them in column A: <em>Bump $</em>, <em>Bump %</em>, <em>12-month income if they renew</em>, <em>Lost rent while vacant</em>, <em>Cash turnover costs</em>, <em>Total turnover cost</em>, <em>12-month net if they leave</em>, <em>Renewal advantage</em>, <em>Break-even renewal increase</em>, <em>Verdict</em>, <em>Months to recover turnover via rent gap</em>.</p>
+<p>What each one does:</p>
+<ul>
+<li><strong>B8 / B9:</strong> proposed minus current, and that difference as a fraction of current. Format <code>B9</code> as a percentage. These match the bump columns on a lease renewal tracker.</li>
+<li><strong>B10:</strong> twelve months of the proposed rent if the tenant stays (no vacancy).</li>
+<li><strong>B11:</strong> proration of market rent for the vacant days (<code>market × 12 / 365 × days</code>). Using market rent (not current) prices the empty days at what you could have collected from a new lease.</li>
+<li><strong>B12 / B13:</strong> cash make-ready and leasing costs, then cash plus lost rent = total turnover cost.</li>
+<li><strong>B14:</strong> a full year at market rent, minus the total turnover cost. That is the 12-month net if they leave and you re-lease at market after the vacancy.</li>
+<li><strong>B15:</strong> renew income minus turn net. Positive means renewing wins on these assumptions.</li>
+<li><strong>B16:</strong> the renewal increase (as a fraction of current rent) that would make 12-month renew income equal the turn net. It can be <strong>negative</strong> when turnover is expensive — meaning even a flat renewal still beats turning the unit.</li>
+<li><strong>B17:</strong> plain-language verdict from the sign of <code>B15</code>.</li>
+<li><strong>B18:</strong> if market is above proposed, how many months of that monthly gap would it take to earn back the total turnover cost. Blank when market is not higher than proposed (there is no gap to "earn back" against).</li>
+</ul>
+<h3>Optional: vacant days from a move-out and re-lease date</h3>
+<p>If you already know the expected move-out and the day a new lease would start:</p>
+<pre><code>B4 (from dates in C4 and D4):  =IF(OR(C4=&quot;&quot;,D4=&quot;&quot;),&quot;&quot;,D4-C4)
+</code></pre>
+<p>Put the move-out date in <code>C4</code> and the new lease start in <code>D4</code>, and leave <code>B4</code> as this formula instead of a typed day count.</p>
+<h2>3. Notice rules before you send the bump</h2>
+<p>This sheet is economics, not a notice calendar. Your lease and state law still set how much written notice a rent increase needs. For example, <a href="https://colorado.public.law/statutes/crs_38-12-701">Colorado C.R.S. 38-12-701</a> requires at least <strong>60 days'</strong> written notice to raise rent in a residential tenancy with <strong>no written agreement</strong>; other tenancies follow the lease or other statutes. Check yours before you mail or email an offer. Pair this decision sheet with a <a href="/sheet-and-flow/tutorials/lease-renewal-tracker-spreadsheet/">lease renewal tracker for expiration windows and send-by dates</a>.</p>
+<p>Lost rent while vacant is an <strong>economic</strong> cost in this comparison. For tax treatment of vacant rental property (you generally cannot deduct the <em>lost income</em> itself, only allowed expenses while it is held for rent), see <a href="https://www.irs.gov/publications/p527">IRS Publication 527</a>. This tutorial is not tax advice.</p>
+<h2>Worked example</h2>
+<p>Oak St Duplex 1A style numbers: current rent <strong>$1,450</strong>, proposed renewal <strong>$1,520</strong> (the same bump as the Lease Renewal Tracker SAMPLE for that unit). Market rent for a replacement <strong>$1,580</strong>. Expected vacant days <strong>40</strong>. Make-ready <strong>$1,100</strong>, leasing fee <strong>$790</strong>, other costs <strong>$250</strong>.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Bump $</td>
+<td>70.00</td>
+</tr>
+<tr>
+<td>Bump %</td>
+<td>4.83%</td>
+</tr>
+<tr>
+<td>12-month income if they renew</td>
+<td>18240.00</td>
+</tr>
+<tr>
+<td>Lost rent while vacant</td>
+<td>2077.81</td>
+</tr>
+<tr>
+<td>Cash turnover costs</td>
+<td>2140.00</td>
+</tr>
+<tr>
+<td>Total turnover cost</td>
+<td>4217.81</td>
+</tr>
+<tr>
+<td>12-month net if they leave</td>
+<td>14742.19</td>
+</tr>
+<tr>
+<td>Renewal advantage</td>
+<td>3497.81</td>
+</tr>
+<tr>
+<td>Break-even renewal increase</td>
+<td>-15.27%</td>
+</tr>
+<tr>
+<td>Verdict</td>
+<td>Renewing at this rent earns more over 12 months</td>
+</tr>
+<tr>
+<td>Months to recover turnover via rent gap</td>
+<td>70.3</td>
+</tr>
+</tbody>
+</table>
+<p>What the example shows:</p>
+<ol>
+<li><strong>The bump itself is modest.</strong> $1,520 − $1,450 = <strong>$70</strong>, or <strong>4.83%</strong>.</li>
+<li><strong>Turnover is expensive even when market is only $60 above proposed.</strong> Lost rent ≈ <strong>$2,077.81</strong> plus <strong>$2,140</strong> cash = about <strong>$4,217.81</strong> of total turnover cost.</li>
+<li><strong>Renewing wins by about $3,497.81</strong> over 12 months ($18,240 renew income vs about $14,742.19 turn net).</li>
+<li><strong>Break-even increase is negative (−15.27%).</strong> On these vacancy and cost assumptions, even a flat renewal still beats turning the unit — the sheet is telling you not to chase a small market premium.</li>
+<li><strong>The rent gap would take ~70.3 months to "earn back" a turnover.</strong> $4,217.81 ÷ ($1,580 − $1,520) ≈ <strong>70.3</strong> months of the $60 gap.</li>
+</ol>
+<p>A second case, same current rent, where turning over wins: proposed only <strong>$1,470</strong>, market <strong>$1,700</strong>, vacant days <strong>14</strong>, cash turnover costs <strong>$800</strong> (put 800 in <code>B5</code> and 0 in <code>B6</code>/<code>B7</code>). Renew 12-month income = <strong>$17,640</strong>. Turn net ≈ <strong>$18,817.53</strong>. Renewal advantage ≈ <strong>−$1,177.53</strong> → verdict <strong>Turning over earns more over 12 months (if vacancy estimate holds)</strong>.</p>
+<h2>Common mistakes</h2>
+<ul>
+<li><strong>Optimistic vacant days.</strong> Fourteen days assumes the unit shows clean the day they leave and a signed lease starts immediately. Add make-ready and advertising time.</li>
+<li><strong>Listing price as "market."</strong> Use what comparable units actually leased for recently, not the ask.</li>
+<li><strong>Forgetting your own time.</strong> Put an hours × rate line into <code>B7</code> if you self-manage.</li>
+<li><strong>Comparing one month instead of twelve.</strong> A single month of higher rent never covers a multi-thousand-dollar turnover.</li>
+<li><strong>Sending an increase without checking notice rules.</strong> Run the economics here, then use your lease / state notice period before you send anything.</li>
+</ul>
+<h2>Related tutorials</h2>
+<ul>
+<li><a href="/sheet-and-flow/tutorials/lease-renewal-tracker-spreadsheet/">Lease renewal tracker spreadsheet: expiration alerts, notice deadlines and rent increases</a>.</li>
+<li><a href="/sheet-and-flow/tutorials/security-deposit-itemization-spreadsheet/">Security deposit itemization spreadsheet: refund, interest, deductions and return deadline</a>.</li>
+<li><a href="/sheet-and-flow/tutorials/rent-late-fee-calculator-spreadsheet/">Rent late fee calculator spreadsheet: grace period, flat + daily fees and a cap</a>.</li>
+</ul>
+<h2>Want it done for you?</h2>
+<p>The <a href="/sheet-and-flow/products/lease-renewal-tracker/">Lease Renewal Tracker</a> is a finished workbook with a dashboard (open renewals, past due, 0–30 / 31–60 windows), a leases grid that calculates days until end, window, bump $ / bump % and a suggested action, plus a Monday pipeline of open renewals. It comes with an 8-lease sample (including the Oak St Duplex 1A $1,450 → $1,520 bump used above) and works in Excel and Google Sheets with no macros.</p>
+<p>Not legal or tax advice. Renewal notice periods, rent-increase rules and what you may charge for make-ready depend on your state, city and lease. Check them before you send an offer or withhold a deposit.</p><aside class="cta"><img src="/sheet-and-flow/assets/img/lease-renewal-tracker.webp" width="640" height="360" alt="Lease Renewal Tracker cover" loading="lazy">
+<div><h3>Lease Renewal Tracker</h3><p>Upcoming lease end dates, proposed rent bumps, 30/60/90-day windows and a Monday pipeline.</p><a class="btn" href="https://sheetandflow.gumroad.com/l/lease-renewal-tracker">Get it · $12</a> <a href="/sheet-and-flow/products/lease-renewal-tracker/">See what's inside</a></div></aside><p>Free tool: <a href="/sheet-and-flow/tools/rental-deal-calculator/">Free Rental Property Calculator: Cash Flow, Cap Rate, Cash-on-Cash, DSCR</a></p><p class="note">Written with AI assistance. Every formula, command and number on this page was tested before publishing (see each section). Product links go to our store.</p></article></div></main>
+<footer><div class="wrap"><p><strong>Sheet & Flow</strong> · Practical spreadsheets and n8n automations for landlords, freelancers and small teams.</p>
+<p><a href="/sheet-and-flow/about/">About</a><a href="/sheet-and-flow/affiliate-disclosure/">Affiliate disclosure</a><a href="/sheet-and-flow/privacy/">Privacy</a><a href="/sheet-and-flow/refunds/">Refunds</a><a href="https://sheetandflow.gumroad.com">Store</a></p>
+<p>Questions about a purchase? Reply to your Gumroad receipt email.</p>
+<p>Content and products are built with AI assistance and tested before publishing. Some links may become affiliate links. Nothing here is tax, legal or financial advice. Not affiliated with n8n GmbH, Microsoft or Google.</p></div></footer>
+</body></html>
