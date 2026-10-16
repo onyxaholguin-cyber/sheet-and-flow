@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Christmas Gift Budget Spreadsheet: Per-Person Budgets, Gift Status and Black Friday Dates (Excel &amp; Google Sheets) | Sheet &amp; Flow</title><meta name="description" content="Build a three-tab Christmas gift budget that counts a gift as spent once it&#x27;s bought, totals planned vs spent per person, flags anyone over budget, and works out Thanksgiving, Black Friday and Cyber Monday for any year. Exact formulas, tested in LibreOffice against an independent model.">
+<link rel="canonical" href="https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/christmas-gift-budget-spreadsheet/"><meta property="og:title" content="Christmas Gift Budget Spreadsheet: Per-Person Budgets, Gift Status and Black Friday Dates (Excel &amp; Google Sheets) | Sheet &amp; Flow"><meta property="og:description" content="Build a three-tab Christmas gift budget that counts a gift as spent once it&#x27;s bought, totals planned vs spent per person, flags anyone over budget, and works out Thanksgiving, Black Friday and Cyber Monday for any year. Exact formulas, tested in LibreOffice against an independent model.">
+<meta property="og:type" content="article"><meta property="og:url" content="https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/christmas-gift-budget-spreadsheet/"><meta name="theme-color" content="#0d9488">
+<link rel="stylesheet" href="/sheet-and-flow/assets/style.css"><link rel="icon" href="/sheet-and-flow/assets/favicon.svg" type="image/svg+xml"><meta property="og:image" content="https://onyxaholguin-cyber.github.io/sheet-and-flow/assets/og/holiday-budget-planner.jpg"><meta property="og:image:width" content="1280"><meta property="og:image:height" content="720"><meta property="og:site_name" content="Sheet & Flow"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Christmas Gift Budget Spreadsheet: Per-Person Budgets, Gift Status and Black Friday Dates (Excel &amp; Google Sheets) | Sheet &amp; Flow"><meta name="twitter:description" content="Build a three-tab Christmas gift budget that counts a gift as spent once it&#x27;s bought, totals planned vs spent per person, flags anyone over budget, and works out Thanksgiving, Black Friday and Cyber Monday for any year. Exact formulas, tested in LibreOffice against an independent model."><meta name="twitter:image" content="https://onyxaholguin-cyber.github.io/sheet-and-flow/assets/og/holiday-budget-planner.jpg"><script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Christmas Gift Budget Spreadsheet: Per-Person Budgets, Gift Status and Black Friday Dates (Excel & Google Sheets)", "description": "Build a three-tab Christmas gift budget that counts a gift as spent once it's bought, totals planned vs spent per person, flags anyone over budget, and works out Thanksgiving, Black Friday and Cyber Monday for any year. Exact formulas, tested in LibreOffice against an independent model.", "dateModified": "2026-10-16", "datePublished": "2026-10-16", "image": "https://onyxaholguin-cyber.github.io/sheet-and-flow/assets/og/holiday-budget-planner.jpg", "author": {"@type": "Organization", "name": "Sheet & Flow", "url": "https://onyxaholguin-cyber.github.io/sheet-and-flow/"}, "publisher": {"@type": "Organization", "name": "Sheet & Flow", "url": "https://onyxaholguin-cyber.github.io/sheet-and-flow/"}, "mainEntityOfPage": "https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/christmas-gift-budget-spreadsheet/"}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://onyxaholguin-cyber.github.io/sheet-and-flow/"}, {"@type": "ListItem", "position": 2, "name": "Tutorials", "item": "https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/"}, {"@type": "ListItem", "position": 3, "name": "Christmas Gift Budget Spreadsheet: Per-Person Budgets, Gift Status and Black Friday Dates (Excel & Google Sheets)", "item": "https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/christmas-gift-budget-spreadsheet/"}]}</script></head>
+<body><a class="skip" href="#main">Skip to content</a>
+<header class="top"><div class="wrap"><a class="brand" href="/sheet-and-flow/">Sheet <span>&amp;</span> Flow</a>
+<nav><a href="/sheet-and-flow/products/">Products</a><a href="/sheet-and-flow/tutorials/">Tutorials</a><a href="/sheet-and-flow/tools/">Free tools</a></nav></div></header>
+<main id="main"><div class="wrap narrow"><article><h1>Christmas Gift Budget Spreadsheet: Per-Person Budgets, Gift Status and Black Friday Dates (Excel &amp; Google Sheets)</h1><div class="byline">Updated 2026-10-16 · Sheet & Flow</div><p class="inline-cta">Short on time? The <a href="/sheet-and-flow/products/holiday-budget-planner/">Christmas &amp; Holiday Budget Planner</a> ($9) is the finished, tested version of what this tutorial builds.</p><p>Most holiday overspending isn't one big purchase. It's a dozen "small" gifts nobody added up until January. The fix is a sheet that knows the difference between a gift you're <strong>thinking about</strong> and a gift you've <strong>paid for</strong>, and that totals both per person.</p>
+<p>This tutorial builds that sheet in three tabs: <strong>Settings</strong>, <strong>People</strong> and <strong>Gifts</strong>. It works the same in Excel, Google Sheets and LibreOffice, using only SUMIFS, IF, AND/OR, N, DATE, WEEKDAY and MOD. To test it, we built a workbook with these exact formulas, recalculated it in LibreOffice, and compared every cell to the worked example below and to an independent Python model. We also checked the holiday dates for every year from 2024 to 2040.</p>
+<h2>1. The Gifts tab</h2>
+<p>Row 1 holds the headers: <strong>Person, Gift, Status, Estimate, Actual, Cost, Spent</strong>. You type columns A–E. Status is one of <strong>Idea, Bought, Wrapped, Given</strong> (add a dropdown with Data → Data validation). Columns F and G are formulas. Fill them down as far as you need.</p>
+<pre><code>F2 (Cost):  =IF(AND(D2=&quot;&quot;,E2=&quot;&quot;),&quot;&quot;,IF(E2&lt;&gt;&quot;&quot;,E2,D2))
+G2 (Spent): =IF(OR(C2=&quot;Bought&quot;,C2=&quot;Wrapped&quot;,C2=&quot;Given&quot;),N(F2),0)
+</code></pre>
+<p><strong>Cost</strong> uses the actual price once you've typed one and the estimate until then, so a gift you've bought but whose receipt you haven't logged still counts. <strong>Spent</strong> counts the cost only once the gift is past the Idea stage. <code>N()</code> turns a blank cost into 0, so an empty row adds nothing.</p>
+<h2>2. The People tab</h2>
+<p>Row 1 holds the headers: <strong>Person, Budget, Planned, Spent, Left, Status</strong>. Type names and budgets in A and B, then fill C–F down:</p>
+<pre><code>C2 (Planned): =SUMIFS(Gifts!F:F,Gifts!A:A,A2)
+D2 (Spent):   =SUMIFS(Gifts!G:G,Gifts!A:A,A2)
+E2 (Left):    =B2-D2
+F2 (Status):  =IF(B2=&quot;&quot;,&quot;&quot;,IF(D2&gt;B2,&quot;Over budget&quot;,IF(C2&gt;B2,&quot;Plan is over budget&quot;,&quot;OK&quot;)))
+</code></pre>
+<p><strong>Planned</strong> includes ideas, so it warns you before you buy. "Plan is over budget" means your list for that person already costs more than their budget, even though you haven't spent it yet. Person names must match exactly on both tabs (a dropdown on Gifts!A pointing at People!A avoids typos).</p>
+<h2>3. The Settings tab</h2>
+<pre><code>B1: 2026                       (year)
+B2: 600                        (total gift budget)
+B4 (Thanksgiving, US): =DATE(B1,11,1)+MOD(5-WEEKDAY(DATE(B1,11,1)),7)+21
+B5 (Black Friday):     =B4+1
+B6 (Cyber Monday):     =B4+4
+B7 (Days to Christmas): =MAX(0,DATE(B1,12,25)-TODAY())
+B9 (Total spent):      =SUM(Gifts!G:G)
+B10 (Remaining):       =B2-B9
+B11 (Given to people): =SUM(People!B:B)
+B12 (Not yet assigned): =B2-B11
+</code></pre>
+<p>Format B4:B6 as dates. The Thanksgiving formula finds the first Thursday of November. <code>WEEKDAY</code> returns 1 for Sunday through 7 for Saturday, and Thursday is 5, so <code>MOD(5-WEEKDAY(...),7)</code> is the number of days from November 1 to that Thursday. Adding 21 jumps three weeks to the fourth Thursday. Change B1 and every date moves.</p>
+<h2>Worked example</h2>
+<p>Settings: year <strong>2026</strong>, budget <strong>$600</strong>. People: Mom $120, Dad $80, Emma $150, Liam $140.</p>
+<table>
+<thead>
+<tr>
+<th>Person</th>
+<th>Gift</th>
+<th>Status</th>
+<th>Estimate</th>
+<th>Actual</th>
+<th>Cost</th>
+<th>Spent</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Mom</td>
+<td>Scarf</td>
+<td>Wrapped</td>
+<td>60.00</td>
+<td>54.00</td>
+<td>54.00</td>
+<td>54.00</td>
+</tr>
+<tr>
+<td>Mom</td>
+<td>Novel</td>
+<td>Idea</td>
+<td>25.00</td>
+<td></td>
+<td>25.00</td>
+<td>0.00</td>
+</tr>
+<tr>
+<td>Dad</td>
+<td>Cordless drill</td>
+<td>Bought</td>
+<td>139.00</td>
+<td>89.00</td>
+<td>89.00</td>
+<td>89.00</td>
+</tr>
+<tr>
+<td>Emma</td>
+<td>Ice skates</td>
+<td>Bought</td>
+<td>80.00</td>
+<td>74.50</td>
+<td>74.50</td>
+<td>74.50</td>
+</tr>
+<tr>
+<td>Emma</td>
+<td>Book set</td>
+<td>Idea</td>
+<td>30.00</td>
+<td></td>
+<td>30.00</td>
+<td>0.00</td>
+</tr>
+<tr>
+<td>Liam</td>
+<td>LEGO set</td>
+<td>Given</td>
+<td>79.99</td>
+<td>59.99</td>
+<td>59.99</td>
+<td>59.99</td>
+</tr>
+<tr>
+<td>Liam</td>
+<td>Video game</td>
+<td>Bought</td>
+<td>70.00</td>
+<td></td>
+<td>70.00</td>
+<td>70.00</td>
+</tr>
+<tr>
+<td>Liam</td>
+<td>Fun socks</td>
+<td>Idea</td>
+<td>15.00</td>
+<td></td>
+<td>15.00</td>
+<td>0.00</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Person</th>
+<th>Budget</th>
+<th>Planned</th>
+<th>Spent</th>
+<th>Left</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Mom</td>
+<td>120.00</td>
+<td>79.00</td>
+<td>54.00</td>
+<td>66.00</td>
+<td>OK</td>
+</tr>
+<tr>
+<td>Dad</td>
+<td>80.00</td>
+<td>89.00</td>
+<td>89.00</td>
+<td>-9.00</td>
+<td>Over budget</td>
+</tr>
+<tr>
+<td>Emma</td>
+<td>150.00</td>
+<td>104.50</td>
+<td>74.50</td>
+<td>75.50</td>
+<td>OK</td>
+</tr>
+<tr>
+<td>Liam</td>
+<td>140.00</td>
+<td>144.99</td>
+<td>129.99</td>
+<td>10.01</td>
+<td>Plan is over budget</td>
+</tr>
+</tbody>
+</table>
+<p>Settings results: Thanksgiving <strong>Thu Nov 26, 2026</strong>, Black Friday <strong>Nov 27</strong>, Cyber Monday <strong>Nov 30</strong>. Total spent <strong>$347.49</strong>, remaining <strong>$252.51</strong>, given to people <strong>$490.00</strong>, not yet assigned <strong>$110.00</strong>.</p>
+<p>Dad's drill was a Black Friday deal, but $89 is still more than his $80 budget. Liam hasn't overspent yet, but his idea list has. Those are exactly the two things the sheet is meant to catch.</p>
+<h2>Holiday dates for the next few years</h2>
+<table>
+<thead>
+<tr>
+<th>Year</th>
+<th>Thanksgiving</th>
+<th>Black Friday</th>
+<th>Cyber Monday</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2026</td>
+<td>Nov 26</td>
+<td>Nov 27</td>
+<td>Nov 30</td>
+</tr>
+<tr>
+<td>2027</td>
+<td>Nov 25</td>
+<td>Nov 26</td>
+<td>Nov 29</td>
+</tr>
+<tr>
+<td>2028</td>
+<td>Nov 23</td>
+<td>Nov 24</td>
+<td>Nov 27</td>
+</tr>
+<tr>
+<td>2029</td>
+<td>Nov 22</td>
+<td>Nov 23</td>
+<td>Nov 26</td>
+</tr>
+<tr>
+<td>2030</td>
+<td>Nov 28</td>
+<td>Nov 29</td>
+<td>Dec 2</td>
+</tr>
+</tbody>
+</table>
+<h2>Common mistakes</h2>
+<ul>
+<li><strong>Counting ideas as spent.</strong> If your total looks too high, check that Spent uses the status test and not just the cost.</li>
+<li><strong>Name typos.</strong> "Mom" and "Mom " (with a trailing space) are different people to SUMIFS. Use a dropdown.</li>
+<li><strong>Forgetting the estimate.</strong> Leave Actual blank until you know it; Cost falls back to the estimate, so bought gifts are never counted as $0.</li>
+<li><strong>Hard-coding Black Friday.</strong> It isn't a fixed date. Use the formula so next year's copy just works.</li>
+</ul>
+<h2>Going further</h2>
+<p>This sheet covers gifts. The paid Christmas &amp; Holiday Budget Planner adds stockings, cards, events, the holiday meal, a Black Friday savings tracker, a November–December calendar, a per-group fairness check and dark mode. But the three tabs above are a complete, working gift budget on their own.</p><aside class="cta"><img src="/sheet-and-flow/assets/img/holiday-budget-planner.webp" width="640" height="360" alt="Christmas &amp; Holiday Budget Planner cover" loading="lazy">
+<div><h3>Christmas &amp; Holiday Budget Planner</h3><p>Holiday budget, gift tracker (Idea to Given), stockings, cards, meal and baking, Black Friday savings, a Nov-Dec calendar and a fairness view. Light and dark mode.</p><a class="btn" href="https://sheetandflow.gumroad.com/l/holiday-budget-planner">Get it · $9</a> <a href="/sheet-and-flow/products/holiday-budget-planner/">See what's inside</a></div></aside><p class="note">Written with AI assistance. Every formula, command and number on this page was tested before publishing (see each section). Product links go to our store.</p></article></div></main>
+<footer><div class="wrap"><p><strong>Sheet & Flow</strong> · Practical spreadsheets and n8n automations for landlords, freelancers and small teams.</p>
+<p><a href="/sheet-and-flow/about/">About</a><a href="/sheet-and-flow/affiliate-disclosure/">Affiliate disclosure</a><a href="/sheet-and-flow/privacy/">Privacy</a><a href="/sheet-and-flow/refunds/">Refunds</a><a href="https://sheetandflow.gumroad.com">Store</a></p>
+<p>Questions about a purchase? Reply to your Gumroad receipt email.</p>
+<p>Content and products are built with AI assistance and tested before publishing. Some links may become affiliate links. Nothing here is tax, legal or financial advice. Not affiliated with n8n GmbH, Microsoft or Google.</p></div></footer>
+</body></html>
