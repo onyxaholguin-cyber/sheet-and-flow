@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sinking Funds Spreadsheet: Monthly and Per-Paycheck Savings for Irregular Bills (Excel &amp; Google Sheets) | Sheet &amp; Flow</title><meta name="description" content="Work out how much to set aside each month and each paycheck for car insurance, holidays, vacations and repairs, count the saving dates and paydays left before each due date, and flag any fund that&#x27;s behind. Exact formulas, tested in LibreOffice against an independent model.">
+<link rel="canonical" href="https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/sinking-funds-spreadsheet/"><meta property="og:title" content="Sinking Funds Spreadsheet: Monthly and Per-Paycheck Savings for Irregular Bills (Excel &amp; Google Sheets) | Sheet &amp; Flow"><meta property="og:description" content="Work out how much to set aside each month and each paycheck for car insurance, holidays, vacations and repairs, count the saving dates and paydays left before each due date, and flag any fund that&#x27;s behind. Exact formulas, tested in LibreOffice against an independent model.">
+<meta property="og:type" content="article"><meta property="og:url" content="https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/sinking-funds-spreadsheet/"><meta name="theme-color" content="#0d9488">
+<link rel="stylesheet" href="/sheet-and-flow/assets/style.css"><link rel="icon" href="/sheet-and-flow/assets/favicon.svg" type="image/svg+xml"><meta property="og:image" content="https://onyxaholguin-cyber.github.io/sheet-and-flow/assets/og/budget-planner-2027.jpg"><meta property="og:image:width" content="1280"><meta property="og:image:height" content="720"><meta property="og:site_name" content="Sheet & Flow"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Sinking Funds Spreadsheet: Monthly and Per-Paycheck Savings for Irregular Bills (Excel &amp; Google Sheets) | Sheet &amp; Flow"><meta name="twitter:description" content="Work out how much to set aside each month and each paycheck for car insurance, holidays, vacations and repairs, count the saving dates and paydays left before each due date, and flag any fund that&#x27;s behind. Exact formulas, tested in LibreOffice against an independent model."><meta name="twitter:image" content="https://onyxaholguin-cyber.github.io/sheet-and-flow/assets/og/budget-planner-2027.jpg"><script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Sinking Funds Spreadsheet: Monthly and Per-Paycheck Savings for Irregular Bills (Excel & Google Sheets)", "description": "Work out how much to set aside each month and each paycheck for car insurance, holidays, vacations and repairs, count the saving dates and paydays left before each due date, and flag any fund that's behind. Exact formulas, tested in LibreOffice against an independent model.", "dateModified": "2026-10-19", "datePublished": "2026-10-19", "image": "https://onyxaholguin-cyber.github.io/sheet-and-flow/assets/og/budget-planner-2027.jpg", "author": {"@type": "Organization", "name": "Sheet & Flow", "url": "https://onyxaholguin-cyber.github.io/sheet-and-flow/"}, "publisher": {"@type": "Organization", "name": "Sheet & Flow", "url": "https://onyxaholguin-cyber.github.io/sheet-and-flow/"}, "mainEntityOfPage": "https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/sinking-funds-spreadsheet/"}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://onyxaholguin-cyber.github.io/sheet-and-flow/"}, {"@type": "ListItem", "position": 2, "name": "Tutorials", "item": "https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/"}, {"@type": "ListItem", "position": 3, "name": "Sinking Funds Spreadsheet: Monthly and Per-Paycheck Savings for Irregular Bills (Excel & Google Sheets)", "item": "https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/sinking-funds-spreadsheet/"}]}</script></head>
+<body><a class="skip" href="#main">Skip to content</a>
+<header class="top"><div class="wrap"><a class="brand" href="/sheet-and-flow/">Sheet <span>&amp;</span> Flow</a>
+<nav><a href="/sheet-and-flow/products/">Products</a><a href="/sheet-and-flow/tutorials/">Tutorials</a><a href="/sheet-and-flow/tools/">Free tools</a></nav></div></header>
+<main id="main"><div class="wrap narrow"><article><h1>Sinking Funds Spreadsheet: Monthly and Per-Paycheck Savings for Irregular Bills (Excel &amp; Google Sheets)</h1><div class="byline">Updated 2026-10-19 · Sheet & Flow</div><p class="inline-cta">Short on time? The <a href="/sheet-and-flow/products/budget-planner-2027/">2027 Budget Planner</a> ($12.99) is the finished, tested version of what this tutorial builds.</p><p>A <strong>sinking fund</strong> is money you set aside a little at a time for a bill you know is coming: the six-month car insurance premium, holiday gifts, a summer trip, the next set of tires. The math looks like "cost ÷ 12", but that's only right if the bill is due exactly twelve saving dates from now. Most aren't. And if you're paid every two weeks, "monthly amount ÷ 2" quietly leaves some funds short.</p>
+<p>This tutorial builds a two-tab sheet, <strong>Settings</strong> and <strong>Funds</strong>, that counts the saving dates and paydays actually left before each due date and divides by those. It works the same in Excel, Google Sheets and LibreOffice, using only DATE, YEAR, MONTH, DAY, INT, IF, MAX, ROUND and SUM. To test it, we built a workbook with these exact formulas, recalculated it in LibreOffice, and compared every cell to the worked example below and to an independent Python model that lists every saving date and payday one by one, on the example plus 40 randomized sets of funds.</p>
+<h2>1. The Settings tab</h2>
+<pre><code>B1 (As of):              2027-01-01
+B2 (Saving day):         1
+B3 (Next payday):        2027-01-08
+B4 (Days between pays):  14
+B5 (First saving date):  =IF(DAY(B1)&lt;=B2,DATE(YEAR(B1),MONTH(B1),B2),DATE(YEAR(B1),MONTH(B1)+1,B2))
+</code></pre>
+<p><strong>As of</strong> is the date you're planning from (use <code>=TODAY()</code> if you want the sheet to move on its own). <strong>Saving day</strong> is the day of the month you move money into your sinking funds; keep it between 1 and 28 so every month has one. <strong>Next payday</strong> is your first payday on or after the as-of date, and <strong>Days between pays</strong> is 14 for every two weeks or 7 for weekly.</p>
+<p><strong>First saving date</strong> is the next saving day on or after the as-of date. If this month's saving day has already passed, it moves to next month. <code>DATE(YEAR(B1),MONTH(B1)+1,B2)</code> is safe in December: month 13 rolls over to January of the next year in Excel (<a href="https://support.microsoft.com/en-us/office/date-function-e36c0c8c-4104-49da-ab83-82328b832349">Microsoft's DATE help</a>) and in Google Sheets (<a href="https://support.google.com/docs/answer/3092969">Google's DATE help</a>).</p>
+<h2>2. The Funds tab</h2>
+<p>Row 1 holds the headers: <strong>Fund, Target, Due date, Saved so far, Saving / month, Still needed, Months left, Needed / month, Paychecks left, Needed / paycheck, Projected, Shortfall, Status</strong>. You type columns A–E. Columns F–M are formulas; fill them down as far as you need.</p>
+<pre><code>F2 (Still needed):      =MAX(0,B2-D2)
+G2 (Months left):       =IF(C2&lt;Settings!$B$5,0,(YEAR(C2)-YEAR(Settings!$B$5))*12+MONTH(C2)-MONTH(Settings!$B$5)+IF(DAY(C2)&gt;=Settings!$B$2,1,0))
+H2 (Needed / month):    =IF(G2&gt;0,F2/G2,F2)
+I2 (Paychecks left):    =IF(C2&lt;Settings!$B$3,0,INT((C2-Settings!$B$3)/Settings!$B$4)+1)
+J2 (Needed / paycheck): =IF(I2&gt;0,F2/I2,F2)
+K2 (Projected):         =D2+E2*G2
+L2 (Shortfall):         =MAX(0,B2-K2)
+M2 (Status):            =IF(F2=0,&quot;Funded&quot;,IF(ROUND(L2,2)=0,&quot;On track&quot;,&quot;Behind&quot;))
+</code></pre>
+<p><strong>Months left</strong> counts the saving dates from the first saving date up to and including the due date. The <code>(YEAR…)*12+MONTH…</code> part counts whole months between them, and the <code>IF(DAY(C2)&gt;=…)</code> adds one more if the due date falls on or after that month's saving day. A bill due July 1 with saving on the 1st, planned from January 1, gets <strong>7</strong> saving dates (January through July). Planned from January 2, it gets 6.</p>
+<p><strong>Paychecks left</strong> counts paydays from the next payday to the due date, inclusive: the days between them divided by 14, rounded down, plus the next payday itself. If a fund has <strong>no</strong> saving dates or paychecks left, the Needed columns show the whole amount still needed, because it has to come from this month's money.</p>
+<p><strong>Projected</strong> is what the fund will hold on its due date if you keep saving what you typed in column E. <strong>Status</strong> says Funded once the target is already saved, On track if the projection reaches the target, and Behind otherwise. <code>ROUND</code> keeps a one-cent floating-point difference from showing a fund as Behind.</p>
+<h2>3. Totals for your budget</h2>
+<p>Back on Settings:</p>
+<pre><code>B7 (Total needed / month):    =SUM(Funds!H:H)
+B8 (Total needed / paycheck): =SUM(Funds!J:J)
+B9 (You're saving / month):   =SUM(Funds!E:E)
+B10 (Monthly gap):            =B7-B9
+</code></pre>
+<p>B7 is the line to put in your monthly budget (or B8 if you budget by paycheck). A positive gap is how much more per month you'd need to set aside to keep every fund on track.</p>
+<h2>Worked example</h2>
+<p>Settings: as of <strong>Jan 1, 2027</strong>, saving day <strong>1</strong>, next payday <strong>Jan 8, 2027</strong>, paid every <strong>14</strong> days.</p>
+<table>
+<thead>
+<tr>
+<th>Fund</th>
+<th>Target</th>
+<th>Due date</th>
+<th>Saved so far</th>
+<th>Saving / month</th>
+<th>Still needed</th>
+<th>Months left</th>
+<th>Needed / month</th>
+<th>Paychecks left</th>
+<th>Needed / paycheck</th>
+<th>Projected</th>
+<th>Shortfall</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Car insurance (6-mo)</td>
+<td>660.00</td>
+<td>2027-07-01</td>
+<td>120.00</td>
+<td>90.00</td>
+<td>540.00</td>
+<td>7</td>
+<td>77.14</td>
+<td>13</td>
+<td>41.54</td>
+<td>750.00</td>
+<td>0.00</td>
+<td>On track</td>
+</tr>
+<tr>
+<td>Holidays 2027</td>
+<td>1200.00</td>
+<td>2027-12-01</td>
+<td>0.00</td>
+<td>100.00</td>
+<td>1200.00</td>
+<td>12</td>
+<td>100.00</td>
+<td>24</td>
+<td>50.00</td>
+<td>1200.00</td>
+<td>0.00</td>
+<td>On track</td>
+</tr>
+<tr>
+<td>Summer vacation</td>
+<td>2000.00</td>
+<td>2027-08-01</td>
+<td>400.00</td>
+<td>60.00</td>
+<td>1600.00</td>
+<td>8</td>
+<td>200.00</td>
+<td>15</td>
+<td>106.67</td>
+<td>880.00</td>
+<td>1120.00</td>
+<td>Behind</td>
+</tr>
+<tr>
+<td>Car repairs</td>
+<td>800.00</td>
+<td>2027-12-31</td>
+<td>250.00</td>
+<td>0.00</td>
+<td>550.00</td>
+<td>12</td>
+<td>45.83</td>
+<td>26</td>
+<td>21.15</td>
+<td>250.00</td>
+<td>550.00</td>
+<td>Behind</td>
+</tr>
+</tbody>
+</table>
+<p>Totals: needed <strong>$422.98</strong> a month or <strong>$219.36</strong> a paycheck. You're saving <strong>$250.00</strong> a month, so the monthly gap is <strong>$172.98</strong>.</p>
+<p>Three things this example shows:</p>
+<ul>
+<li><strong>"Cost ÷ 12" undersaves anything due before December.</strong> The vacation still needs $1,600, and $1,600 ÷ 12 is $133.33 a month. But August 1 is only 8 saving dates away, so it really needs <strong>$200.00</strong> a month.</li>
+<li><strong>"Monthly ÷ 2" doesn't work on a biweekly paycheck.</strong> January 8 to July 1 has 13 paydays, not 14. Saving $38.57 a paycheck (half of $77.14) for the car insurance leaves you <strong>$38.59</strong> short in July. The vacation, at $100 a paycheck over 15 paydays, ends <strong>$100.00</strong> short. Divide by the real count instead.</li>
+<li><strong>Three-paycheck months help funds due late in the year.</strong> Car repairs gets 26 paydays before December 31, so $21.15 a paycheck is less than half of the $45.83 monthly amount.</li>
+</ul>
+<h2>Common mistakes</h2>
+<ul>
+<li><strong>Counting the current month after its saving day has passed.</strong> If you plan on January 20 with saving on the 1st, January is gone. The First saving date cell handles this; a plain "months between" formula doesn't.</li>
+<li><strong>Forgetting the money already saved.</strong> Divide what's <em>still needed</em>, not the full target, or every fund looks more expensive than it is.</li>
+<li><strong>Leaving a fund at $0 needed after the bill is paid.</strong> When the bill goes out, set Saved so far back to 0 and move the due date to the next one. The fund starts filling again.</li>
+<li><strong>Typing percentages or text in the dates.</strong> A due date typed as text ("July 1") makes the comparisons fail. Format column C as a date.</li>
+</ul>
+<h2>Going further</h2>
+<p>This sheet covers sinking funds on their own. The paid 2027 Budget Planner puts them inside a whole-year budget: a month-by-month contribution grid for each fund, paycheck and bill planning for weekly, every-two-weeks and twice-a-month pay, variable income, debt payoff (snowball or avalanche) with a 120-month schedule, savings goals and an annual dashboard, plus dark mode. But the two tabs above are a complete, working sinking-fund planner on their own. This is a budgeting method, not financial advice.</p><aside class="cta"><img src="/sheet-and-flow/assets/img/budget-planner-2027.webp" width="640" height="360" alt="2027 Budget Planner cover" loading="lazy">
+<div><h3>2027 Budget Planner</h3><p>Monthly and per-paycheck budgets, 50/30/20, variable-income mode, sinking funds, debt payoff (snowball or avalanche) and savings goals for 2027.</p><a class="btn" href="https://sheetandflow.gumroad.com/l/budget-planner-2027">Get it · $12.99</a> <a href="/sheet-and-flow/products/budget-planner-2027/">See what's inside</a></div></aside><p class="note">Written with AI assistance. Every formula, command and number on this page was tested before publishing (see each section). Product links go to our store.</p></article></div></main>
+<footer><div class="wrap"><p><strong>Sheet & Flow</strong> · Practical spreadsheets and n8n automations for landlords, freelancers and small teams.</p>
+<p><a href="/sheet-and-flow/about/">About</a><a href="/sheet-and-flow/affiliate-disclosure/">Affiliate disclosure</a><a href="/sheet-and-flow/privacy/">Privacy</a><a href="/sheet-and-flow/refunds/">Refunds</a><a href="https://sheetandflow.gumroad.com">Store</a></p>
+<p>Questions about a purchase? Reply to your Gumroad receipt email.</p>
+<p>Content and products are built with AI assistance and tested before publishing. Some links may become affiliate links. Nothing here is tax, legal or financial advice. Not affiliated with n8n GmbH, Microsoft or Google.</p></div></footer>
+</body></html>
