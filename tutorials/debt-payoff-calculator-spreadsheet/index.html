@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Debt Payoff Calculator Spreadsheet: Months to Debt-Free, Total Interest and What an Extra Payment Saves (Excel &amp; Google Sheets) | Sheet &amp; Flow</title><meta name="description" content="Work out how many months each debt takes to pay off, the exact interest you&#x27;ll pay (including the smaller last payment), what an extra payment each month saves, and the payment needed to be debt-free by a target date. Exact formulas, tested in LibreOffice against a month-by-month model.">
+<link rel="canonical" href="https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/debt-payoff-calculator-spreadsheet/"><meta property="og:title" content="Debt Payoff Calculator Spreadsheet: Months to Debt-Free, Total Interest and What an Extra Payment Saves (Excel &amp; Google Sheets) | Sheet &amp; Flow"><meta property="og:description" content="Work out how many months each debt takes to pay off, the exact interest you&#x27;ll pay (including the smaller last payment), what an extra payment each month saves, and the payment needed to be debt-free by a target date. Exact formulas, tested in LibreOffice against a month-by-month model.">
+<meta property="og:type" content="article"><meta property="og:url" content="https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/debt-payoff-calculator-spreadsheet/"><meta name="theme-color" content="#0d9488">
+<link rel="stylesheet" href="/sheet-and-flow/assets/style.css"><link rel="icon" href="/sheet-and-flow/assets/favicon.svg" type="image/svg+xml"><meta property="og:image" content="https://onyxaholguin-cyber.github.io/sheet-and-flow/assets/og/budget-planner-2027.jpg"><meta property="og:image:width" content="1280"><meta property="og:image:height" content="720"><meta property="og:site_name" content="Sheet & Flow"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Debt Payoff Calculator Spreadsheet: Months to Debt-Free, Total Interest and What an Extra Payment Saves (Excel &amp; Google Sheets) | Sheet &amp; Flow"><meta name="twitter:description" content="Work out how many months each debt takes to pay off, the exact interest you&#x27;ll pay (including the smaller last payment), what an extra payment each month saves, and the payment needed to be debt-free by a target date. Exact formulas, tested in LibreOffice against a month-by-month model."><meta name="twitter:image" content="https://onyxaholguin-cyber.github.io/sheet-and-flow/assets/og/budget-planner-2027.jpg"><script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Debt Payoff Calculator Spreadsheet: Months to Debt-Free, Total Interest and What an Extra Payment Saves (Excel & Google Sheets)", "description": "Work out how many months each debt takes to pay off, the exact interest you'll pay (including the smaller last payment), what an extra payment each month saves, and the payment needed to be debt-free by a target date. Exact formulas, tested in LibreOffice against a month-by-month model.", "dateModified": "2026-10-20", "datePublished": "2026-10-20", "image": "https://onyxaholguin-cyber.github.io/sheet-and-flow/assets/og/budget-planner-2027.jpg", "author": {"@type": "Organization", "name": "Sheet & Flow", "url": "https://onyxaholguin-cyber.github.io/sheet-and-flow/"}, "publisher": {"@type": "Organization", "name": "Sheet & Flow", "url": "https://onyxaholguin-cyber.github.io/sheet-and-flow/"}, "mainEntityOfPage": "https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/debt-payoff-calculator-spreadsheet/"}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://onyxaholguin-cyber.github.io/sheet-and-flow/"}, {"@type": "ListItem", "position": 2, "name": "Tutorials", "item": "https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/"}, {"@type": "ListItem", "position": 3, "name": "Debt Payoff Calculator Spreadsheet: Months to Debt-Free, Total Interest and What an Extra Payment Saves (Excel & Google Sheets)", "item": "https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/debt-payoff-calculator-spreadsheet/"}]}</script></head>
+<body><a class="skip" href="#main">Skip to content</a>
+<header class="top"><div class="wrap"><a class="brand" href="/sheet-and-flow/">Sheet <span>&amp;</span> Flow</a>
+<nav><a href="/sheet-and-flow/products/">Products</a><a href="/sheet-and-flow/tutorials/">Tutorials</a><a href="/sheet-and-flow/tools/">Free tools</a></nav></div></header>
+<main id="main"><div class="wrap narrow"><article><h1>Debt Payoff Calculator Spreadsheet: Months to Debt-Free, Total Interest and What an Extra Payment Saves (Excel &amp; Google Sheets)</h1><div class="byline">Updated 2026-10-20 · Sheet & Flow</div><p class="inline-cta">Short on time? The <a href="/sheet-and-flow/products/budget-planner-2027/">2027 Budget Planner</a> ($12.99) is the finished, tested version of what this tutorial builds.</p><p>"How long until this card is paid off?" has a one-formula answer, and "how much interest will I pay?" has a two-formula answer, as long as you handle the last payment properly. Most quick calculators multiply months × payment and overstate the interest, because the final payment is almost always smaller than the rest.</p>
+<p>This tutorial builds a two-tab sheet, <strong>Settings</strong> and <strong>Debts</strong>, with one row per debt. For each debt it shows the months to pay off, the size of the last payment, the total interest, the month it's paid off, what the same debt costs at the minimum payment, the interest your extra payment saves, and the payment that would clear it by a target date. It works the same in Excel, Google Sheets and LibreOffice, using only NPER, FV, PMT, EDATE, ROUNDUP, IF, OR, COUNTIF, MAX and SUM. To test it, we built a workbook with these exact formulas, recalculated it in LibreOffice, and compared every cell to an independent Python model that pays each debt month by month, on the worked example below plus 40 randomized sets of debts (including 0% loans, payments too small to ever finish, and balances paid off in one month).</p>
+<h2>1. The Settings tab</h2>
+<pre><code>B1 (First payment month):        2027-01-01
+B2 (Debt-free target, months):   24
+</code></pre>
+<p><strong>First payment month</strong> is the month of your next payment; the sheet counts it as month 1. <strong>Debt-free target</strong> is how many months you'd like to be done in; the Debts tab works out the payment each debt would need to hit it.</p>
+<h2>2. The Debts tab</h2>
+<p>Row 1 holds the headers: <strong>Debt, Balance, APR, Minimum payment, Extra / month, Monthly rate, Payment, Months to pay off, Last payment, Total interest, Paid off in, Months at minimum, Interest at minimum, Interest saved, Payment for target, Avalanche order, Snowball order</strong>. You type columns A–E (APR as a percentage, like 22.99%). Columns F–Q are formulas; fill them down only as far as you have debts.</p>
+<pre><code>F2 (Monthly rate):        =C2/12
+G2 (Payment):             =D2+E2
+H2 (Months to pay off):   =IF(G2&lt;=B2*F2,&quot;Never&quot;,IF(F2=0,ROUNDUP((B2-0.005)/G2,0),ROUNDUP(NPER(F2,-G2,B2,-0.005),0)))
+I2 (Last payment):        =IF(H2=&quot;Never&quot;,&quot;&quot;,-FV(F2,H2-1,-G2,B2)*(1+F2))
+J2 (Total interest):      =IF(H2=&quot;Never&quot;,&quot;&quot;,(H2-1)*G2+I2-B2)
+K2 (Paid off in):         =IF(H2=&quot;Never&quot;,&quot;&quot;,EDATE(Settings!$B$1,H2-1))
+L2 (Months at minimum):   =IF(D2&lt;=B2*F2,&quot;Never&quot;,IF(F2=0,ROUNDUP((B2-0.005)/D2,0),ROUNDUP(NPER(F2,-D2,B2,-0.005),0)))
+M2 (Interest at minimum): =IF(L2=&quot;Never&quot;,&quot;&quot;,(L2-1)*D2-FV(F2,L2-1,-D2,B2)*(1+F2)-B2)
+N2 (Interest saved):      =IF(OR(H2=&quot;Never&quot;,L2=&quot;Never&quot;),&quot;&quot;,M2-J2)
+O2 (Payment for target):  =IF(F2=0,B2/Settings!$B$2,PMT(F2,Settings!$B$2,-B2))
+P2 (Avalanche order):     =COUNTIF($C$2:$C$9,&quot;&gt;&quot;&amp;C2)+1
+Q2 (Snowball order):      =COUNTIF($B$2:$B$9,&quot;&lt;&quot;&amp;B2)+1
+</code></pre>
+<p><strong>Monthly rate</strong> is the APR divided by 12. Card issuers often charge interest daily on the average daily balance (<a href="https://www.consumerfinance.gov/ask-cfpb/how-is-my-credit-card-interest-calculated-en-51/">CFPB</a>), so treat the card results as a close estimate rather than your statement to the cent. Loans that charge APR/12 each month match exactly.</p>
+<p><strong>Months to pay off</strong> uses NPER, which returns the number of payment periods for a loan with a fixed payment and rate (<a href="https://support.microsoft.com/en-us/office/nper-function-240535b5-6653-4d2d-bfcf-b6a38151d815">Microsoft's NPER help</a>, <a href="https://support.google.com/docs/answer/3093183">Google's NPER help</a>). The payment goes in as a negative number and the balance as a positive one, the usual cash-flow sign convention. NPER gives a fraction like 23.4; ROUNDUP turns it into the 24th payment, which is the smaller last one. The last argument, −0.005, tells NPER the debt is done once less than half a cent is left. Without it, a leftover of a fraction of a cent (we hit one at $0.00495 in testing) adds a month that no lender would bill. The 0% branch does the same with plain division. If the payment is no bigger than one month's interest, the balance never goes down, and the sheet says <strong>Never</strong> instead of letting NPER return an error.</p>
+<p><strong>Last payment</strong> is what's left after all the full payments, plus that month's interest. FV gives the balance after a number of payments (<a href="https://support.microsoft.com/en-us/office/fv-function-2eef9f44-a084-4c61-bdd8-4fe4bb1b71b3">Microsoft's FV help</a>); with this sign convention the balance comes back negative, hence the minus sign in front. <strong>Total interest</strong> is then everything you pay minus the balance you started with: all the full payments, plus the last one, minus the balance.</p>
+<p><strong>Paid off in</strong> counts forward from the first payment month with EDATE (<a href="https://support.microsoft.com/en-us/office/edate-function-3c920eb2-6e66-44e7-a1f5-753ae47ee4f5">Microsoft's EDATE help</a>). Format column K as a month and year. <strong>Months at minimum</strong> and <strong>Interest at minimum</strong> repeat the same math with the minimum payment only, so <strong>Interest saved</strong> shows what your extra payment is worth.</p>
+<p><strong>Payment for target</strong> uses PMT, the fixed payment that clears a balance in a given number of months (<a href="https://support.microsoft.com/en-us/office/pmt-function-0214da64-9a63-4996-bc20-214433fa6441">Microsoft's PMT help</a>, <a href="https://support.google.com/docs/answer/3093185">Google's PMT help</a>). For a 0% loan it's simply the balance divided by the months.</p>
+<p><strong>Avalanche order</strong> ranks the debts by APR, highest first. <strong>Snowball order</strong> ranks them by balance, smallest first. They're the two common orders for where extra money goes. Ties share a rank.</p>
+<h2>3. Totals</h2>
+<p>Put these under the settings:</p>
+<pre><code>B4 (Total balance):                      =SUM(Debts!B2:B9)
+B5 (Paid each month):                    =SUM(Debts!G2:G9)
+B6 (Total interest):                     =SUM(Debts!J2:J9)
+B7 (Interest saved by extra payments):   =SUM(Debts!N2:N9)
+B8 (Months until the last debt is paid): =MAX(Debts!H2:H9)
+B9 (Payment to be debt-free on target):  =SUM(Debts!O2:O9)
+</code></pre>
+<p>SUM and MAX skip the blank and "Never" cells, so check column H for any <strong>Never</strong> before you trust B6 and B8.</p>
+<h2>Worked example</h2>
+<p>Settings: first payment month <strong>January 2027</strong>, target <strong>24</strong> months. Four debts, with an extra <strong>$100</strong> a month on the credit card:</p>
+<table>
+<thead>
+<tr>
+<th>Debt</th>
+<th>Balance</th>
+<th>APR</th>
+<th>Minimum payment</th>
+<th>Extra / month</th>
+<th>Payment</th>
+<th>Months to pay off</th>
+<th>Last payment</th>
+<th>Total interest</th>
+<th>Paid off in</th>
+<th>Months at minimum</th>
+<th>Interest at minimum</th>
+<th>Interest saved</th>
+<th>Payment for target</th>
+<th>Avalanche order</th>
+<th>Snowball order</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Credit card</td>
+<td>4200.00</td>
+<td>22.99%</td>
+<td>120.00</td>
+<td>100.00</td>
+<td>220.00</td>
+<td>24</td>
+<td>218.41</td>
+<td>1078.41</td>
+<td>2028-12</td>
+<td>59</td>
+<td>2821.19</td>
+<td>1742.79</td>
+<td>219.95</td>
+<td>2</td>
+<td>2</td>
+</tr>
+<tr>
+<td>Car loan</td>
+<td>9800.00</td>
+<td>6.90%</td>
+<td>285.00</td>
+<td>0.00</td>
+<td>285.00</td>
+<td>39</td>
+<td>120.62</td>
+<td>1150.62</td>
+<td>2030-03</td>
+<td>39</td>
+<td>1150.62</td>
+<td>0.00</td>
+<td>438.33</td>
+<td>3</td>
+<td>3</td>
+</tr>
+<tr>
+<td>Student loan</td>
+<td>18500.00</td>
+<td>5.50%</td>
+<td>210.00</td>
+<td>0.00</td>
+<td>210.00</td>
+<td>114</td>
+<td>18.18</td>
+<td>5248.18</td>
+<td>2036-06</td>
+<td>114</td>
+<td>5248.18</td>
+<td>0.00</td>
+<td>815.77</td>
+<td>4</td>
+<td>4</td>
+</tr>
+<tr>
+<td>Store card</td>
+<td>650.00</td>
+<td>26.99%</td>
+<td>35.00</td>
+<td>0.00</td>
+<td>35.00</td>
+<td>25</td>
+<td>11.03</td>
+<td>201.03</td>
+<td>2029-01</td>
+<td>25</td>
+<td>201.03</td>
+<td>0.00</td>
+<td>35.34</td>
+<td>1</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+<p>Totals: <strong>$33,150.00</strong> owed, <strong>$750.00</strong> paid each month, <strong>$7,678.23</strong> of interest in total, <strong>$1,742.79</strong> of it saved by the extra $100, and the last debt is paid after <strong>114</strong> months. Being debt-free in 24 months would take <strong>$1,509.39</strong> a month.</p>
+<p>What the numbers say:</p>
+<ul>
+<li><strong>An extra $100 on the card saves $1,742.79 and 35 months.</strong> At the $120 minimum the card takes 59 months and costs <strong>$2,821.19</strong> in interest. At $220 it's gone in 24 months for <strong>$1,078.41</strong>. The 24-month target payment for the card, $219.95, is almost exactly the same thing.</li>
+<li><strong>Months × payment overstates the interest.</strong> 24 × $220 − $4,200 = $1,080.00, but the 24th payment is only $218.41, so the real interest is $1,078.41. On the student loan the gap is bigger: 114 × $210 − $18,500 = $5,440.00, against a real <strong>$5,248.18</strong>, because the last payment is just $18.18.</li>
+<li><strong>A payment below the monthly interest never finishes.</strong> $80 a month on the $4,200 card is less than the first month's interest (about $80.47), so the sheet shows <strong>Never</strong>. If a promotional rate ends or the APR goes up, check column H again.</li>
+<li><strong>Here, snowball and avalanche agree.</strong> The store card has both the smallest balance and the highest APR, and the student loan has the largest balance and the lowest rate, so both methods pay the debts in the same order: store card, credit card, car loan, student loan. When they disagree, avalanche usually saves more interest and snowball usually clears its first debt sooner.</li>
+</ul>
+<h2>Paying debts one at a time vs rolling payments over</h2>
+<p>This sheet treats every debt on its own: when the store card is paid off in month 25, its $35 just stops. If you send the extra $100 to the first debt in that order and roll each finished debt's payment into the next one (the "rollover" both snowball and avalanche rely on), the same $750 a month clears all four debts in <strong>52</strong> months instead of 114, with <strong>$5,392.69</strong> of interest instead of $7,678.23. That needs a month-by-month schedule, because each debt's payment changes when the one ahead of it finishes.</p>
+<h2>Common mistakes</h2>
+<ul>
+<li><strong>Typing the APR as 22.99 instead of 22.99%.</strong> The monthly rate becomes 191.6% and every debt shows Never. Format column C as a percentage.</li>
+<li><strong>Forgetting the minus signs.</strong> NPER and FV need the payment negative and the balance positive. If they're the same sign, NPER returns an error.</li>
+<li><strong>Using the annual rate in NPER.</strong> The rate and the periods must match: monthly payments need the monthly rate, F2, not C2.</li>
+<li><strong>Comparing payoff dates without rollover.</strong> B8 is the "each debt on its own" answer. Rolling payments over is always at least as fast.</li>
+</ul>
+<h2>Going further</h2>
+<p>This sheet answers the per-debt questions on its own. The paid 2027 Budget Planner adds the rollover: a Debt Payoff tab where you pick Snowball or Avalanche and an extra amount, backed by a 120-month schedule that moves each paid-off debt's payment to the next one, and shows your debt-free date and total interest. It sits inside a whole-year budget with paychecks, bills, sinking funds, savings goals and an annual dashboard, plus dark mode. But the two tabs above are a complete, working payoff calculator on their own. This is a budgeting method, not financial advice.</p><aside class="cta"><img src="/sheet-and-flow/assets/img/budget-planner-2027.webp" width="640" height="360" alt="2027 Budget Planner cover" loading="lazy">
+<div><h3>2027 Budget Planner</h3><p>Monthly and per-paycheck budgets, 50/30/20, variable-income mode, sinking funds, debt payoff (snowball or avalanche) and savings goals for 2027.</p><a class="btn" href="https://sheetandflow.gumroad.com/l/budget-planner-2027">Get it · $12.99</a> <a href="/sheet-and-flow/products/budget-planner-2027/">See what's inside</a></div></aside><p class="note">Written with AI assistance. Every formula, command and number on this page was tested before publishing (see each section). Product links go to our store.</p></article></div></main>
+<footer><div class="wrap"><p><strong>Sheet & Flow</strong> · Practical spreadsheets and n8n automations for landlords, freelancers and small teams.</p>
+<p><a href="/sheet-and-flow/about/">About</a><a href="/sheet-and-flow/affiliate-disclosure/">Affiliate disclosure</a><a href="/sheet-and-flow/privacy/">Privacy</a><a href="/sheet-and-flow/refunds/">Refunds</a><a href="https://sheetandflow.gumroad.com">Store</a></p>
+<p>Questions about a purchase? Reply to your Gumroad receipt email.</p>
+<p>Content and products are built with AI assistance and tested before publishing. Some links may become affiliate links. Nothing here is tax, legal or financial advice. Not affiliated with n8n GmbH, Microsoft or Google.</p></div></footer>
+</body></html>
