@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Black Friday Deal Tracker Spreadsheet: Check the Real Discount Against the Lowest Price You&#x27;ve Seen (Excel &amp; Google Sheets) | Sheet &amp; Flow</title><meta name="description" content="Build a two-tab Black Friday and Cyber Monday deal tracker that compares each deal with the lowest price you&#x27;ve actually seen, not just the store&#x27;s &quot;regular&quot; price, labels it Good deal, Small discount, Same as usual or Worse than before, and totals claimed vs real savings. Exact formulas, tested in LibreOffice against an independent model.">
+<link rel="canonical" href="https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/black-friday-deal-tracker-spreadsheet/"><meta property="og:title" content="Black Friday Deal Tracker Spreadsheet: Check the Real Discount Against the Lowest Price You&#x27;ve Seen (Excel &amp; Google Sheets) | Sheet &amp; Flow"><meta property="og:description" content="Build a two-tab Black Friday and Cyber Monday deal tracker that compares each deal with the lowest price you&#x27;ve actually seen, not just the store&#x27;s &quot;regular&quot; price, labels it Good deal, Small discount, Same as usual or Worse than before, and totals claimed vs real savings. Exact formulas, tested in LibreOffice against an independent model.">
+<meta property="og:type" content="article"><meta property="og:url" content="https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/black-friday-deal-tracker-spreadsheet/"><meta name="theme-color" content="#0d9488">
+<link rel="stylesheet" href="/sheet-and-flow/assets/style.css"><link rel="icon" href="/sheet-and-flow/assets/favicon.svg" type="image/svg+xml"><meta property="og:image" content="https://onyxaholguin-cyber.github.io/sheet-and-flow/assets/og/holiday-budget-planner.jpg"><meta property="og:image:width" content="1280"><meta property="og:image:height" content="720"><meta property="og:site_name" content="Sheet & Flow"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Black Friday Deal Tracker Spreadsheet: Check the Real Discount Against the Lowest Price You&#x27;ve Seen (Excel &amp; Google Sheets) | Sheet &amp; Flow"><meta name="twitter:description" content="Build a two-tab Black Friday and Cyber Monday deal tracker that compares each deal with the lowest price you&#x27;ve actually seen, not just the store&#x27;s &quot;regular&quot; price, labels it Good deal, Small discount, Same as usual or Worse than before, and totals claimed vs real savings. Exact formulas, tested in LibreOffice against an independent model."><meta name="twitter:image" content="https://onyxaholguin-cyber.github.io/sheet-and-flow/assets/og/holiday-budget-planner.jpg"><script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Black Friday Deal Tracker Spreadsheet: Check the Real Discount Against the Lowest Price You've Seen (Excel & Google Sheets)", "description": "Build a two-tab Black Friday and Cyber Monday deal tracker that compares each deal with the lowest price you've actually seen, not just the store's \"regular\" price, labels it Good deal, Small discount, Same as usual or Worse than before, and totals claimed vs real savings. Exact formulas, tested in LibreOffice against an independent model.", "dateModified": "2026-10-21", "datePublished": "2026-10-21", "image": "https://onyxaholguin-cyber.github.io/sheet-and-flow/assets/og/holiday-budget-planner.jpg", "author": {"@type": "Organization", "name": "Sheet & Flow", "url": "https://onyxaholguin-cyber.github.io/sheet-and-flow/"}, "publisher": {"@type": "Organization", "name": "Sheet & Flow", "url": "https://onyxaholguin-cyber.github.io/sheet-and-flow/"}, "mainEntityOfPage": "https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/black-friday-deal-tracker-spreadsheet/"}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://onyxaholguin-cyber.github.io/sheet-and-flow/"}, {"@type": "ListItem", "position": 2, "name": "Tutorials", "item": "https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/"}, {"@type": "ListItem", "position": 3, "name": "Black Friday Deal Tracker Spreadsheet: Check the Real Discount Against the Lowest Price You've Seen (Excel & Google Sheets)", "item": "https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/black-friday-deal-tracker-spreadsheet/"}]}</script></head>
+<body><a class="skip" href="#main">Skip to content</a>
+<header class="top"><div class="wrap"><a class="brand" href="/sheet-and-flow/">Sheet <span>&amp;</span> Flow</a>
+<nav><a href="/sheet-and-flow/products/">Products</a><a href="/sheet-and-flow/tutorials/">Tutorials</a><a href="/sheet-and-flow/tools/">Free tools</a></nav></div></header>
+<main id="main"><div class="wrap narrow"><article><h1>Black Friday Deal Tracker Spreadsheet: Check the Real Discount Against the Lowest Price You&#x27;ve Seen (Excel &amp; Google Sheets)</h1><div class="byline">Updated 2026-10-21 · Sheet & Flow</div><p class="inline-cta">Short on time? The <a href="/sheet-and-flow/products/holiday-budget-planner/">Christmas &amp; Holiday Budget Planner</a> ($9) is the finished, tested version of what this tutorial builds.</p><p>A Black Friday tag that says "was $139, now $89" tells you how far the price fell from the number the store chose to print. It doesn't tell you whether $89 is a good price. If the same drill sold for $99 in September, the real saving is $10, not $50.</p>
+<p>This tutorial builds a deal tracker that keeps both numbers side by side. You note the <strong>lowest price you've seen</strong> for each item in the weeks before (a price-history tool, a screenshot or your own notes), and the sheet measures every deal against the lower of that and the list price. It works the same in Excel, Google Sheets and LibreOffice, using only IF, OR, AND, MIN, N, ISNUMBER, SUM, SUMIFS and COUNTIF. To test it, we built a workbook with these exact formulas, recalculated it in LibreOffice, and compared every cell to the worked example below and to an independent Python model on 40 random deal lists.</p>
+<p>Why bother? The US Federal Trade Commission's Guides Against Deceptive Pricing say a "was" price is only a legitimate comparison if it's the price the item "was offered to the public on a regular basis for a reasonably substantial period of time" (<a href="https://www.law.cornell.edu/cfr/text/16/233.1">16 CFR 233.1</a>). If it was inflated so the sale could look bigger, the guide says the "reduced" price "is, in reality, probably just the seller's regular price." You can't audit a store's pricing history, but you can write down what you saw.</p>
+<h2>1. The Deals tab</h2>
+<p>Row 1 holds the headers: <strong>Item, List price, Lowest seen, Deal price, Bought?, Claimed saving, Benchmark, Real saving, Real %, Verdict, Saved</strong>. You type columns A–E. Leave <strong>Lowest seen</strong> blank if you haven't tracked the item; the sheet then falls back to the list price. <strong>Bought?</strong> is Yes or No (a dropdown via Data → Data validation helps). Columns F–K are formulas. Fill them down as far as you need.</p>
+<pre><code>F2 (Claimed saving): =IF(OR(B2=&quot;&quot;,D2=&quot;&quot;),&quot;&quot;,B2-D2)
+G2 (Benchmark):      =IF(B2=&quot;&quot;,&quot;&quot;,IF(C2=&quot;&quot;,B2,MIN(B2,C2)))
+H2 (Real saving):    =IF(OR(G2=&quot;&quot;,D2=&quot;&quot;),&quot;&quot;,G2-D2)
+I2 (Real %):         =IF(OR(H2=&quot;&quot;,N(G2)=0),&quot;&quot;,H2/G2)
+J2 (Verdict):        =IF(I2=&quot;&quot;,&quot;&quot;,IF(I2&gt;=Settings!$B$1,&quot;Good deal&quot;,IF(I2&gt;0,&quot;Small discount&quot;,IF(I2=0,&quot;Same as usual&quot;,&quot;Worse than before&quot;))))
+K2 (Saved):          =IF(AND(E2=&quot;Yes&quot;,ISNUMBER(H2)),H2,0)
+</code></pre>
+<p><strong>Claimed saving</strong> is what the tag says. <strong>Benchmark</strong> is the price you'd have paid anyway: the list price, or the lowest price you've seen if that's lower. <strong>Real saving</strong> and <strong>Real %</strong> measure the deal against the benchmark, so a "50% off" tag on an item that was cheaper last month shows up as <strong>Worse than before</strong>. <strong>Saved</strong> counts only what you actually bought, and it can be negative: paying more than you could have paid earlier is money lost, not saved. Format I as a percentage.</p>
+<h2>2. The Settings tab</h2>
+<pre><code>B1: 20%                              (a Good deal is at least this far below the benchmark)
+B3 (Claimed savings, bought): =SUMIFS(Deals!F:F,Deals!E:E,&quot;Yes&quot;)
+B4 (Real savings, bought):    =SUM(Deals!K:K)
+B5 (Spent on deals):          =SUMIFS(Deals!D:D,Deals!E:E,&quot;Yes&quot;)
+B6 (Good deals found):        =COUNTIF(Deals!J:J,&quot;Good deal&quot;)
+</code></pre>
+<p>Type B1 as 20% (or 0.2). The gap between B3 and B4 is how much of the "savings" came from the tags rather than from the prices.</p>
+<h2>Worked example</h2>
+<p>Settings: Good-deal threshold <strong>20%</strong>. Seven deals, five bought:</p>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>List price</th>
+<th>Lowest seen</th>
+<th>Deal price</th>
+<th>Bought?</th>
+<th>Claimed saving</th>
+<th>Benchmark</th>
+<th>Real saving</th>
+<th>Real %</th>
+<th>Verdict</th>
+<th>Saved</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cordless drill</td>
+<td>139.00</td>
+<td>99.00</td>
+<td>89.00</td>
+<td>Yes</td>
+<td>50.00</td>
+<td>99.00</td>
+<td>10.00</td>
+<td>10.1%</td>
+<td>Small discount</td>
+<td>10.00</td>
+</tr>
+<tr>
+<td>Cashmere scarf</td>
+<td>78.00</td>
+<td></td>
+<td>54.00</td>
+<td>Yes</td>
+<td>24.00</td>
+<td>78.00</td>
+<td>24.00</td>
+<td>30.8%</td>
+<td>Good deal</td>
+<td>24.00</td>
+</tr>
+<tr>
+<td>LEGO set</td>
+<td>79.99</td>
+<td>59.99</td>
+<td>59.99</td>
+<td>Yes</td>
+<td>20.00</td>
+<td>59.99</td>
+<td>0.00</td>
+<td>0.0%</td>
+<td>Same as usual</td>
+<td>0.00</td>
+</tr>
+<tr>
+<td>Ice skates</td>
+<td>89.99</td>
+<td>69.99</td>
+<td>74.50</td>
+<td>Yes</td>
+<td>15.49</td>
+<td>69.99</td>
+<td>-4.51</td>
+<td>-6.4%</td>
+<td>Worse than before</td>
+<td>-4.51</td>
+</tr>
+<tr>
+<td>Headphones</td>
+<td>99.99</td>
+<td>89.99</td>
+<td>79.99</td>
+<td>Yes</td>
+<td>20.00</td>
+<td>89.99</td>
+<td>10.00</td>
+<td>11.1%</td>
+<td>Small discount</td>
+<td>10.00</td>
+</tr>
+<tr>
+<td>Robot vacuum</td>
+<td>249.00</td>
+<td>199.00</td>
+<td>229.00</td>
+<td>No</td>
+<td>20.00</td>
+<td>199.00</td>
+<td>-30.00</td>
+<td>-15.1%</td>
+<td>Worse than before</td>
+<td>0.00</td>
+</tr>
+<tr>
+<td>Air fryer</td>
+<td>99.00</td>
+<td>79.00</td>
+<td>59.00</td>
+<td>No</td>
+<td>40.00</td>
+<td>79.00</td>
+<td>20.00</td>
+<td>25.3%</td>
+<td>Good deal</td>
+<td>0.00</td>
+</tr>
+</tbody>
+</table>
+<p>Settings results: claimed savings on what was bought <strong>$129.49</strong>, real savings <strong>$39.49</strong>, spent on deals <strong>$357.48</strong>, good deals found <strong>2</strong>.</p>
+<p>The tags promised $129.49 off. Measured against prices that were already available, the five purchases saved $39.49, and the ice skates cost $4.51 more than they had a few weeks earlier. The two genuinely good deals were the scarf (never seen cheaper) and the air fryer, which wasn't bought. That's the decision the sheet is for: the air fryer at $59 beats its own history by 25%, the robot vacuum at $229 is $30 worse than its history even though the tag says $20 off.</p>
+<h2>Black Friday and Cyber Monday 2026</h2>
+<p>Black Friday 2026 is <strong>Friday, November 27</strong> and Cyber Monday is <strong>November 30</strong> (US Thanksgiving is the fourth Thursday of November). Start filling in <strong>Lowest seen</strong> now: the weeks before Black Friday are when you can still see what an item normally costs. The <a href="/sheet-and-flow/tutorials/christmas-gift-budget-spreadsheet/">Christmas gift budget tutorial</a> has a formula that works out these dates for any year.</p>
+<h2>Common mistakes</h2>
+<ul>
+<li><strong>Trusting the tag.</strong> Claimed saving uses the store's list price. If you only track that column, every deal looks good.</li>
+<li><strong>Typing percentages as whole numbers.</strong> If B1 is 20 instead of 20%, nothing is ever a Good deal. Format B1 as a percentage.</li>
+<li><strong>Counting what you didn't buy.</strong> Saved only counts rows marked Yes, so a deal you passed on doesn't inflate your total. Spelling matters: "yes " with a space doesn't count.</li>
+<li><strong>Mixing pack sizes.</strong> Compare the same item and quantity. A "deal" on a smaller bundle at a lower price isn't a saving.</li>
+<li><strong>Hiding losses.</strong> Leave negative Saved values in. If you overpaid, the total should say so.</li>
+</ul>
+<h2>Going further</h2>
+<p>This tracker covers deals. The paid Christmas &amp; Holiday Budget Planner has its own Black Friday tab (it compares the deal price with the regular price against a threshold you set and totals what you saved), plus gifts per person, stockings, cards, events, the holiday meal, a November–December calendar with every key date, a fairness check and dark mode. Adding a <strong>Lowest seen</strong> column like the one above to its Black Friday tab works the same way. The two tabs above are a complete, working deal tracker on their own.</p><aside class="cta"><img src="/sheet-and-flow/assets/img/holiday-budget-planner.webp" width="640" height="360" alt="Christmas &amp; Holiday Budget Planner cover" loading="lazy">
+<div><h3>Christmas &amp; Holiday Budget Planner</h3><p>Holiday budget, gift tracker (Idea to Given), stockings, cards, meal and baking, Black Friday savings, a Nov-Dec calendar and a fairness view. Light and dark mode.</p><a class="btn" href="https://sheetandflow.gumroad.com/l/holiday-budget-planner">Get it · $9</a> <a href="/sheet-and-flow/products/holiday-budget-planner/">See what's inside</a></div></aside><p class="note">Written with AI assistance. Every formula, command and number on this page was tested before publishing (see each section). Product links go to our store.</p></article></div></main>
+<footer><div class="wrap"><p><strong>Sheet & Flow</strong> · Practical spreadsheets and n8n automations for landlords, freelancers and small teams.</p>
+<p><a href="/sheet-and-flow/about/">About</a><a href="/sheet-and-flow/affiliate-disclosure/">Affiliate disclosure</a><a href="/sheet-and-flow/privacy/">Privacy</a><a href="/sheet-and-flow/refunds/">Refunds</a><a href="https://sheetandflow.gumroad.com">Store</a></p>
+<p>Questions about a purchase? Reply to your Gumroad receipt email.</p>
+<p>Content and products are built with AI assistance and tested before publishing. Some links may become affiliate links. Nothing here is tax, legal or financial advice. Not affiliated with n8n GmbH, Microsoft or Google.</p></div></footer>
+</body></html>
