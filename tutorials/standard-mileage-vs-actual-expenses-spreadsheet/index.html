@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Standard Mileage vs Actual Expenses Spreadsheet (2026): Which Car Deduction Is Bigger? | Sheet &amp; Flow</title><meta name="description" content="Build a one-tab spreadsheet that works out your business-use percentage from odometer readings, prices 2026 business miles at 72.5¢ (Jan–Jun) and 76¢ (Jul–Dec), applies that percentage to your actual car costs, and tells you which method gives the bigger deduction and the cost level where the answer flips. Exact formulas, tested in LibreOffice against an independent model.">
+<link rel="canonical" href="https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/standard-mileage-vs-actual-expenses-spreadsheet/"><meta property="og:title" content="Standard Mileage vs Actual Expenses Spreadsheet (2026): Which Car Deduction Is Bigger? | Sheet &amp; Flow"><meta property="og:description" content="Build a one-tab spreadsheet that works out your business-use percentage from odometer readings, prices 2026 business miles at 72.5¢ (Jan–Jun) and 76¢ (Jul–Dec), applies that percentage to your actual car costs, and tells you which method gives the bigger deduction and the cost level where the answer flips. Exact formulas, tested in LibreOffice against an independent model.">
+<meta property="og:type" content="article"><meta property="og:url" content="https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/standard-mileage-vs-actual-expenses-spreadsheet/"><meta name="theme-color" content="#0d9488">
+<link rel="stylesheet" href="/sheet-and-flow/assets/style.css"><link rel="icon" href="/sheet-and-flow/assets/favicon.svg" type="image/svg+xml"><meta property="og:image" content="https://onyxaholguin-cyber.github.io/sheet-and-flow/assets/og/freelancer-mileage-log.jpg"><meta property="og:image:width" content="1280"><meta property="og:image:height" content="720"><meta property="og:site_name" content="Sheet & Flow"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Standard Mileage vs Actual Expenses Spreadsheet (2026): Which Car Deduction Is Bigger? | Sheet &amp; Flow"><meta name="twitter:description" content="Build a one-tab spreadsheet that works out your business-use percentage from odometer readings, prices 2026 business miles at 72.5¢ (Jan–Jun) and 76¢ (Jul–Dec), applies that percentage to your actual car costs, and tells you which method gives the bigger deduction and the cost level where the answer flips. Exact formulas, tested in LibreOffice against an independent model."><meta name="twitter:image" content="https://onyxaholguin-cyber.github.io/sheet-and-flow/assets/og/freelancer-mileage-log.jpg"><script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Standard Mileage vs Actual Expenses Spreadsheet (2026): Which Car Deduction Is Bigger?", "description": "Build a one-tab spreadsheet that works out your business-use percentage from odometer readings, prices 2026 business miles at 72.5\u00a2 (Jan\u2013Jun) and 76\u00a2 (Jul\u2013Dec), applies that percentage to your actual car costs, and tells you which method gives the bigger deduction and the cost level where the answer flips. Exact formulas, tested in LibreOffice against an independent model.", "dateModified": "2026-10-22", "datePublished": "2026-10-22", "image": "https://onyxaholguin-cyber.github.io/sheet-and-flow/assets/og/freelancer-mileage-log.jpg", "author": {"@type": "Organization", "name": "Sheet & Flow", "url": "https://onyxaholguin-cyber.github.io/sheet-and-flow/"}, "publisher": {"@type": "Organization", "name": "Sheet & Flow", "url": "https://onyxaholguin-cyber.github.io/sheet-and-flow/"}, "mainEntityOfPage": "https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/standard-mileage-vs-actual-expenses-spreadsheet/"}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://onyxaholguin-cyber.github.io/sheet-and-flow/"}, {"@type": "ListItem", "position": 2, "name": "Tutorials", "item": "https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/"}, {"@type": "ListItem", "position": 3, "name": "Standard Mileage vs Actual Expenses Spreadsheet (2026): Which Car Deduction Is Bigger?", "item": "https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/standard-mileage-vs-actual-expenses-spreadsheet/"}]}</script></head>
+<body><a class="skip" href="#main">Skip to content</a>
+<header class="top"><div class="wrap"><a class="brand" href="/sheet-and-flow/">Sheet <span>&amp;</span> Flow</a>
+<nav><a href="/sheet-and-flow/products/">Products</a><a href="/sheet-and-flow/tutorials/">Tutorials</a><a href="/sheet-and-flow/tools/">Free tools</a></nav></div></header>
+<main id="main"><div class="wrap narrow"><article><h1>Standard Mileage vs Actual Expenses Spreadsheet (2026): Which Car Deduction Is Bigger?</h1><div class="byline">Updated 2026-10-22 · Sheet & Flow</div><p class="inline-cta">Short on time? The <a href="/sheet-and-flow/products/freelancer-mileage-log/">Freelancer Mileage Log</a> ($9) is the finished, tested version of what this tutorial builds.</p><p>If you're self-employed and drive for work, you can deduct car costs on Schedule C in one of two ways: the <strong>standard mileage rate</strong> (business miles × the IRS rate) or <strong>actual expenses</strong> (gas, insurance, repairs, depreciation or lease payments and so on, times your business-use percentage). Most people pick one out of habit. This tutorial builds a small sheet that runs both with your numbers, so the choice is a comparison instead of a guess.</p>
+<p>It works the same in Excel, Google Sheets and LibreOffice, using only SUM, ROUND and IF. To test it, we built a workbook with these exact formulas, recalculated it in LibreOffice, and compared every result with the worked example below, with an independent Python model on 40 random cars, and with the Business total of our Freelancer Mileage Log's sample file.</p>
+<blockquote>
+<p>Not tax advice. The rules below are quoted from <a href="https://www.irs.gov/publications/p463">IRS Publication 463</a> and the <a href="https://www.irs.gov/tax-professionals/standard-mileage-rates">IRS standard mileage rates page</a>. Check them with your tax preparer before you choose a method, because the choice can lock you in (see "Before you switch" below).</p>
+</blockquote>
+<h2>1. Inputs (column B)</h2>
+<p>One tab. Labels go in column A, numbers in column B. Type rates as dollars per mile.</p>
+<table>
+<thead>
+<tr>
+<th>Cell</th>
+<th>What to type</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>B2</td>
+<td>Odometer on January 1</td>
+<td>31200</td>
+</tr>
+<tr>
+<td>B3</td>
+<td>Odometer on December 31</td>
+<td>45700</td>
+</tr>
+<tr>
+<td>B4</td>
+<td>Business miles, Jan 1 – Jun 30</td>
+<td>4100</td>
+</tr>
+<tr>
+<td>B5</td>
+<td>Business miles, Jul 1 – Dec 31</td>
+<td>4600</td>
+</tr>
+<tr>
+<td>B6</td>
+<td>Business rate, Jan–Jun 2026</td>
+<td>0.725</td>
+</tr>
+<tr>
+<td>B7</td>
+<td>Business rate, Jul–Dec 2026</td>
+<td>0.76</td>
+</tr>
+<tr>
+<td>B9</td>
+<td>Gas and oil for the year</td>
+<td>2350</td>
+</tr>
+<tr>
+<td>B10</td>
+<td>Repairs, maintenance and tires</td>
+<td>780</td>
+</tr>
+<tr>
+<td>B11</td>
+<td>Insurance</td>
+<td>1440</td>
+</tr>
+<tr>
+<td>B12</td>
+<td>Registration and license fees</td>
+<td>420</td>
+</tr>
+<tr>
+<td>B13</td>
+<td>Depreciation <strong>or</strong> lease payments</td>
+<td>3100</td>
+</tr>
+<tr>
+<td>B14</td>
+<td>Garage rent and other car costs</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<p>The two business-mile totals come from your mileage log, split at July 1 because the IRS raised the 2026 business rate from 72.5¢ to 76¢ for miles driven on or after that date (Announcement 2026-11). B9:B14 are the car's <strong>whole-year</strong> costs, business and personal together. The sheet takes the business share itself. Depreciation is the one number you shouldn't guess: it depends on what you paid, when the car went into service and the depreciation limits, so take it from your preparer or last year's Form 4562.</p>
+<p>Leave parking fees, tolls and the business part of car-loan interest <strong>out</strong> of B9:B14. Publication 463 lets you deduct business parking and tolls "in addition to using the standard mileage rate", and a self-employed person can deduct the business part of car-loan interest under either method. They're added on top of whichever method you choose, so they don't change which one wins.</p>
+<h2>2. The formulas</h2>
+<pre><code>B16 (Total miles):               =B3-B2
+B17 (Business miles):            =B4+B5
+B18 (Business-use %):            =IF(B16&gt;0,B17/B16,0)
+B19 (Standard mileage):          =ROUND(B4*B6+B5*B7,2)
+B20 (Total car costs):           =SUM(B9:B14)
+B21 (Actual expenses):           =ROUND(B20*B18,2)
+B22 (Actual minus standard):     =B21-B19
+B23 (Bigger deduction):          =IF(OR(B16&lt;=0,B17&gt;B16),&quot;Check miles&quot;,IF(B21&gt;B19,&quot;Actual expenses&quot;,IF(B21&lt;B19,&quot;Standard mileage&quot;,&quot;Same&quot;)))
+B24 (Break-even car costs):      =IF(B18&gt;0,ROUND(B19/B18,2),&quot;n/a&quot;)
+B25 (Actual $ per business mile): =IF(B17&gt;0,ROUND(B21/B17,3),&quot;n/a&quot;)
+B26 (Standard $ per business mile): =IF(B17&gt;0,ROUND(B19/B17,3),&quot;n/a&quot;)
+</code></pre>
+<p>Format B18 as a percentage. <strong>Business-use %</strong> is the split Publication 463 describes: "You can divide your expense based on the miles driven for each purpose." <strong>Standard mileage</strong> prices each half of the year at its own rate. <strong>Actual expenses</strong> is your total car cost times the business share. <strong>Break-even car costs</strong> is the yearly total (B20) at which both methods give the same deduction: below it the standard rate wins, above it actual expenses win. <strong>Bigger deduction</strong> says "Check miles" when the odometer readings are missing or you've logged more business miles than the car drove, which is a typo, not a result.</p>
+<h2>Worked example</h2>
+<p>A freelancer's own car, owned for several years and used for client visits:</p>
+<ul>
+<li>Odometer 31,200 → 45,700, so total miles <strong>14,500</strong>. Business miles 4,100 (Jan–Jun) + 4,600 (Jul–Dec) = <strong>8,700</strong>, a business-use share of <strong>60.0%</strong>.</li>
+<li>Standard mileage: 4,100 × $0.725 + 4,600 × $0.76 = $2,972.50 + $3,496.00 = <strong>$6,468.50</strong>.</li>
+<li>Actual expenses: total car costs <strong>$8,090.00</strong> × 60% = <strong>$4,854.00</strong>.</li>
+<li>Actual minus standard: <strong>-$1,614.50</strong>. Bigger deduction: <strong>Standard mileage</strong>.</li>
+<li>Break-even car costs: <strong>$10,780.83</strong>. The car would have to cost about $2,690 more a year to run before actual expenses won.</li>
+<li>Per business mile: actual <strong>$0.558</strong> vs standard <strong>$0.744</strong>.</li>
+</ul>
+<p>This is the usual result for a paid-off or modest car: the standard rate (72.5¢ to 76¢ a mile) assumes more cost per mile than the car really has.</p>
+<p>Now swap the car for a <strong>leased SUV</strong> with the same miles: gas 3,000, repairs 300, insurance 1,900, registration 650, lease payments 6,600 (B13), other 0. Total car costs <strong>$12,450.00</strong> × 60% = <strong>$7,470.00</strong>, which beats the standard <strong>$6,468.50</strong> by <strong>$1,001.50</strong>. Total costs are above the $10,780.83 break-even, so actual expenses win. A high-value leased car may also have an "inclusion amount" that reduces the lease deduction (Publication 463, chapter 4), so run it past your preparer before relying on that margin.</p>
+<h2>Before you switch: the rules that lock you in</h2>
+<p>These are quoted from Publication 463, "Choosing the standard mileage rate" and "Standard mileage rate not allowed":</p>
+<ul>
+<li><strong>Owned car:</strong> "If you want to use the standard mileage rate for a car you own, you must choose to use it in the first year the car is available for use in your business. Then, in later years, you can choose to use either the standard mileage rate or actual expenses." If you start with actual expenses and accelerated depreciation, you can't move to the standard rate later for that car.</li>
+<li><strong>Leased car:</strong> "If you want to use the standard mileage rate for a car you lease, you must use it for the entire lease period."</li>
+<li><strong>Not allowed</strong> if you "use five or more cars at the same time (such as in fleet operations)", or if you claimed MACRS, a section 179 deduction or the special depreciation allowance on the car.</li>
+</ul>
+<p>So in a car's <strong>first business year</strong>, the sheet's answer is only half the decision: picking the standard rate keeps both options open later. That's why this sheet is worth running before you file, not after.</p>
+<h2>Common mistakes</h2>
+<ul>
+<li><strong>Using business miles for total miles.</strong> B18 needs the car's total miles for the year (odometer difference). If business miles equal total miles, every drive was business, which is rarely true and hard to defend.</li>
+<li><strong>One rate for the whole year.</strong> In 2026, January–June miles are 72.5¢ and July–December miles are 76¢. A single 76¢ rate overstates the first half.</li>
+<li><strong>Counting parking and tolls inside B9:B14.</strong> They're deductible on top of either method; inside the comparison they make actual expenses look better than they are.</li>
+<li><strong>Only the business share of costs in B9:B14.</strong> The sheet multiplies by the business-use % itself. Entering costs that are already split counts the split twice.</li>
+<li><strong>No log.</strong> Both methods need the business miles. Publication 463 expects a record of each business trip (date, miles, destination and purpose) kept at or near the time of the trip.</li>
+</ul>
+<h2>Going further</h2>
+<p>The miles in B4 and B5 come from a mileage log. The <a href="https://sheetandflow.gumroad.com/l/freelancer-mileage-log">Freelancer Mileage Log</a> is a trip log (Excel and Google Sheets) that prices each trip at the 2026 rate for its date and totals Business miles and dollars for January–June, July–December and the year. Its sample file's Business total ($264.28 on 223 + 135 miles) is one of the checks this tutorial's formulas were tested against. The free <a href="/sheet-and-flow/tools/mileage-deduction-calculator/">IRS Mileage Deduction Calculator</a> does the standard-rate side in your browser, and the <a href="/sheet-and-flow/tutorials/irs-mileage-log-schedule-c-2026/">Schedule C mileage log tutorial</a> covers what to record for each trip.</p><aside class="cta"><img src="/sheet-and-flow/assets/img/freelancer-mileage-log.webp" width="640" height="360" alt="Freelancer Mileage Log cover" loading="lazy">
+<div><h3>Freelancer Mileage Log</h3><p>IRS-ready trip log with 2026 H1/H2 standard mileage rates and a Schedule C Line 9 total.</p><a class="btn" href="https://sheetandflow.gumroad.com/l/freelancer-mileage-log">Get it · $9</a> <a href="/sheet-and-flow/products/freelancer-mileage-log/">See what's inside</a></div></aside><p>Free tool: <a href="/sheet-and-flow/tools/mileage-deduction-calculator/">Free IRS Mileage Deduction Calculator (2026)</a></p><p class="note">Written with AI assistance. Every formula, command and number on this page was tested before publishing (see each section). Product links go to our store.</p></article></div></main>
+<footer><div class="wrap"><p><strong>Sheet & Flow</strong> · Practical spreadsheets and n8n automations for landlords, freelancers and small teams.</p>
+<p><a href="/sheet-and-flow/about/">About</a><a href="/sheet-and-flow/affiliate-disclosure/">Affiliate disclosure</a><a href="/sheet-and-flow/privacy/">Privacy</a><a href="/sheet-and-flow/refunds/">Refunds</a><a href="https://sheetandflow.gumroad.com">Store</a></p>
+<p>Questions about a purchase? Reply to your Gumroad receipt email.</p>
+<p>Content and products are built with AI assistance and tested before publishing. Some links may become affiliate links. Nothing here is tax, legal or financial advice. Not affiliated with n8n GmbH, Microsoft or Google.</p></div></footer>
+</body></html>
