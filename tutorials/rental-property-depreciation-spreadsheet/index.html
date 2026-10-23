@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Rental Property Depreciation Spreadsheet: 27.5-Year Schedule with the Mid-Month Convention (Excel &amp; Google Sheets) | Sheet &amp; Flow</title><meta name="description" content="Build a small spreadsheet that splits your purchase price between land and building, applies the 27.5-year straight-line rate with the mid-month convention, and shows this year&#x27;s depreciation, the total taken so far and what&#x27;s left, for the building and each improvement like a new roof. Exact formulas, tested in LibreOffice against an independent model and the IRS&#x27;s own examples.">
+<link rel="canonical" href="https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/rental-property-depreciation-spreadsheet/"><meta property="og:title" content="Rental Property Depreciation Spreadsheet: 27.5-Year Schedule with the Mid-Month Convention (Excel &amp; Google Sheets) | Sheet &amp; Flow"><meta property="og:description" content="Build a small spreadsheet that splits your purchase price between land and building, applies the 27.5-year straight-line rate with the mid-month convention, and shows this year&#x27;s depreciation, the total taken so far and what&#x27;s left, for the building and each improvement like a new roof. Exact formulas, tested in LibreOffice against an independent model and the IRS&#x27;s own examples.">
+<meta property="og:type" content="article"><meta property="og:url" content="https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/rental-property-depreciation-spreadsheet/"><meta name="theme-color" content="#0d9488">
+<link rel="stylesheet" href="/sheet-and-flow/assets/style.css"><link rel="icon" href="/sheet-and-flow/assets/favicon.svg" type="image/svg+xml"><meta property="og:image" content="https://onyxaholguin-cyber.github.io/sheet-and-flow/assets/og/rental-property-tracker.jpg"><meta property="og:image:width" content="1280"><meta property="og:image:height" content="720"><meta property="og:site_name" content="Sheet & Flow"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Rental Property Depreciation Spreadsheet: 27.5-Year Schedule with the Mid-Month Convention (Excel &amp; Google Sheets) | Sheet &amp; Flow"><meta name="twitter:description" content="Build a small spreadsheet that splits your purchase price between land and building, applies the 27.5-year straight-line rate with the mid-month convention, and shows this year&#x27;s depreciation, the total taken so far and what&#x27;s left, for the building and each improvement like a new roof. Exact formulas, tested in LibreOffice against an independent model and the IRS&#x27;s own examples."><meta name="twitter:image" content="https://onyxaholguin-cyber.github.io/sheet-and-flow/assets/og/rental-property-tracker.jpg"><script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Rental Property Depreciation Spreadsheet: 27.5-Year Schedule with the Mid-Month Convention (Excel & Google Sheets)", "description": "Build a small spreadsheet that splits your purchase price between land and building, applies the 27.5-year straight-line rate with the mid-month convention, and shows this year's depreciation, the total taken so far and what's left, for the building and each improvement like a new roof. Exact formulas, tested in LibreOffice against an independent model and the IRS's own examples.", "dateModified": "2026-10-23", "datePublished": "2026-10-23", "image": "https://onyxaholguin-cyber.github.io/sheet-and-flow/assets/og/rental-property-tracker.jpg", "author": {"@type": "Organization", "name": "Sheet & Flow", "url": "https://onyxaholguin-cyber.github.io/sheet-and-flow/"}, "publisher": {"@type": "Organization", "name": "Sheet & Flow", "url": "https://onyxaholguin-cyber.github.io/sheet-and-flow/"}, "mainEntityOfPage": "https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/rental-property-depreciation-spreadsheet/"}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://onyxaholguin-cyber.github.io/sheet-and-flow/"}, {"@type": "ListItem", "position": 2, "name": "Tutorials", "item": "https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/"}, {"@type": "ListItem", "position": 3, "name": "Rental Property Depreciation Spreadsheet: 27.5-Year Schedule with the Mid-Month Convention (Excel & Google Sheets)", "item": "https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/rental-property-depreciation-spreadsheet/"}]}</script></head>
+<body><a class="skip" href="#main">Skip to content</a>
+<header class="top"><div class="wrap"><a class="brand" href="/sheet-and-flow/">Sheet <span>&amp;</span> Flow</a>
+<nav><a href="/sheet-and-flow/products/">Products</a><a href="/sheet-and-flow/tutorials/">Tutorials</a><a href="/sheet-and-flow/tools/">Free tools</a></nav></div></header>
+<main id="main"><div class="wrap narrow"><article><h1>Rental Property Depreciation Spreadsheet: 27.5-Year Schedule with the Mid-Month Convention (Excel &amp; Google Sheets)</h1><div class="byline">Updated 2026-10-23 · Sheet & Flow</div><p class="inline-cta">Short on time? The <a href="/sheet-and-flow/products/rental-property-tracker/">Rental Property Tracker</a> ($19) is the finished, tested version of what this tutorial builds.</p><p>Depreciation is often the biggest number on a landlord's Schedule E (line 18), and it's the one people most often get wrong or leave to the last minute. The rules for a residential rental building are short: the land isn't depreciable, the building is recovered over <strong>27.5 years</strong> in equal amounts, and the first and last years are prorated by the month, counting the month you start (or stop) as half a month.</p>
+<p>This tutorial turns those rules into one tab you can keep year after year: one row per building or improvement, with this year's depreciation, the total taken before this year and the basis left. It works the same in Excel, Google Sheets and LibreOffice, using only ROUND, IF, MIN, MAX, MONTH, YEAR and SUM. To test it, we built a workbook with these exact formulas, recalculated it in LibreOffice, and compared every result with the worked example below, with the two worked examples in IRS publications 527 and 946, with an independent Python model that steps through every year on 40 random properties, and with the roof entry and Schedule E line 18 of our Rental Property Tracker's sample file.</p>
+<blockquote>
+<p>Not tax advice. The rules below are quoted from <a href="https://www.irs.gov/publications/p527">IRS Publication 527</a> (Residential Rental Property) and <a href="https://www.irs.gov/publications/p946">IRS Publication 946</a> (How To Depreciate Property). This sheet covers the general 27.5-year method only: no bonus depreciation, no cost segregation, no 5-year items. Have your preparer check the first year you set it up.</p>
+</blockquote>
+<h2>1. What goes in the sheet</h2>
+<p>Put the tax year in <strong>B1</strong>. Then one row per item, starting in row 5 (row 4 holds the headers):</p>
+<table>
+<thead>
+<tr>
+<th>Column</th>
+<th>What to type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A</td>
+<td>What it is: "Maple Duplex building", "New roof"</td>
+</tr>
+<tr>
+<td>B</td>
+<td>The date it was <strong>placed in service</strong></td>
+</tr>
+<tr>
+<td>C</td>
+<td>Cost: purchase price plus the closing costs that go into basis (or the improvement's cost)</td>
+</tr>
+<tr>
+<td>D</td>
+<td>Land value on the tax assessment (leave blank for an improvement)</td>
+</tr>
+<tr>
+<td>E</td>
+<td>Total value on the same assessment (leave blank for an improvement)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Placed in service</strong> isn't the closing date. Publication 527: "You place property in service in a rental activity when it is ready and available for a specific use in that activity. Even if you aren't using the property, it is in service when it is ready and available for its specific use." A house you buy in March and fix up until May goes in as May.</p>
+<p><strong>Cost</strong> includes some closing costs and not others. Publication 527 lists ones that are part of your basis, among them "Abstract fees", "Legal fees", "Recording fees", "Surveys", "Transfer taxes" and "Title insurance". It says you can't include "Fire insurance premiums" or charges connected with getting or refinancing a loan, such as points.</p>
+<p><strong>Land</strong> comes out because "You can't depreciate the cost of land because land generally doesn't wear out, become obsolete, or get used up." If your purchase contract doesn't split the price, Publication 527 says "you can divide the cost between them based on their assessed values for real estate tax purposes". That's what columns D and E do.</p>
+<p><strong>Improvements</strong> like a new roof get their own row. Publication 527's Table 2-1 gives "Additions and improvements, such as a new roof" the same recovery period as the property they're added to, so a roof on a rental house is 27.5-year property, starting from the month it was finished. Appliances, carpeting and furniture are different: Publication 527 puts them in the <strong>5-year</strong> class, which uses other rates, so keep them out of this sheet.</p>
+<h2>2. The formulas (row 5; fill down to row 14)</h2>
+<pre><code>F5 (Depreciable basis):     =IF(C5=&quot;&quot;,&quot;&quot;,ROUND(C5*(1-IF(E5&gt;0,D5/E5,0)),2))
+G5 (Year number):           =IF(B5=&quot;&quot;,&quot;&quot;,$B$1-YEAR(B5)+1)
+H5 (First-year rate):       =IF(B5=&quot;&quot;,&quot;&quot;,ROUND((12.5-MONTH(B5))/12/27.5,5))
+I5 (Taken before this year): =IF(B5=&quot;&quot;,&quot;&quot;,IF(G5&lt;=1,0,MIN(F5,ROUND(F5*H5,2)+(G5-2)*ROUND(F5*0.03636,2))))
+J5 (This year):             =IF(B5=&quot;&quot;,&quot;&quot;,IF(G5&lt;1,0,IF(G5=1,ROUND(F5*H5,2),MAX(0,MIN(ROUND(F5*0.03636,2),F5-I5)))))
+K5 (Left to depreciate):    =IF(B5=&quot;&quot;,&quot;&quot;,F5-I5-J5)
+J15 (Total for Schedule E line 18): =SUM(J5:J14)
+</code></pre>
+<p>Format H as a percentage with three decimals. <strong>Depreciable basis</strong> is the cost times the building's share of the assessment. <strong>Year number</strong> is 1 in the year the item was placed in service, 2 the next year, and so on. It's zero or negative for something placed in service after the tax year in B1, and <strong>This year</strong> shows 0 for it.</p>
+<p><strong>First-year rate</strong> is the mid-month convention: an item placed in service in month <em>m</em> gets 12 − <em>m</em> + ½ months in its first year, out of 12 months × 27.5 years. Rounded to three decimals of a percent, that gives:</p>
+<table>
+<thead>
+<tr>
+<th>Month placed in service</th>
+<th>Jan</th>
+<th>Feb</th>
+<th>Mar</th>
+<th>Apr</th>
+<th>May</th>
+<th>Jun</th>
+<th>Jul</th>
+<th>Aug</th>
+<th>Sep</th>
+<th>Oct</th>
+<th>Nov</th>
+<th>Dec</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>First-year rate</td>
+<td>3.485%</td>
+<td>3.182%</td>
+<td>2.879%</td>
+<td>2.576%</td>
+<td>2.273%</td>
+<td>1.970%</td>
+<td>1.667%</td>
+<td>1.364%</td>
+<td>1.061%</td>
+<td>0.758%</td>
+<td>0.455%</td>
+<td>0.152%</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Every full year after that</strong> is 1 ÷ 27.5 = <strong>3.636%</strong> of the basis. Publication 946's example uses the same figure: "A full year of depreciation for 2025 is $3,636. This is $100,000 multiplied by 0.03636". <strong>Taken before this year</strong> adds the first year and the full years in between, and <strong>MIN</strong> stops it at the basis. <strong>This year</strong> is the first-year amount in year 1, a full year after that, and only what's left in the final year, so the total never goes over the basis.</p>
+<h2>Worked example</h2>
+<p>A duplex bought for $310,000 and ready to rent in <strong>June 2019</strong>, plus $4,200 of closing costs that go into basis, so C5 is 314200. The county assessment shows land $52,000 of a $260,000 total. In May 2026 the landlord put on a new roof for $9,800 (row 6, D and E blank). B1 is 2026.</p>
+<ul>
+<li>Land share: 52,000 ÷ 260,000 = <strong>20%</strong>, so the duplex's depreciable basis is 314,200 × 80% = <strong>$251,360.00</strong>.</li>
+<li>First year (2019, June): 251,360 × <strong>1.970%</strong> = <strong>$4,951.79</strong>.</li>
+<li>Each full year: 251,360 × 3.636% = <strong>$9,139.45</strong>.</li>
+<li>2026 is year <strong>8</strong>. Taken before 2026: $4,951.79 + 6 full years = <strong>$59,788.49</strong>. This year: <strong>$9,139.45</strong>. Left after 2026: <strong>$182,432.06</strong>.</li>
+<li>The roof, placed in service in May 2026, is in year 1: 9,800 × <strong>2.273%</strong> = <strong>$222.75</strong>, leaving <strong>$9,577.25</strong> for later years.</li>
+<li>Total for line 18 in 2026: <strong>$9,362.20</strong>.</li>
+</ul>
+<p>Skipping the land split would claim <strong>$11,424.31</strong> a year on the duplex instead of $9,139.45, which is <strong>$2,284.86</strong> a year too much. That's the most common mistake in DIY depreciation, and it compounds every year.</p>
+<p>Publication 527's own example checks the first-year rate. A building with a basis of $160,000 is placed in service on February 8. The publication finds 3.182% in its table and gets "$5,091 ($160,000 x 3.182% (0.03182))". The sheet gives <strong>$5,091.20</strong>, the same amount before rounding to whole dollars.</p>
+<h2>3. The year you sell</h2>
+<p>The mid-month convention applies at the end too: Publication 946 says to "Treat the month of disposition as one-half month of use." If you sell the building in a later year, its depreciation for that year is a full year's amount times (month of sale − ½) ÷ 12:</p>
+<pre><code>B18 (Sold on):                 2025-03-02
+B19 (Depreciation in sale year): =ROUND(ROUND(F5*0.03636,2)*(MONTH(B18)-0.5)/12,2)
+</code></pre>
+<p>Publication 946's example is a $100,000 basis sold on March 2: "Multiply $3,636 by the fraction, 2.5 over 12, to get your 2025 depreciation deduction of $757.50." With 100000 in F5 the formula gives <strong>$757.50</strong>. Use this in place of <strong>This year</strong> for the year of the sale only, and talk to your preparer about the sale itself: depreciation you took (or could have taken) reduces your basis and affects the gain.</p>
+<h2>Before you rely on it</h2>
+<ul>
+<li><strong>The IRS tables are the official version of these rates.</strong> Publication 527's Table 2-2d lists the percentage for each month and year, and Publication 946 notes that figuring MACRS without the tables "will generally result in a slightly different amount". The sheet's first-year rates and the 3.636% full-year rate are the figures used in the two IRS examples above. If you use the table, keep using the same month's row each year, and read later years from it, because a table's rounded rates may not be exactly 3.636% in every year.</li>
+<li><strong>The month matters, not the day.</strong> A building placed in service on June 1 or June 30 gets the same 1.970%.</li>
+<li><strong>Depreciation reduces your basis whether or not you claim it.</strong> The IRS talks about depreciation "allowed or allowable", so skipping it in a low-income year doesn't save it for later. If you've missed years, ask your preparer about fixing it.</li>
+<li><strong>Personal use, a home converted to a rental, and short-term rentals</strong> have extra rules in Publication 527 that this sheet doesn't cover.</li>
+</ul>
+<h2>Common mistakes</h2>
+<ul>
+<li><strong>Depreciating the land.</strong> Use the assessment split (or the contract or an appraisal) every time.</li>
+<li><strong>Using the closing date instead of the placed-in-service date.</strong> It changes the first-year rate and can move the start into the next year.</li>
+<li><strong>Putting appliances or carpet in the 27.5-year table.</strong> They're 5-year property with their own rates.</li>
+<li><strong>Expensing a roof.</strong> A new roof is an improvement with its own 27.5-year schedule, not a repair on line 14.</li>
+<li><strong>Starting a new row for the same building each year.</strong> One row per item, and change only B1 each January.</li>
+</ul>
+<h2>Going further</h2>
+<p>The number in J15 goes on Schedule E line 18. Our <a href="https://sheetandflow.gumroad.com/l/rental-property-tracker">Rental Property Tracker</a> (Excel and Google Sheets) sorts every rental transaction into its Schedule E line for up to 10 properties. Improvements like the sample file's $9,800 roof are typed as Capital, so they stay out of the expense totals, and a Depreciation entry lands on line 18. When we added this tutorial's 2026 total for the duplex as a Depreciation entry in the sample file, its Schedule E tab showed the same $9,362.20 on line 18. For the full year's records, see <a href="/sheet-and-flow/tutorials/rental-income-expenses-schedule-e/">How to track rental income and expenses by Schedule E line</a>.</p><aside class="cta"><img src="/sheet-and-flow/assets/img/rental-property-tracker.webp" width="640" height="360" alt="Rental Property Tracker cover" loading="lazy">
+<div><h3>Rental Property Tracker</h3><p>Income, expenses, rent roll, deposits, mileage and a Schedule E summary for up to 10 properties.</p><a class="btn" href="https://sheetandflow.gumroad.com/l/rental-property-tracker">Get it · $19</a> <a href="/sheet-and-flow/products/rental-property-tracker/">See what's inside</a></div></aside><p class="note">Written with AI assistance. Every formula, command and number on this page was tested before publishing (see each section). Product links go to our store.</p></article></div></main>
+<footer><div class="wrap"><p><strong>Sheet & Flow</strong> · Practical spreadsheets and n8n automations for landlords, freelancers and small teams.</p>
+<p><a href="/sheet-and-flow/about/">About</a><a href="/sheet-and-flow/affiliate-disclosure/">Affiliate disclosure</a><a href="/sheet-and-flow/privacy/">Privacy</a><a href="/sheet-and-flow/refunds/">Refunds</a><a href="https://sheetandflow.gumroad.com">Store</a></p>
+<p>Questions about a purchase? Reply to your Gumroad receipt email.</p>
+<p>Content and products are built with AI assistance and tested before publishing. Some links may become affiliate links. Nothing here is tax, legal or financial advice. Not affiliated with n8n GmbH, Microsoft or Google.</p></div></footer>
+</body></html>
