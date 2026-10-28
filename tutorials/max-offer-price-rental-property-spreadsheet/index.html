@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Max Offer Price for a Rental Property: Solve the Highest Price That Hits Your Cash Flow, Cash-on-Cash and DSCR Targets (Excel &amp; Google Sheets) | Sheet &amp; Flow</title><meta name="description" content="Instead of testing prices one at a time, solve for the highest purchase price that still meets your minimum monthly cash flow, cash-on-cash return and DSCR, see which target binds, and check the deal at that price. Exact formulas, tested in LibreOffice against an independent model and the Rental Property Calculator Pro max-offer finder.">
+<link rel="canonical" href="https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/max-offer-price-rental-property-spreadsheet/"><meta property="og:title" content="Max Offer Price for a Rental Property: Solve the Highest Price That Hits Your Cash Flow, Cash-on-Cash and DSCR Targets (Excel &amp; Google Sheets) | Sheet &amp; Flow"><meta property="og:description" content="Instead of testing prices one at a time, solve for the highest purchase price that still meets your minimum monthly cash flow, cash-on-cash return and DSCR, see which target binds, and check the deal at that price. Exact formulas, tested in LibreOffice against an independent model and the Rental Property Calculator Pro max-offer finder.">
+<meta property="og:type" content="article"><meta property="og:url" content="https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/max-offer-price-rental-property-spreadsheet/"><meta name="theme-color" content="#0d9488">
+<link rel="stylesheet" href="/sheet-and-flow/assets/style.css"><link rel="icon" href="/sheet-and-flow/assets/favicon.svg" type="image/svg+xml"><meta property="og:image" content="https://onyxaholguin-cyber.github.io/sheet-and-flow/assets/og/rental-calculator-pro.jpg"><meta property="og:image:width" content="1280"><meta property="og:image:height" content="720"><meta property="og:site_name" content="Sheet & Flow"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Max Offer Price for a Rental Property: Solve the Highest Price That Hits Your Cash Flow, Cash-on-Cash and DSCR Targets (Excel &amp; Google Sheets) | Sheet &amp; Flow"><meta name="twitter:description" content="Instead of testing prices one at a time, solve for the highest purchase price that still meets your minimum monthly cash flow, cash-on-cash return and DSCR, see which target binds, and check the deal at that price. Exact formulas, tested in LibreOffice against an independent model and the Rental Property Calculator Pro max-offer finder."><meta name="twitter:image" content="https://onyxaholguin-cyber.github.io/sheet-and-flow/assets/og/rental-calculator-pro.jpg"><script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Max Offer Price for a Rental Property: Solve the Highest Price That Hits Your Cash Flow, Cash-on-Cash and DSCR Targets (Excel & Google Sheets)", "description": "Instead of testing prices one at a time, solve for the highest purchase price that still meets your minimum monthly cash flow, cash-on-cash return and DSCR, see which target binds, and check the deal at that price. Exact formulas, tested in LibreOffice against an independent model and the Rental Property Calculator Pro max-offer finder.", "dateModified": "2026-10-28", "datePublished": "2026-10-28", "image": "https://onyxaholguin-cyber.github.io/sheet-and-flow/assets/og/rental-calculator-pro.jpg", "author": {"@type": "Organization", "name": "Sheet & Flow", "url": "https://onyxaholguin-cyber.github.io/sheet-and-flow/"}, "publisher": {"@type": "Organization", "name": "Sheet & Flow", "url": "https://onyxaholguin-cyber.github.io/sheet-and-flow/"}, "mainEntityOfPage": "https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/max-offer-price-rental-property-spreadsheet/"}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://onyxaholguin-cyber.github.io/sheet-and-flow/"}, {"@type": "ListItem", "position": 2, "name": "Tutorials", "item": "https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/"}, {"@type": "ListItem", "position": 3, "name": "Max Offer Price for a Rental Property: Solve the Highest Price That Hits Your Cash Flow, Cash-on-Cash and DSCR Targets (Excel & Google Sheets)", "item": "https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/max-offer-price-rental-property-spreadsheet/"}]}</script></head>
+<body><a class="skip" href="#main">Skip to content</a>
+<header class="top"><div class="wrap"><a class="brand" href="/sheet-and-flow/">Sheet <span>&amp;</span> Flow</a>
+<nav><a href="/sheet-and-flow/products/">Products</a><a href="/sheet-and-flow/tutorials/">Tutorials</a><a href="/sheet-and-flow/tools/">Free tools</a></nav></div></header>
+<main id="main"><div class="wrap narrow"><article><h1>Max Offer Price for a Rental Property: Solve the Highest Price That Hits Your Cash Flow, Cash-on-Cash and DSCR Targets (Excel &amp; Google Sheets)</h1><div class="byline">Updated 2026-10-28 · Sheet & Flow</div><p class="inline-cta">Short on time? The <a href="/sheet-and-flow/products/rental-calculator-pro/">Rental Calculator Pro</a> ($12) is the finished, tested version of what this tutorial builds.</p><p>Most rental calculators answer "is this deal good at the asking price?" The more useful question before you make an offer is the reverse: <strong>what is the most I can pay and still hit my numbers?</strong> If you know you want at least $200 a month of cash flow, an 8% cash-on-cash return and a DSCR of 1.25, there is one highest price that satisfies all three, and it is usually the right anchor for a first offer.</p>
+<p>This tutorial builds a one-tab <strong>max offer</strong> sheet. You type the deal (rent, expenses, loan terms, closing and repair costs) and your three targets. The sheet solves the maximum price for each target in closed form, takes the lowest one, rounds it down to the nearest $500, tells you which target is the bottleneck, and then re-checks the deal at that price. It works the same in Excel, Google Sheets and LibreOffice, using only PMT, MIN, ROUNDDOWN, IF and ISNUMBER.</p>
+<p>To test it, we built a workbook with these exact formulas, recalculated it in LibreOffice and compared every cell to the worked examples below and to an independent Python model that finds each maximum price by bisection on the full cash-flow model (no algebra shortcuts), on the examples plus 40 randomized deals including a 0% loan rate, 0% vacancy, no closing or repair costs and deals where no price works. We also checked the results against the max-offer finder in Rental Property Calculator Pro on its three sample deals.</p>
+<h2>Why price can be solved directly</h2>
+<p>When you change only the purchase price, the rent and operating expenses don't move (property tax here is a fixed dollar amount you enter; if your county reassesses on sale, put the post-sale tax in). Two things scale with price:</p>
+<ul>
+<li><strong>Debt service.</strong> The loan is price × (1 − down %), and the monthly payment is proportional to the loan. So yearly debt service = price × <em>k</em>, where <em>k</em> is the debt service per $1 of purchase price.</li>
+<li><strong>Cash invested.</strong> Down payment plus points are price × (down % + (1 − down %) × points %), plus the fixed closing and repair costs.</li>
+</ul>
+<p>Each target then becomes a straight-line inequality in price:</p>
+<ul>
+<li>Cash flow: NOI − price × <em>k</em> ≥ 12 × minimum monthly cash flow</li>
+<li>DSCR: NOI ÷ (price × <em>k</em>) ≥ minimum DSCR</li>
+<li>Cash-on-cash: NOI − price × <em>k</em> ≥ minimum CoC × (price × cash-per-$1 + closing + repairs)</li>
+</ul>
+<p>Solve each one for price and the smallest answer is your max offer.</p>
+<h2>1. Inputs</h2>
+<p>Column A holds labels, column B the values. The numbers are the Elm St Duplex sample deal from the Rental Deal Analyzer and Rental Property Calculator Pro.</p>
+<pre><code>B1 (Asking price):                285000
+B2 (Closing costs):               7500
+B3 (Upfront repairs):             12000
+B4 (Down payment %):              25%
+B5 (Interest rate):               6.75%
+B6 (Loan term, years):            30
+B7 (Points / loan fees %):        1%
+B8 (Rent, all units / month):     2900
+B9 (Other income / month):        50
+B10 (Vacancy &amp; credit loss %):    6%
+B11 (Fixed expenses / year):      6340
+B12 (Repairs + CapEx % of rent):  12%
+B13 (Management % of collected):  8%
+B14 (Min monthly cash flow):      200
+B15 (Min cash-on-cash):           8%
+B16 (Min DSCR):                   1.25
+</code></pre>
+<p>Fixed expenses are everything that doesn't depend on rent: property tax $3,100 + insurance $1,500 + owner-paid utilities $120/month + other $25/month = 3,100 + 1,500 + 145 × 12 = $6,340. Repairs and CapEx are a percentage of the unit rent (not other income); management is a percentage of what you actually collect.</p>
+<h2>2. NOI</h2>
+<pre><code>B18 (Gross scheduled income):  =(B8+B9)*12
+B19 (Effective gross income):  =B18*(1-B10)
+B20 (Operating expenses):      =B11+B12*B8*12+B13*B19
+B21 (NOI):                     =B19-B20
+</code></pre>
+<p>For the duplex: gross income <strong>$35,400</strong>, effective gross income <strong>$33,276</strong>, operating expenses <strong>$13,178.08</strong>, NOI <strong>$20,097.92</strong>. None of these depend on the price.</p>
+<h2>3. The price-scaled pieces</h2>
+<pre><code>B22 (Debt service per $1 of price):  =12*PMT(B5/12,B6*12,-(1-B4))
+B23 (Cash in per $1 of price):       =B4+(1-B4)*B7
+</code></pre>
+<p><code>B22</code> is the yearly principal and interest on the 75% loan behind one dollar of purchase price: about <strong>0.058374</strong>. <code>B23</code> is the down payment plus points per dollar: 0.25 + 0.75 × 0.01 = <strong>0.2575</strong>. PMT handles a 0% rate in all three apps (it becomes loan ÷ number of payments), so interest-free seller financing works too. These formulas assume there is a loan; for an all-cash purchase B22 is 0 and the DSCR line divides by zero.</p>
+<h2>4. Max price for each target, and the max offer</h2>
+<pre><code>B24 (Max price, cash flow target):    =(B21-12*B14)/B22
+B25 (Max price, cash-on-cash target): =(B21-B15*(B2+B3))/(B22+B15*B23)
+B26 (Max price, DSCR target):         =B21/(B16*B22)
+B27 (Max offer):                      =IF(MIN(B24:B26)&lt;500,&quot;No price works&quot;,ROUNDDOWN(MIN(B24:B26)/500,0)*500)
+B28 (Binding target):                 =IF(B24=MIN(B24:B26),&quot;Cash flow&quot;,IF(B25=MIN(B24:B26),&quot;Cash-on-cash&quot;,&quot;DSCR&quot;))
+B29 (Below asking by):                =IF(ISNUMBER(B27),B1-B27,&quot;&quot;)
+</code></pre>
+<p>For the duplex with $200/month, 8% and 1.25:</p>
+<table>
+<thead>
+<tr>
+<th>Target</th>
+<th>Max price</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>$200/month cash flow</td>
+<td>$303,182.44</td>
+</tr>
+<tr>
+<td>8% cash-on-cash</td>
+<td>$234,734.98</td>
+</tr>
+<tr>
+<td>1.25 DSCR</td>
+<td>$275,437.41</td>
+</tr>
+</tbody>
+</table>
+<p>The lowest is cash-on-cash, so the max offer is <strong>$234,500</strong>, <strong>$50,500</strong> below the $285,000 asking price. Rounding <em>down</em> to $500 matters: rounding to the nearest $500 could land a few dollars above the line and miss the target.</p>
+<p>"No price works" means even a $500 price misses a target, typically because NOI is below 12 × your minimum monthly cash flow (no amount of negotiating fixes a rent problem).</p>
+<h2>5. Check the deal at the max offer</h2>
+<p>Always recompute the deal from scratch at the solved price. If these rows don't meet your targets, a formula above is wrong. (When B27 says "No price works", rows 31–36 show #VALUE!; that's expected.)</p>
+<pre><code>B31 (Loan):               =B27*(1-B4)
+B32 (Monthly P&amp;I):        =PMT(B5/12,B6*12,-B31)
+B33 (Monthly cash flow):  =(B21-12*B32)/12
+B34 (Cash invested):      =B27*B4+B2+B3+B31*B7
+B35 (Cash-on-cash):       =(B21-12*B32)/B34
+B36 (DSCR):               =B21/(12*B32)
+B37 (Cash-on-cash at asking): =(B21-12*PMT(B5/12,B6*12,-B1*(1-B4)))/(B1*B4+B2+B3+B1*(1-B4)*B7)
+</code></pre>
+<p>At $234,500: loan <strong>$175,875</strong>, monthly P&amp;I <strong>$1,140.72</strong>, monthly cash flow <strong>$534.10</strong>, cash invested <strong>$79,883.75</strong>, cash-on-cash <strong>8.02%</strong>, DSCR <strong>1.47</strong>. All three targets pass, and cash-on-cash is the one sitting right at the line. At the asking price the same deal returns only <strong>3.73%</strong> cash-on-cash.</p>
+<h2>A second case: when DSCR is the bottleneck</h2>
+<p>Keep the same duplex but change the targets to 5% cash-on-cash (<code>B15</code>) and a 1.30 DSCR (<code>B16</code>), as a lender might require. The cash-on-cash limit rises to <strong>$268,396.27</strong> while the DSCR limit drops to <strong>$264,843.66</strong>, so the binding target becomes <strong>DSCR</strong> and the max offer is <strong>$264,500</strong> ($20,500 below asking). At that price DSCR is <strong>1.30</strong> and monthly cash flow is <strong>$388.17</strong>.</p>
+<h2>Common mistakes</h2>
+<ul>
+<li><strong>Forgetting closing and repair costs in cash-on-cash.</strong> They don't scale with price, but they are in the denominator. Leave them out and the max offer comes out too high.</li>
+<li><strong>Using the asking-price tax bill.</strong> If your area reassesses at sale, the post-sale tax is what you'll pay; enter that in fixed expenses.</li>
+<li><strong>Mixing monthly and yearly.</strong> B14 is monthly; NOI and debt service are yearly. The formulas multiply by 12 where needed.</li>
+<li><strong>Rounding to the nearest $500.</strong> Round down, or the offer can miss a target by a few dollars.</li>
+<li><strong>Treating the max offer as the price to offer.</strong> It is your walk-away ceiling. Offer below it and leave room for inspection surprises.</li>
+</ul>
+<h2>Related tutorials</h2>
+<ul>
+<li><a href="/sheet-and-flow/tutorials/cap-rate-cash-on-cash-dscr/">Cap rate, cash-on-cash and DSCR: the three rental metrics in one sheet</a>.</li>
+<li><a href="/sheet-and-flow/tutorials/rental-property-cash-flow-spreadsheet/">Rental property cash flow spreadsheet</a>.</li>
+<li><a href="/sheet-and-flow/tutorials/rental-property-irr-spreadsheet/">Rental property IRR spreadsheet</a>.</li>
+</ul>
+<h2>Want it done for you?</h2>
+<p><a href="/sheet-and-flow/products/rental-calculator-pro/">Rental Property Calculator Pro</a> has a <strong>Max offer price</strong> finder built in: set any mix of minimum monthly cash flow, cash-on-cash, DSCR and cap rate and it returns the highest price (to the nearest $500) that meets all of them, alongside a 10-year projection with IRR, saved deals, side-by-side comparison, CSV export and a printable report. It is one HTML file that runs offline in your browser; your numbers never leave your computer.</p>
+<p>For education, not financial advice. Check loan terms with your lender and the numbers with your accountant.</p><aside class="cta"><img src="/sheet-and-flow/assets/img/rental-calculator-pro.webp" width="640" height="360" alt="Rental Calculator Pro cover" loading="lazy">
+<div><h3>Rental Calculator Pro</h3><p>Downloadable browser app that works offline: 10-year projection, IRR, max-offer price finder, saved deals, side-by-side comparison and CSV export.</p><a class="btn" href="https://sheetandflow.gumroad.com/l/rental-calculator-pro">Get it · $12</a> <a href="/sheet-and-flow/products/rental-calculator-pro/">See what's inside</a></div></aside><p>Free tool: <a href="/sheet-and-flow/tools/rental-deal-calculator/">Free Rental Property Calculator: Cash Flow, Cap Rate, Cash-on-Cash, DSCR</a></p><p class="note">Written with AI assistance. Every formula, command and number on this page was tested before publishing (see each section). Product links go to our store.</p></article></div></main>
+<footer><div class="wrap"><p><strong>Sheet & Flow</strong> · Practical spreadsheets and n8n automations for landlords, freelancers and small teams.</p>
+<p><a href="/sheet-and-flow/about/">About</a><a href="/sheet-and-flow/affiliate-disclosure/">Affiliate disclosure</a><a href="/sheet-and-flow/privacy/">Privacy</a><a href="/sheet-and-flow/refunds/">Refunds</a><a href="https://sheetandflow.gumroad.com">Store</a></p>
+<p>Questions about a purchase? Reply to your Gumroad receipt email.</p>
+<p>Content and products are built with AI assistance and tested before publishing. Some links may become affiliate links. Nothing here is tax, legal or financial advice. Not affiliated with n8n GmbH, Microsoft or Google.</p></div></footer>
+</body></html>
