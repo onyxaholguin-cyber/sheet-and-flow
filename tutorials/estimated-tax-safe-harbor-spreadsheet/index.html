@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Estimated Tax Safe Harbor Spreadsheet: How Much to Pay by January 15, 2027 (90% vs 100%/110% Rule) | Sheet &amp; Flow</title><meta name="description" content="Work out the smallest total you must prepay for 2026 to avoid the IRS underpayment penalty (90% of this year&#x27;s tax or 100%/110% of last year&#x27;s), what your January 15, 2027 payment needs to be, and which earlier periods were short. Exact Excel and Google Sheets formulas, tested in LibreOffice against an independent model and the IRS&#x27;s own Pub 505 example.">
+<link rel="canonical" href="https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/estimated-tax-safe-harbor-spreadsheet/"><meta property="og:title" content="Estimated Tax Safe Harbor Spreadsheet: How Much to Pay by January 15, 2027 (90% vs 100%/110% Rule) | Sheet &amp; Flow"><meta property="og:description" content="Work out the smallest total you must prepay for 2026 to avoid the IRS underpayment penalty (90% of this year&#x27;s tax or 100%/110% of last year&#x27;s), what your January 15, 2027 payment needs to be, and which earlier periods were short. Exact Excel and Google Sheets formulas, tested in LibreOffice against an independent model and the IRS&#x27;s own Pub 505 example.">
+<meta property="og:type" content="article"><meta property="og:url" content="https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/estimated-tax-safe-harbor-spreadsheet/"><meta name="theme-color" content="#0d9488">
+<link rel="stylesheet" href="/sheet-and-flow/assets/style.css"><link rel="icon" href="/sheet-and-flow/assets/favicon.svg" type="image/svg+xml"><meta property="og:image" content="https://onyxaholguin-cyber.github.io/sheet-and-flow/assets/og/freelancer-finance-tracker.jpg"><meta property="og:image:width" content="1280"><meta property="og:image:height" content="720"><meta property="og:site_name" content="Sheet & Flow"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Estimated Tax Safe Harbor Spreadsheet: How Much to Pay by January 15, 2027 (90% vs 100%/110% Rule) | Sheet &amp; Flow"><meta name="twitter:description" content="Work out the smallest total you must prepay for 2026 to avoid the IRS underpayment penalty (90% of this year&#x27;s tax or 100%/110% of last year&#x27;s), what your January 15, 2027 payment needs to be, and which earlier periods were short. Exact Excel and Google Sheets formulas, tested in LibreOffice against an independent model and the IRS&#x27;s own Pub 505 example."><meta name="twitter:image" content="https://onyxaholguin-cyber.github.io/sheet-and-flow/assets/og/freelancer-finance-tracker.jpg"><script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Estimated Tax Safe Harbor Spreadsheet: How Much to Pay by January 15, 2027 (90% vs 100%/110% Rule)", "description": "Work out the smallest total you must prepay for 2026 to avoid the IRS underpayment penalty (90% of this year's tax or 100%/110% of last year's), what your January 15, 2027 payment needs to be, and which earlier periods were short. Exact Excel and Google Sheets formulas, tested in LibreOffice against an independent model and the IRS's own Pub 505 example.", "dateModified": "2026-10-29", "datePublished": "2026-10-29", "image": "https://onyxaholguin-cyber.github.io/sheet-and-flow/assets/og/freelancer-finance-tracker.jpg", "author": {"@type": "Organization", "name": "Sheet & Flow", "url": "https://onyxaholguin-cyber.github.io/sheet-and-flow/"}, "publisher": {"@type": "Organization", "name": "Sheet & Flow", "url": "https://onyxaholguin-cyber.github.io/sheet-and-flow/"}, "mainEntityOfPage": "https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/estimated-tax-safe-harbor-spreadsheet/"}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://onyxaholguin-cyber.github.io/sheet-and-flow/"}, {"@type": "ListItem", "position": 2, "name": "Tutorials", "item": "https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/"}, {"@type": "ListItem", "position": 3, "name": "Estimated Tax Safe Harbor Spreadsheet: How Much to Pay by January 15, 2027 (90% vs 100%/110% Rule)", "item": "https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/estimated-tax-safe-harbor-spreadsheet/"}]}</script></head>
+<body><a class="skip" href="#main">Skip to content</a>
+<header class="top"><div class="wrap"><a class="brand" href="/sheet-and-flow/">Sheet <span>&amp;</span> Flow</a>
+<nav><a href="/sheet-and-flow/products/">Products</a><a href="/sheet-and-flow/tutorials/">Tutorials</a><a href="/sheet-and-flow/tools/">Free tools</a></nav></div></header>
+<main id="main"><div class="wrap narrow"><article><h1>Estimated Tax Safe Harbor Spreadsheet: How Much to Pay by January 15, 2027 (90% vs 100%/110% Rule)</h1><div class="byline">Updated 2026-10-29 · Sheet & Flow</div><p class="inline-cta">Short on time? The <a href="/sheet-and-flow/products/freelancer-finance-tracker/">Freelancer Finance Tracker</a> ($15) is the finished, tested version of what this tutorial builds.</p><p>If you freelance, the last 2026 estimated-tax payment is due <strong>Friday, January 15, 2027</strong>, and the question most people have at this point is not <em>how much tax will I owe?</em> but <em>how much do I have to pay now so I don't get a penalty?</em> Those are two different numbers. The IRS calls the second one the <strong>required annual payment</strong>, and it is often a lot smaller than your actual tax, because it can be based on last year's return.</p>
+<p>This tutorial builds one small tab that answers it: the required annual payment under both rules, which rule wins, the January 15 payment that gets you there, the balance you will still owe in April, and a period-by-period check of the four installments. It uses only ROUND, MIN, MAX, IF, SUM, INDEX and TEXT, so it works the same in Excel, Google Sheets and LibreOffice. To test it, we built a workbook with these exact formulas, recalculated it in LibreOffice, and compared every cell with the worked example below, with the example in IRS Publication 505, and with an independent Python model on 40 random cases.</p>
+<blockquote>
+<p>Not tax advice. The rules below are quoted from the <a href="https://www.irs.gov/pub/irs-pdf/f1040es.pdf">2026 Form 1040-ES instructions</a> and <a href="https://www.irs.gov/publications/p505">IRS Publication 505</a> (Tax Withholding and Estimated Tax). This sheet covers the regular method (four equal installments) for federal tax only. It does not cover the farming/fishing rules, the annualized income method, or state estimated tax. Ask your preparer if any of those apply to you.</p>
+</blockquote>
+<h2>1. The two safe harbors</h2>
+<p>The 1040-ES instructions say you generally have to pay estimated tax if "You expect to owe at least $1,000 in tax for 2026, after subtracting your withholding and refundable credits." and your withholding and refundable credits will be less than the smaller of:</p>
+<ul>
+<li>"90% of the tax to be shown on your 2026 tax return", or</li>
+<li>"100% of the tax shown on your 2025 tax return." with the condition that "Your 2025 tax return must cover all 12 months."</li>
+</ul>
+<p>For higher incomes there is one change. If your 2025 AGI was more than $150,000 ($75,000 if married filing separately for 2026), you "substitute 110% for 100% in (2b) under General Rule".</p>
+<p>So the target is the <strong>smaller</strong> of the two numbers. If your income jumped this year, last year's tax is usually the smaller one, and paying it in full by January 15 protects you from the penalty even though you will still owe more when you file. If your income fell, 90% of this year's tax is usually smaller.</p>
+<p>Withholding (from a W-2 job, for example) counts too, and by default it is spread evenly over the year no matter when it was actually taken out of your pay: "One-fourth of your estimated withholding is considered withheld on the due date of each payment period." (Publication 505 also lets you use the actual withholding dates instead; this sheet uses the default.)</p>
+<h2>2. Inputs (column B)</h2>
+<table>
+<thead>
+<tr>
+<th>Cell</th>
+<th>What to type</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>B2</td>
+<td>Expected total 2026 tax (Form 1040-ES worksheet line 11c)</td>
+<td>27,600</td>
+</tr>
+<tr>
+<td>B3</td>
+<td>Total tax on your 2025 return</td>
+<td>18,400</td>
+</tr>
+<tr>
+<td>B4</td>
+<td>2025 AGI (Form 1040 line 11b)</td>
+<td>96,000</td>
+</tr>
+<tr>
+<td>B5</td>
+<td>Married filing separately for 2026? (<code>Yes</code>/<code>No</code>)</td>
+<td>No</td>
+</tr>
+<tr>
+<td>B6</td>
+<td>Did your 2025 return cover all 12 months? (<code>Yes</code>/<code>No</code>)</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>B7</td>
+<td>Federal income tax withheld for 2026 (whole year, expected)</td>
+<td>2,400</td>
+</tr>
+<tr>
+<td>B8</td>
+<td>Estimated payment made by April 15, 2026</td>
+<td>3,000</td>
+</tr>
+<tr>
+<td>B9</td>
+<td>Estimated payment made by June 15, 2026</td>
+<td>3,000</td>
+</tr>
+<tr>
+<td>B10</td>
+<td>Estimated payment made by September 15, 2026</td>
+<td>3,000</td>
+</tr>
+<tr>
+<td>B11</td>
+<td>Payment you plan to make by January 15, 2027</td>
+<td>7,000</td>
+</tr>
+</tbody>
+</table>
+<h2>3. The formulas</h2>
+<pre><code>B12 (Prior-year %):           =IF(B4&gt;IF(B5=&quot;Yes&quot;,75000,150000),110%,100%)
+B13 (90% of 2026 tax):        =ROUND(90%*B2,0)
+B14 (Prior-year safe harbor): =IF(B6=&quot;Yes&quot;,ROUND(B12*B3,0),&quot;&quot;)
+B15 (Rule that sets it):      =IF(B14=&quot;&quot;,&quot;90% of 2026 tax&quot;,IF(B13&lt;B14,&quot;90% of 2026 tax&quot;,TEXT(B12,&quot;0%&quot;)&amp;&quot; of 2025 tax&quot;))
+B16 (Required annual payment): =MIN(B13,B14)
+B17 (Tax not covered by withholding): =B2-B7
+B18 (Estimated payments needed?): =IF(OR(B16-B7&lt;=0,B17&lt;1000),&quot;No&quot;,&quot;Yes&quot;)
+B19 (Paid through September): =B7+SUM(B8:B10)
+B20 (January 15 payment needed): =MAX(0,B16-B19)
+B21 (Still owed at filing):    =MAX(0,B2-B19-B11)
+</code></pre>
+<p><code>MIN</code> ignores the empty text that <code>B14</code> returns when last year's return was a short year, so <code>B16</code> falls back to the 90% rule on its own. Both safe-harbor amounts are rounded to whole dollars, as Publication 505 does in its example. <code>B18</code> follows the order of the 1040-ES worksheet (lines 14a and 14b): if withholding alone covers the required annual payment, or the tax left after withholding is under $1,000, you don't need estimated payments.</p>
+<p><code>B19</code> counts the full year's withholding, because by the fourth due date all four quarters of it are treated as withheld.</p>
+<h2>4. Check each period (rows 24 to 27)</h2>
+<p>The required annual payment is due in four equal parts, and the penalty is figured per period: "The penalty is imposed on each underpayment for the number of days it remains unpaid." So it also helps to see which earlier periods were short. Put the period numbers 1 to 4 in <code>A24:A27</code>, then in row 24 (fill down to 27):</p>
+<pre><code>C24 (Required by this due date): =$B$16*A24/4
+D24 (Credited by this due date): =$B$7*A24/4+SUM($B$8:INDEX($B$8:$B$11,A24))
+E24 (Short by):                  =MAX(0,C24-D24)
+F24 (Status):                    =IF(E24&gt;0,&quot;Short&quot;,&quot;OK&quot;)
+</code></pre>
+<p><code>D24</code> adds a quarter of the year's withholding per period plus every estimated payment made so far, so a catch-up payment counts toward the periods after it, not before.</p>
+<h2>Worked example</h2>
+<p>A freelance designer who also has a small W-2 job. 2025 total tax was <strong>$18,400</strong> on AGI of $96,000; with a busy 2026 she now expects <strong>$27,600</strong> of tax. She sent $3,000 on each of the first three due dates and has $2,400 withheld at the W-2 job.</p>
+<ul>
+<li>90% of 2026 tax = <strong>$24,840</strong>. Prior-year safe harbor at 100% (her AGI is under $150,000) = <strong>$18,400</strong>. The smaller is the prior-year number, so the required annual payment is <strong>$18,400</strong> and <code>B15</code> shows <code>100% of 2025 tax</code>.</li>
+<li>Paid through September (withholding + three payments) = <strong>$11,400</strong>.</li>
+<li>January 15 payment needed = <strong>$7,000</strong>.</li>
+<li>Even after that payment she will still owe <strong>$9,200</strong> when she files. The safe harbor avoids the <em>penalty</em>; it doesn't reduce the <em>tax</em>. Keep that money in the tax account.</li>
+</ul>
+<p>The period check shows why paying earlier is better than waiting:</p>
+<table>
+<thead>
+<tr>
+<th>Period</th>
+<th>Due</th>
+<th>Required</th>
+<th>Credited</th>
+<th>Short</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Apr 15, 2026</td>
+<td>$4,600</td>
+<td>$3,600</td>
+<td>$1,000</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Jun 15, 2026</td>
+<td>$9,200</td>
+<td>$7,200</td>
+<td>$2,000</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Sep 15, 2026</td>
+<td>$13,800</td>
+<td>$10,800</td>
+<td>$3,000</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Jan 15, 2027</td>
+<td>$18,400</td>
+<td>$18,400</td>
+<td>$0</td>
+</tr>
+</tbody>
+</table>
+<p>The first three periods were each short, so a small penalty can still apply for the days those amounts were unpaid. The $7,000 brings her to the safe harbor by January 15, and sending it sooner (say in November) shortens the time the shortfall stays unpaid.</p>
+<p><strong>Higher-income check (the IRS's own example).</strong> Publication 505 uses 2025 tax of $42,581, expected 2026 tax of $71,253 and 2025 AGI of $180,000. Type those into B3, B2 and B4 and the sheet shows <code>B12</code> = 110%, 90% of 2026 tax <strong>$64,128</strong>, prior-year safe harbor <strong>$46,839</strong>, and a required annual payment of <strong>$46,839</strong>, the same numbers as the publication.</p>
+<p><strong>Under $1,000 check.</strong> If your expected tax is $3,000, your 2025 tax was $4,000 and $2,200 will be withheld, the tax left after withholding is <strong>$800</strong>, so <code>B18</code> shows <code>No</code>: under the general rule you don't need estimated payments.</p>
+<h2>Two dates worth knowing</h2>
+<ul>
+<li>The fourth period runs September 1 to December 31, so it is four months long, and its payment is due January 15, 2027.</li>
+<li>The 1040-ES instructions add: "You don’t have to make the payment due January 15, 2027, if you file your 2026 tax return by February 1, 2027, and pay the entire balance due with your return." That only works if your paperwork is ready by then.</li>
+</ul>
+<h2>Common mistakes</h2>
+<ul>
+<li><strong>Using this year's tax when last year's is smaller.</strong> If your income went up, 90% of this year's tax may be far more than you need to pay to be penalty-free.</li>
+<li><strong>Forgetting the 110% rule.</strong> Over $150,000 of 2025 AGI ($75,000 married filing separately), 100% of last year isn't enough.</li>
+<li><strong>Thinking the safe harbor is the bill.</strong> You still owe the rest of the tax by the filing deadline (<code>B21</code>).</li>
+<li><strong>Counting withholding by date.</strong> By default it is spread evenly over the four periods, which is why <code>D24</code> uses <code>$B$7*A24/4</code>.</li>
+<li><strong>Using it with very uneven income.</strong> If most of your 2026 income came late in the year, the annualized income installment method (Form 2210 Schedule AI, explained in Pub. 505) may lower the earlier installments. This sheet doesn't do that calculation.</li>
+</ul>
+<h2>Related tutorials</h2>
+<ul>
+<li><a href="/sheet-and-flow/tutorials/freelancer-quarterly-tax-set-aside/">Freelancer taxes: a simple set-aside method and the 2026 quarterly due dates</a>.</li>
+<li><a href="/sheet-and-flow/tutorials/standard-mileage-vs-actual-expenses-spreadsheet/">Standard mileage vs actual expenses (2026)</a>.</li>
+<li><a href="/sheet-and-flow/tutorials/ar-aging-report-sumifs/">AR aging report with SUMIFS</a>.</li>
+</ul>
+<h2>Want it done for you?</h2>
+<p>The <a href="/sheet-and-flow/products/freelancer-finance-tracker/">Freelancer Finance Tracker</a> keeps your invoices, payments and expenses in one workbook and fills in net profit per IRS estimated-tax period, a set-aside target, the estimated payments you've made and their status, plus AR aging and a Schedule C summary. Type your four payments into its Quarterly Set-Aside tab and its total matches <code>B8:B11</code> here.</p>
+<p>For education, not tax advice. Check the current Form 1040-ES and Publication 505, and your own numbers with a tax professional.</p><aside class="cta"><img src="/sheet-and-flow/assets/img/freelancer-finance-tracker.webp" width="640" height="360" alt="Freelancer Finance Tracker cover" loading="lazy">
+<div><h3>Freelancer Finance Tracker</h3><p>Invoices, partial payments, AR aging, quarterly tax set-aside and a Schedule C summary.</p><a class="btn" href="https://sheetandflow.gumroad.com/l/freelancer-finance-tracker">Get it · $15</a> <a href="/sheet-and-flow/products/freelancer-finance-tracker/">See what's inside</a></div></aside><p class="note">Written with AI assistance. Every formula, command and number on this page was tested before publishing (see each section). Product links go to our store.</p></article></div></main>
+<footer><div class="wrap"><p><strong>Sheet & Flow</strong> · Practical spreadsheets and n8n automations for landlords, freelancers and small teams.</p>
+<p><a href="/sheet-and-flow/about/">About</a><a href="/sheet-and-flow/affiliate-disclosure/">Affiliate disclosure</a><a href="/sheet-and-flow/privacy/">Privacy</a><a href="/sheet-and-flow/refunds/">Refunds</a><a href="https://sheetandflow.gumroad.com">Store</a></p>
+<p>Questions about a purchase? Reply to your Gumroad receipt email.</p>
+<p>Content and products are built with AI assistance and tested before publishing. Some links may become affiliate links. Nothing here is tax, legal or financial advice. Not affiliated with n8n GmbH, Microsoft or Google.</p></div></footer>
+</body></html>
