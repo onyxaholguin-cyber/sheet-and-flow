@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Three-Paycheck Months in 2027: Biweekly Payday Calendar Spreadsheet (Excel &amp; Google Sheets) | Sheet &amp; Flow</title><meta name="description" content="Find which months of 2027 have three biweekly paychecks (or five weekly ones), how many paychecks you get in the year (26 or 27), and how much extra money that is if you budget on two checks a month. One tab, exact formulas, tested in LibreOffice against an independent model and the 2027 Budget Planner on every possible 2027 pay schedule.">
+<link rel="canonical" href="https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/three-paycheck-months-2027-spreadsheet/"><meta property="og:title" content="Three-Paycheck Months in 2027: Biweekly Payday Calendar Spreadsheet (Excel &amp; Google Sheets) | Sheet &amp; Flow"><meta property="og:description" content="Find which months of 2027 have three biweekly paychecks (or five weekly ones), how many paychecks you get in the year (26 or 27), and how much extra money that is if you budget on two checks a month. One tab, exact formulas, tested in LibreOffice against an independent model and the 2027 Budget Planner on every possible 2027 pay schedule.">
+<meta property="og:type" content="article"><meta property="og:url" content="https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/three-paycheck-months-2027-spreadsheet/"><meta name="theme-color" content="#0d9488">
+<link rel="stylesheet" href="/sheet-and-flow/assets/style.css"><link rel="icon" href="/sheet-and-flow/assets/favicon.svg" type="image/svg+xml"><meta property="og:image" content="https://onyxaholguin-cyber.github.io/sheet-and-flow/assets/og/budget-planner-2027.jpg"><meta property="og:image:width" content="1280"><meta property="og:image:height" content="720"><meta property="og:site_name" content="Sheet & Flow"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Three-Paycheck Months in 2027: Biweekly Payday Calendar Spreadsheet (Excel &amp; Google Sheets) | Sheet &amp; Flow"><meta name="twitter:description" content="Find which months of 2027 have three biweekly paychecks (or five weekly ones), how many paychecks you get in the year (26 or 27), and how much extra money that is if you budget on two checks a month. One tab, exact formulas, tested in LibreOffice against an independent model and the 2027 Budget Planner on every possible 2027 pay schedule."><meta name="twitter:image" content="https://onyxaholguin-cyber.github.io/sheet-and-flow/assets/og/budget-planner-2027.jpg"><script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "Three-Paycheck Months in 2027: Biweekly Payday Calendar Spreadsheet (Excel & Google Sheets)", "description": "Find which months of 2027 have three biweekly paychecks (or five weekly ones), how many paychecks you get in the year (26 or 27), and how much extra money that is if you budget on two checks a month. One tab, exact formulas, tested in LibreOffice against an independent model and the 2027 Budget Planner on every possible 2027 pay schedule.", "dateModified": "2026-11-02", "datePublished": "2026-11-02", "image": "https://onyxaholguin-cyber.github.io/sheet-and-flow/assets/og/budget-planner-2027.jpg", "author": {"@type": "Organization", "name": "Sheet & Flow", "url": "https://onyxaholguin-cyber.github.io/sheet-and-flow/"}, "publisher": {"@type": "Organization", "name": "Sheet & Flow", "url": "https://onyxaholguin-cyber.github.io/sheet-and-flow/"}, "mainEntityOfPage": "https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/three-paycheck-months-2027-spreadsheet/"}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://onyxaholguin-cyber.github.io/sheet-and-flow/"}, {"@type": "ListItem", "position": 2, "name": "Tutorials", "item": "https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/"}, {"@type": "ListItem", "position": 3, "name": "Three-Paycheck Months in 2027: Biweekly Payday Calendar Spreadsheet (Excel & Google Sheets)", "item": "https://onyxaholguin-cyber.github.io/sheet-and-flow/tutorials/three-paycheck-months-2027-spreadsheet/"}]}</script></head>
+<body><a class="skip" href="#main">Skip to content</a>
+<header class="top"><div class="wrap"><a class="brand" href="/sheet-and-flow/">Sheet <span>&amp;</span> Flow</a>
+<nav><a href="/sheet-and-flow/products/">Products</a><a href="/sheet-and-flow/tutorials/">Tutorials</a><a href="/sheet-and-flow/tools/">Free tools</a></nav></div></header>
+<main id="main"><div class="wrap narrow"><article><h1>Three-Paycheck Months in 2027: Biweekly Payday Calendar Spreadsheet (Excel &amp; Google Sheets)</h1><div class="byline">Updated 2026-11-02 · Sheet & Flow</div><p class="inline-cta">Short on time? The <a href="/sheet-and-flow/products/budget-planner-2027/">2027 Budget Planner</a> ($12.99) is the finished, tested version of what this tutorial builds.</p><p>If you're paid every two weeks, most months bring two paychecks, but two months a year usually bring <strong>three</strong>. Budget the year on two checks a month and those third checks arrive with nothing planned for them, which makes them the easiest money of the year to send to an emergency fund, a debt or a sinking fund. Which months they are depends on your own first payday, so a list from someone else's calendar is only right if your payday matches theirs.</p>
+<p>This tutorial builds a one-tab payday calendar that works it out for any year and any schedule: the paychecks in each month, the date of each extra one, how many paychecks you get in the year, and how much "extra" pay that is. It uses only DATE, EOMONTH, INT, ROUNDUP, IF, MAX, SUM and COUNTIF, so it works the same in Excel, Google Sheets and LibreOffice. To test it, we built a workbook with these exact formulas, recalculated it in LibreOffice, and compared every cell to the examples below and to an independent Python model that lists every payday one by one, on all 14 possible every-two-weeks schedules and all 7 weekly schedules in 2027, plus 40 randomized years and schedules.</p>
+<h2>1. Settings (top of the tab)</h2>
+<pre><code>B1 (Year):                     2027
+B2 (A payday):                 2027-01-08
+B3 (Days between pays):        14
+B4 (Take-home per paycheck):   2400
+B5 (Paychecks you budget on):  2
+</code></pre>
+<p><strong>A payday</strong> is any real payday on your schedule. Your first payday of the year is the obvious choice, but any earlier one works too (for example your last payday of the previous year), because the formulas count forward from it. <strong>Days between pays</strong> is 14 for every two weeks or 7 for weekly. <strong>Paychecks you budget on</strong> is how many checks your monthly budget assumes: 2 for every two weeks, 4 for weekly.</p>
+<p>This calendar is for every-two-weeks and weekly pay. If you're paid twice a month (say the 1st and 15th) or monthly, every month has the same number of paychecks and there are no extra ones.</p>
+<h2>2. The month table</h2>
+<p>Row 7 holds the headers: <strong>Month, Month start, Month end, Paychecks, First payday, Extra paycheck dates, Extra paychecks, Extra pay</strong>. Type 1 to 12 in A8:A19, put these formulas in row 8 and fill them down to row 19:</p>
+<pre><code>B8 (Month start):           =DATE($B$1,A8,1)
+C8 (Month end):             =EOMONTH(B8,0)
+D8 (Paychecks):             =IF(C8&lt;$B$2,0,INT((C8-$B$2)/$B$3)+1)-IF(B8-1&lt;$B$2,0,INT((B8-1-$B$2)/$B$3)+1)
+E8 (First payday):          =IF(D8=0,&quot;&quot;,IF(B8&lt;=$B$2,$B$2,$B$2+$B$3*ROUNDUP((B8-$B$2)/$B$3,0)))
+F8 (Extra paycheck dates):  =IF(D8&lt;=$B$5,&quot;&quot;,TEXT(E8+$B$3*$B$5,&quot;mmm d&quot;)&amp;IF(D8&gt;$B$5+1,&quot;, &quot;&amp;TEXT(E8+$B$3*($B$5+1),&quot;mmm d&quot;),&quot;&quot;))
+G8 (Extra paychecks):       =MAX(0,D8-$B$5)
+H8 (Extra pay):             =G8*$B$4
+</code></pre>
+<p><strong>Paychecks</strong> counts the paydays from your payday in B2 up to the month's last day, minus the ones before the month's first day. <code>INT((date-B2)/B3)+1</code> is the number of paydays from B2 through that date, and the <code>IF(...&lt;$B$2,0,...)</code> parts return 0 for dates before B2, so months before your payday count nothing. <code>EOMONTH(B8,0)</code> is the last day of the month in Excel (<a href="https://support.microsoft.com/en-us/office/eomonth-function-7314ffa1-2bc9-4005-9d66-f49db127d628">Microsoft's EOMONTH help</a>) and in Google Sheets (<a href="https://support.google.com/docs/answer/3093044">Google's EOMONTH help</a>), so February and leap years need no special case.</p>
+<p><strong>First payday</strong> jumps from B2 to the first payday on or after the month start: the days between them divided by the pay interval, rounded <em>up</em> to a whole number of pay periods. <strong>Extra paycheck dates</strong> lists the paydays beyond the ones you budget on (the third check in a biweekly month, the fifth in a weekly one), up to two of them, which is all a month can have when you budget on 2 checks every two weeks or 4 weekly ones. <strong>Extra paychecks</strong> always has the full count. Format column E as a date. If your sheet shows <code>mmm d</code> literally, your spreadsheet's locale uses other date codes; drop the TEXT part and use a date column instead.</p>
+<h2>3. Totals for the year</h2>
+<p>Below the table:</p>
+<pre><code>B21 (Paychecks in the year):       =SUM(D8:D19)
+B22 (Months with an extra check):  =COUNTIF(G8:G19,&quot;&gt;0&quot;)
+B23 (Extra pay for the year):      =SUM(H8:H19)
+B24 (Monthly budget on B5 checks): =B5*B4
+B25 (True monthly average):        =B21*B4/12
+</code></pre>
+<p>B24 is what your monthly budget should be built on. B25 is your real average, which is higher because of the extra checks. Budgeting on B25 instead of B24 is the usual mistake: it spends the extra checks twelve times a year in small pieces, and the months with only two checks come up short.</p>
+<h2>Worked example: paid every two weeks from Friday, January 8, 2027</h2>
+<p>Settings as above: year <strong>2027</strong>, a payday on <strong>2027-01-08</strong>, every <strong>14</strong> days, <strong>$2,400</strong> a check, budget on <strong>2</strong> checks.</p>
+<table>
+<thead>
+<tr>
+<th>Month</th>
+<th>Paychecks</th>
+<th>First payday</th>
+<th>Extra paycheck dates</th>
+<th>Extra pay</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Jan</td>
+<td>2</td>
+<td>2027-01-08</td>
+<td></td>
+<td>0</td>
+</tr>
+<tr>
+<td>Feb</td>
+<td>2</td>
+<td>2027-02-05</td>
+<td></td>
+<td>0</td>
+</tr>
+<tr>
+<td>Mar</td>
+<td>2</td>
+<td>2027-03-05</td>
+<td></td>
+<td>0</td>
+</tr>
+<tr>
+<td>Apr</td>
+<td>3</td>
+<td>2027-04-02</td>
+<td>Apr 30</td>
+<td>2400</td>
+</tr>
+<tr>
+<td>May</td>
+<td>2</td>
+<td>2027-05-14</td>
+<td></td>
+<td>0</td>
+</tr>
+<tr>
+<td>Jun</td>
+<td>2</td>
+<td>2027-06-11</td>
+<td></td>
+<td>0</td>
+</tr>
+<tr>
+<td>Jul</td>
+<td>2</td>
+<td>2027-07-09</td>
+<td></td>
+<td>0</td>
+</tr>
+<tr>
+<td>Aug</td>
+<td>2</td>
+<td>2027-08-06</td>
+<td></td>
+<td>0</td>
+</tr>
+<tr>
+<td>Sep</td>
+<td>2</td>
+<td>2027-09-03</td>
+<td></td>
+<td>0</td>
+</tr>
+<tr>
+<td>Oct</td>
+<td>3</td>
+<td>2027-10-01</td>
+<td>Oct 29</td>
+<td>2400</td>
+</tr>
+<tr>
+<td>Nov</td>
+<td>2</td>
+<td>2027-11-12</td>
+<td></td>
+<td>0</td>
+</tr>
+<tr>
+<td>Dec</td>
+<td>2</td>
+<td>2027-12-10</td>
+<td></td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<p>Totals: <strong>26</strong> paychecks in the year, <strong>2</strong> months with an extra check (April and October), <strong>$4,800</strong> of extra pay. The monthly budget on two checks is <strong>$4,800</strong>, while the true monthly average is <strong>$5,200</strong>. Typing the last payday of 2026, <strong>2026-12-25</strong>, into B2 gives exactly the same table.</p>
+<h2>When 2027 has 27 paychecks</h2>
+<p>January 1, 2027 is a Friday. If your every-two-weeks schedule lands on <strong>2027-01-01</strong>, the year's paydays run from January 1 to December 31 and you get <strong>27</strong> paychecks, with extra checks in <strong>January, July and December</strong>. With the same $2,400 a check, that's <strong>$7,200</strong> of extra pay. Of the 14 possible every-two-weeks schedules in 2027, this is the only one with 27 paydays; the other 13 have 26.</p>
+<p>Two cautions before you plan on it. January 1 is a bank holiday, and many employers pay the business day before, which moves that check into 2026. And some salaried employers divide the annual salary by the number of paychecks in the year, so a 27-paycheck year can mean 27 slightly smaller checks rather than one extra one. Check with your payroll team.</p>
+<p>Weekly pay works the same way: set B3 to <strong>7</strong> and B5 to <strong>4</strong>. Paid every Friday in 2027, you get <strong>53</strong> paychecks, and January, April, July, October and December each have five.</p>
+<h2>Common mistakes</h2>
+<ul>
+<li><strong>Using someone else's list of three-paycheck months.</strong> Two people paid every two weeks, one week apart, get different months. The table above depends only on your own payday.</li>
+<li><strong>Typing the payday as text.</strong> "Jan 8" typed as text makes every comparison fail. Format B2 as a date and check that <code>=ISNUMBER(B2)</code> says TRUE.</li>
+<li><strong>Putting a future payday in B2.</strong> Months before B2 count zero paychecks. Use your first payday of the year, or any earlier one.</li>
+<li><strong>Budgeting on the yearly average.</strong> See section 3. Plan the month on B24 and give every extra check a job before it arrives.</li>
+</ul>
+<h2>Want it done for you?</h2>
+<p>The <a href="/sheet-and-flow/products/budget-planner-2027/">2027 Budget Planner</a> does this on its Paychecks tab for weekly, every-two-weeks, twice-a-month and monthly pay: it lists every payday of the year with the bills due before the next one, highlights the months with an extra paycheck, and splits what's left after bills 50/30/20. It also covers categories, sinking funds, debt payoff and an annual dashboard. But the table above is a complete payday calendar on its own.</p>
+<p>Not financial advice. This is a budgeting method; check payroll questions with your employer.</p><aside class="cta"><img src="/sheet-and-flow/assets/img/budget-planner-2027.webp" width="640" height="360" alt="2027 Budget Planner cover" loading="lazy">
+<div><h3>2027 Budget Planner</h3><p>Monthly and per-paycheck budgets, 50/30/20, variable-income mode, sinking funds, debt payoff (snowball or avalanche) and savings goals for 2027.</p><a class="btn" href="https://sheetandflow.gumroad.com/l/budget-planner-2027">Get it · $12.99</a> <a href="/sheet-and-flow/products/budget-planner-2027/">See what's inside</a></div></aside><p class="note">Written with AI assistance. Every formula, command and number on this page was tested before publishing (see each section). Product links go to our store.</p></article></div></main>
+<footer><div class="wrap"><p><strong>Sheet & Flow</strong> · Practical spreadsheets and n8n automations for landlords, freelancers and small teams.</p>
+<p><a href="/sheet-and-flow/about/">About</a><a href="/sheet-and-flow/affiliate-disclosure/">Affiliate disclosure</a><a href="/sheet-and-flow/privacy/">Privacy</a><a href="/sheet-and-flow/refunds/">Refunds</a><a href="https://sheetandflow.gumroad.com">Store</a></p>
+<p>Questions about a purchase? Reply to your Gumroad receipt email.</p>
+<p>Content and products are built with AI assistance and tested before publishing. Some links may become affiliate links. Nothing here is tax, legal or financial advice. Not affiliated with n8n GmbH, Microsoft or Google.</p></div></footer>
+</body></html>
